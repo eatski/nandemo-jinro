@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@firebase/firestore": "^3.5.0",
     "esbuild": "^0.15.7"
   }
 }
