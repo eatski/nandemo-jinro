@@ -1,0 +1,31 @@
+{
+  "name": "roleroll",
+  "version": "1.0.0",
+  "description": "see https://github.com/thedodd/trunk/issues/415#issuecomment-1207394128",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:js": "esbuild javascript/index.ts --bundle --outfile=assets/index.js",
+    "dev:js": "esbuild javascript/index.ts --bundle --outfile=assets/index.js --watch",
+    "dev:rs": "trunk serve",
+    "dev": "concurrently npm:dev:js npm:dev:rs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eatski/roleroll.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eatski/roleroll/issues"
+  },
+  "homepage": "https://github.com/eatski/roleroll#readme",
+  "dependencies": {
+    "@firebase/firestore": "^3.5.0",
+    "esbuild": "^0.15.7"
+  },
+  "devDependencies": {
+    "concurrently": "^7.4.0"
+  }
+}

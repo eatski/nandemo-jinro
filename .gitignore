@@ -12,3 +12,7 @@
 # build artifacts
 
 /dist
+/assets
+
+# Node.js artifacts
+/node_modules
