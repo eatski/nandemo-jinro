@@ -1,4 +1,4 @@
-import { initializeFirestore, doc,addDoc, collection,onSnapshot } from "@firebase/firestore"
+import { initializeFirestore, doc,addDoc, collection,onSnapshot, QuerySnapshot, DocumentData, DocumentReference, CollectionReference, Unsubscribe } from "@firebase/firestore"
 import { initializeApp } from "@firebase/app";
 
 const app = initializeApp(
@@ -18,9 +18,49 @@ const NAMESPACE = "rollrole/v1";
 
 const roomCollection = collection(store,NAMESPACE,"rooms");
 
+const onSnapshotWhenActive = (
+    ref: CollectionReference,
+    callback: (data: QuerySnapshot<DocumentData>) => void,
+    onError: () => void
+): (() => void) => {
+    let unsubscribe: Unsubscribe | null = null;
+    const INTERBAL = 1000 * 60 * 10;
+    const unsubscribeAndClear = () => {
+        if(unsubscribe){
+            unsubscribe();
+            unsubscribe = null;
+        }
+    }
+    let id = setTimeout(unsubscribeAndClear,INTERBAL);
+    const restart = () => {
+        clearTimeout(id);
+        id = setTimeout(unsubscribeAndClear,INTERBAL);
+    }
+    const call = () => onSnapshot(ref,(data) => {
+        restart();
+        callback(data);
+    },onError)
+    unsubscribe = call();
+   
+    const onMouseMove = () => {
+        if(unsubscribe === null){
+            unsubscribe = call();
+        }
+        clearTimeout(id);
+        id = setTimeout(unsubscribeAndClear,INTERBAL);
+    }
+    window.addEventListener("mousemove",onMouseMove)
+    return () => {
+        clearTimeout(id);
+        unsubscribeAndClear()
+        window.removeEventListener("mousemove",onMouseMove)
+    }
+}
+
+
 const syncMembers = (roomId: string,callback: (res: string) => void,onError: () => void): () => void => {
     const memberCol = collection(doc(roomCollection,roomId),"members");
-    return onSnapshot(
+    return onSnapshotWhenActive(
         memberCol,
         (res) => { callback(JSON.stringify(res.docs.map(doc => doc.data())))},
         onError
