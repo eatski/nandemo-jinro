@@ -1,4 +1,5 @@
 
+use presentational::{header, title, CardListContainer, card_case};
 use yew::prelude::*;
 
 mod members;
@@ -23,7 +24,15 @@ impl Component for Model {
 
     fn view(&self, _: &Context<Self>) -> Html {
         html! {
-            <Lobby />
+            <div>
+                {header()}
+                {title()}
+                <CardListContainer>
+                    {card_case()}
+                    {card_case()}
+                </CardListContainer>
+                <Lobby />
+            </div>
         }
     }
 }
