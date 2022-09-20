@@ -4,8 +4,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        feature: "#38bdf8",
-        "feature-light": "#0ea5e9",
+        feature: "#0ea5e9",
+        "feature-light": "#38bdf8",
+        quiet: "#bae6fd"
       }
     },
     
