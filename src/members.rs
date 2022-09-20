@@ -1,3 +1,4 @@
+use presentational::{button, loading};
 use yew::{function_component, html, use_effect_with_deps, use_state, UseStateHandle, Callback};
 
 use crate::firestore::{sync_members, MemberJSON};
@@ -32,11 +33,7 @@ pub fn lobby() -> Html {
     });
 
     match &*state {
-        LobbyState::Loading => {
-            html! {
-                <div class="animate-spin h-10 w-10 border-4 border-quiet-500 rounded-full border-t-transparent"></div>
-            }
-        },
+        LobbyState::Loading => loading(),
         LobbyState::Loaded(state) => {
             html! { 
                 <div>
@@ -44,7 +41,7 @@ pub fn lobby() -> Html {
                     <ul>
                         { for state.iter().map(|member| html! { <li key={member.id.to_string()}>{&member.name}</li> }) }
                     </ul>
-                    <button class={"bg-feature hover:bg-feature-light text-white py-2 px-4 rounded-md"} onclick={add_member}>{"参加する"}</button>
+                    {button("参加する",add_member)}
                 </div>
             }
         },
