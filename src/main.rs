@@ -23,7 +23,7 @@ impl Component for Model {
 
     fn view(&self, _: &Context<Self>) -> Html {
         html! {
-           <Lobby />
+            <Lobby />
         }
     }
 }

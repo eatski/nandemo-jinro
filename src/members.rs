@@ -24,13 +24,14 @@ pub fn lobby() -> Html {
     let add_member = Callback::from(|_| {
         crate::firestore::add_members("test");
     });
+
     html! { 
         <div>
             <h1>{"Lobby"}</h1>
             <ul>
                 { for state.iter().map(|member| html! { <li key={member.id.to_string()}>{&member.name}</li> }) }
             </ul>
-            <button onclick={add_member}>{"Add Member"}</button>
+            <button class={"bg-feature hover:bg-feature-light text-white py-2 px-4 rounded-md"} onclick={add_member}>{"参加する"}</button>
         </div>
     }
 }

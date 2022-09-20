@@ -8,7 +8,8 @@
     "build:js": "esbuild javascript/index.ts --bundle --outfile=assets/index.js",
     "dev:js": "esbuild javascript/index.ts --bundle --outfile=assets/index.js --watch",
     "dev:rs": "trunk serve",
-    "dev": "concurrently npm:dev:js npm:dev:rs"
+    "dev": "concurrently npm:dev:js npm:dev:rs npm:dev:css",
+    "dev:css": "tailwindcss -i tailwind.css -o assets/index.css --watch"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
     "esbuild": "^0.15.7"
   },
   "devDependencies": {
-    "concurrently": "^7.4.0"
+    "concurrently": "^7.4.0",
+    "tailwindcss": "^3.1.8"
   }
 }
