@@ -41,9 +41,11 @@ pub fn title() -> Html {
 
 pub fn card_case() -> Html {
     html! {
-        <section class="w-full">
-            <h2 class="w-full text-center text-2xl text-black">{"ルーム作成から"}</h2>
-            <p class="w-full text-center text-sm text-black-light mt-1">{"オリジナルのルールで遊ぶ"}</p>
+        <section class="w-full p-4">
+            <div class="h-80 rounded-md bg-colored p-3">
+                <h2 class="w-full text-center text-2xl text-black">{"ルーム作成から"}</h2>
+                <p class="w-full text-center text-sm text-black-light mt-1">{"オリジナルのルールで遊ぶ"}</p>
+            </div>
         </section>
     }
 }
