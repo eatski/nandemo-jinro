@@ -10,6 +10,7 @@ mod members;
 mod firestore;
 mod landing;
 mod router;
+mod storage;
 
 struct Root();
 
