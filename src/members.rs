@@ -1,7 +1,7 @@
-use presentational::{button, loading};
+use presentational::{InputAndButton, loading, mark};
 use yew::{function_component, html, use_effect_with_deps, use_state, UseStateHandle, Callback, Properties};
 
-use crate::{firestore::{sync_members, MemberJSON, MemberInput}, storage::{is_host, get_user_id}};
+use crate::{firestore::{sync_members, MemberJSON, MemberInput, add_members}, storage::{is_host, get_user_id}};
 
 
 enum LobbyState {
@@ -20,7 +20,7 @@ enum MemberType {
 }
 
 enum UserStatus {
-    Joined(MemberType),
+    Joined(MemberType,String),
     NotJoined,
 }
 
@@ -43,11 +43,11 @@ pub fn lobby(props: &LobbyProps) -> Html {
                     room_id.as_str(),
                     move |members| {
                         let user_id = get_user_id(cloned_room_id.as_str());
-                        let user_status = if user_id.is_some() {
+                        let user_status = if let Some(user_id) = user_id {
                             if is_host(cloned_room_id.as_str()) {
-                                UserStatus::Joined(MemberType::Host)
+                                UserStatus::Joined(MemberType::Host,user_id)
                             } else {
-                                UserStatus::Joined(MemberType::Guest)
+                                UserStatus::Joined(MemberType::Guest,user_id)
                             }
                         } else {
                             UserStatus::NotJoined
@@ -61,12 +61,14 @@ pub fn lobby(props: &LobbyProps) -> Html {
         );
     }
     let room_id = props.room_id.clone();
-    let add_member = Callback::from(move |_| {
-        crate::firestore::add_members(room_id.as_str(),&MemberInput {
-            name:"testes".to_string(),
-        },|_| {
-            
-        });
+    let add_member = Callback::from(move |name| {
+        let room_id_cloned = room_id.clone();
+        let user_id = add_members(
+            room_id.as_str(),
+            &MemberInput {name},
+            move || {}
+        );
+        crate::storage::save_user_id(room_id_cloned.as_str(),user_id.as_str());
     });
 
     match &*state {
@@ -75,14 +77,29 @@ pub fn lobby(props: &LobbyProps) -> Html {
             html! { 
                 <div>
                     <h1>{"Lobby"}</h1>
-                    <ul>
-                        { for state.iter().map(|member| html! { <li key={member.id.to_string()}>{&member.name}</li> }) }
-                    </ul>
+                    {
+                        if let UserStatus::Joined(_,user_id) = lobby_type {
+                            html! {
+                                <ul>
+                                    {for state.iter().map(|member| 
+                                        {
+                                            let is_you = member.id.as_str() == user_id;
+                                            html! { 
+                                                <li key={member.id.to_string()}>{&member.name}{if is_you { mark("you") } else {html!{}}}</li> 
+                                            }
+                                        }) 
+                                    }
+                                </ul>
+                            }
+                        } else {
+                            html! {}
+                        }
+                    }
                     {
                         match lobby_type {
-                            UserStatus::Joined(MemberType::Host) => html! { <button>{ "Start" }</button> },
-                            UserStatus::Joined(MemberType::Guest) => html! { "待っててね" },
-                            UserStatus::NotJoined => html! { <button onclick={add_member}>{"Join"}</button> },
+                            UserStatus::Joined(MemberType::Host,_) => html! { <button>{ "Start" }</button> },
+                            UserStatus::Joined(MemberType::Guest,_) => html! { "待っててね" },
+                            UserStatus::NotJoined => html! { <InputAndButton label="参加" placeholder="あなたの名前" onsubmit={add_member} /> },
                         }
                     }
                 </div>

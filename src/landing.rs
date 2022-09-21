@@ -50,16 +50,17 @@ fn create_rule_view() -> Html {
             state.set(State::Loading);
             firestore::add_room(move |room_id| {
                 let room_id_string = room_id.to_string();
-                firestore::add_members(
+                let member_id = firestore::add_members(
                     room_id, 
                     &MemberInput {
                         name 
                     }, 
-                    move |member_id| {
-                        save_user_id(room_id_string.as_str(),member_id);
-                        save_is_host(room_id_string.as_str());
+                    move || {
                         history.push(Route::Room { id: room_id_string});
-                    })
+                    }
+                );
+                save_user_id(room_id,member_id.as_str());
+                save_is_host(room_id);
             })
         })}/>
     },

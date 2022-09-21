@@ -181,3 +181,9 @@ pub fn list(title: &'static str,items: Vec<&'static str>) -> Html {
         </>
     }
 }
+
+pub fn mark(label: &str) -> Html {
+    html! {
+        <span class="bg-feature text-white">{label}</span>
+    }
+}

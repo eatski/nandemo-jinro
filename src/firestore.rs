@@ -9,7 +9,7 @@ use web_sys::console;
 #[wasm_bindgen()]
 extern "C" {
     #[wasm_bindgen(js_name = "addMembers",js_namespace = ["window","_wasm_js_bridge"])]
-    fn addMembersInner(room_id: &str, name: &str, on_complete: &JsValue);
+    fn addMembersInner(room_id: &str, name: &str, on_complete: &JsValue) -> String;
     #[wasm_bindgen(js_name = "syncMembers",js_namespace = ["window","_wasm_js_bridge"])]
     fn syncMembersInner(room_id: &str,callback: JsValue,on_error: JsValue) -> Function;
     #[wasm_bindgen(js_name = "addRoom",js_namespace = ["window","_wasm_js_bridge"])]
@@ -21,10 +21,8 @@ pub struct MemberInput {
     pub name: String,
 }
 
-pub fn add_members(room_id: &str,member: &MemberInput, on_complete: impl FnOnce(&str) + 'static) {
-    addMembersInner(room_id,&member.name,&Closure::once_into_js(|val: JsValue| {
-        on_complete(val.as_string().unwrap().as_str());
-    }));
+pub fn add_members(room_id: &str,member: &MemberInput, on_complete: impl FnOnce() + 'static) -> String {
+    addMembersInner(room_id,&member.name,&Closure::once_into_js(on_complete))
 }
 
 #[derive(Serialize, Deserialize)]

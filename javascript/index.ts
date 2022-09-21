@@ -1,4 +1,4 @@
-import { initializeFirestore, doc,addDoc, collection,onSnapshot, QuerySnapshot, DocumentData, DocumentReference, CollectionReference, Unsubscribe } from "@firebase/firestore"
+import { initializeFirestore, doc,addDoc, collection,onSnapshot, QuerySnapshot, DocumentData, DocumentReference, CollectionReference, Unsubscribe, setDoc } from "@firebase/firestore"
 import { initializeApp } from "@firebase/app";
 
 const app = initializeApp(
@@ -67,13 +67,11 @@ const syncMembers = (roomId: string,callback: (res: string) => void,onError: () 
     )
 }
 
-const addMembers = (roomId: string,name: string,onComplete: (id: string) => void): void => {
+const addMembers = (roomId: string,name: string,onComplete: () => void): string => {
     const memberCol = collection(doc(roomCollection,roomId),"members");
-    addDoc(memberCol,{
-        name
-    }).then((res) => {
-        onComplete(res.id);
-    })
+    const docRef = doc(memberCol);
+    setDoc(docRef, {name}).then(() => { onComplete() });
+    return docRef.id;
 }
 
 const addRoom = (onComplete: (id: string) => void): void => {
