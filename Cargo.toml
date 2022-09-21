@@ -18,3 +18,4 @@ js-sys = "0.3"
 serde = "1.0"
 web-sys = "0.3"
 presentational = {path = "./packages/presentational"}
+yew-router = "0.16"

@@ -1,11 +1,15 @@
 
 use presentational::{header,footer};
+use router::Route;
 use yew::prelude::*;
 use landing::Landing;
+use yew_router::prelude::*;
+
 
 mod members;
 mod firestore;
 mod landing;
+mod router;
 
 struct Root();
 
@@ -26,10 +30,20 @@ impl Component for Root {
         html! {
             <div>
                 {header()}
-                <Landing />
+                <BrowserRouter>
+                    <Switch<Route> render={Switch::render(switch)} />
+                </BrowserRouter>
                 {footer()}
             </div>
         }
+    }
+}
+
+fn switch(route: &Route) -> Html {
+    match route {
+        Route::Home => html! { <Landing /> },
+        Route::Room { id } => html! {<p>{format!("You are looking at Post {}", id)}</p>},
+        Route::NotFound => todo!(),
     }
 }
 
