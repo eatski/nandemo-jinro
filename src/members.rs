@@ -33,9 +33,9 @@ pub fn lobby(props: &LobbyProps) -> Html {
         let state = state.clone();
         let room_id = props.room_id.clone();
         use_effect_with_deps(
-            move |_| {
+            |room_id| {
                 let room_id_cloned = room_id.clone();
-                let cleanup = sync_members(
+                sync_members(
                     room_id.as_str(),
                     move |members| {
                         let lobby_type = if is_host(room_id_cloned.as_str()) {
@@ -50,12 +50,9 @@ pub fn lobby(props: &LobbyProps) -> Html {
                         state.set(LobbyState::Loaded(members,lobby_type))
                     },
                     || {},
-                );
-                || {
-                    cleanup();
-                }
+                )
             },
-            (),
+            room_id,
         );
     }
     let room_id = props.room_id.clone();

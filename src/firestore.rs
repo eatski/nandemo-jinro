@@ -37,7 +37,7 @@ fn json_to_members(json:&str) -> Result<Vec<MemberJSON>,String> {
     serde_json::from_str(json).map_err(|e| e.to_string())
 }
 
-pub fn sync_members<CB: FnMut(Vec<MemberJSON>)  + 'static,OE: FnMut() + 'static>(room_id: &str,mut callback:CB, on_error: OE) -> impl FnOnce() {
+pub fn sync_members(room_id: &str,mut callback:impl FnMut(Vec<MemberJSON>)  + 'static , on_error: impl FnMut() + 'static) -> impl FnOnce() {
     let on_error = Rc::new(RefCell::new(Box::new(on_error) as Box<dyn FnMut()>));
     let on_parse_error = on_error.clone();
     let json_callback : Box<dyn FnMut(String)>= Box::new(
