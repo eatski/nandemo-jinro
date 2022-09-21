@@ -2,7 +2,7 @@ use yew::{function_component, html, Callback, use_state};
 use presentational::{title, CardListContainer,Card,Heading2WithDescription, Main, CardBgType, CardContent,InputAndButton,tag_list, footer, list, loading};
 use yew_router::prelude::{use_history, History};
 
-use crate::{router::Route, firestore::{self, MemberInput}, storage::save_user_id};
+use crate::{router::Route, firestore::{self, MemberInput}, storage::{save_user_id, save_is_host}};
 
 #[function_component(Landing)]
 pub fn landing() -> Html {
@@ -57,6 +57,7 @@ fn create_rule_view() -> Html {
                     }, 
                     move |member_id| {
                         save_user_id(room_id_string.as_str(),member_id);
+                        save_is_host(room_id_string.as_str());
                         history.push(Route::Room { id: room_id_string});
                     })
             })
