@@ -1,6 +1,7 @@
 
-use presentational::{header, title, CardListContainer,Card,Heading2WithDescription, input_and_button, Main, CardBgType, CardContent,tag_list, footer, list};
+use presentational::{header, title, CardListContainer,Card,Heading2WithDescription, input_and_button, Main, CardBgType, CardContent,InputAndButton,tag_list, footer, list};
 use yew::prelude::*;
+use web_sys::console;
 
 mod members;
 mod firestore;
@@ -32,7 +33,9 @@ impl Component for Model {
                         <Card bg_type={CardBgType::Colored}>
                             <Heading2WithDescription title="ルール作成から" description="オリジナルのルールで遊ぶ"/>
                             <CardContent>
-                                {input_and_button("作成","あなたの名前",Callback::from(|_| {}))}
+                                <InputAndButton label="作成" placeholder="あなたの名前" onsubmit={Callback::from(|val: String| {
+                                    console::log_1(&val.into());
+                                })}/>
                             </CardContent>
                         </Card>
                         <Card bg_type={CardBgType::Colored}>

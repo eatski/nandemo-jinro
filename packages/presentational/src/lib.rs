@@ -1,4 +1,5 @@
-use yew::{Callback, html, Html, MouseEvent, Properties, Children, function_component};
+use yew::{Callback, html, Html, MouseEvent, Properties, Children, function_component, use_state, Event,TargetCast};
+use web_sys::{HtmlInputElement};
 
 pub fn button(label: &str,onclick: Callback<MouseEvent>) -> Html {
     html! {
@@ -107,13 +108,27 @@ pub fn card_list_container(props:&ChildrenOnlyProps) -> Html {
     }
 }
 
+#[derive(Properties, PartialEq)]
+pub struct InputAndButtonProps {
+    pub label:  &'static str,
+    pub placeholder: &'static str,
+    pub onsubmit: Callback<String>,
+}
 
-
-pub fn input_and_button(label: &'static str,placeholder: &'static str,onclick: Callback<String>) -> Html {
+#[function_component(InputAndButton)]
+pub fn input_and_button(props: &InputAndButtonProps) -> Html {
+    let state = use_state(|| "".to_string());
+    let state_cloned = state.clone();
+    let onchange = Callback::from(move |e: Event| {
+        let input = e.target_dyn_into::<HtmlInputElement>();
+        if let Some(input) = input {
+            state.set(input.value());
+        }
+    });
     html! {
         <div class="flex justify-center">
-            <input class="border-line border-solid border rounded-md py-2 px-2 text-black mr-3" type="text" placeholder={placeholder}/>
-            <button onclick={onclick.reform(|_| "aaa".to_owned())} class={"bg-feature hover:bg-feature-light text-white py-2 px-4 rounded-md"}>{label}</button>
+            <input {onchange} class="border-line border-solid border rounded-md py-2 px-2 text-black mr-3" type="text" placeholder={props.placeholder}/>
+            <button onclick={props.onsubmit.reform(move |_| state_cloned.to_string())} class={"bg-feature hover:bg-feature-light text-white py-2 px-4 rounded-md"}>{&props.label}</button>
         </div>
     }
 }
