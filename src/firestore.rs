@@ -9,14 +9,22 @@ use web_sys::console;
 #[wasm_bindgen()]
 extern "C" {
     #[wasm_bindgen(js_name = "addMembers",js_namespace = ["window","_wasm_js_bridge"])]
-    fn addMembersInner(room_id: &str);
+    fn addMembersInner(room_id: &str, name: &str, on_complete: &JsValue);
     #[wasm_bindgen(js_name = "syncMembers",js_namespace = ["window","_wasm_js_bridge"])]
     fn syncMembersInner(room_id: &str,callback: JsValue,on_error: JsValue) -> Function;
+    #[wasm_bindgen(js_name = "addRoom",js_namespace = ["window","_wasm_js_bridge"])]
+    fn addRoomInner(on_complete: &JsValue);
 }
 
 
-pub fn add_members(room_id: &str) {
-    addMembersInner(room_id);
+pub struct MemberInput {
+    pub name: String,
+}
+
+pub fn add_members(room_id: &str,member: &MemberInput, on_complete: impl FnOnce(&str) + 'static) {
+    addMembersInner(room_id,&member.name,&Closure::once_into_js(|val: JsValue| {
+        on_complete(val.as_string().unwrap().as_str());
+    }));
 }
 
 #[derive(Serialize, Deserialize)]
@@ -29,7 +37,7 @@ fn json_to_members(json:&str) -> Result<Vec<MemberJSON>,String> {
     serde_json::from_str(json).map_err(|e| e.to_string())
 }
 
-pub fn sync_members<'a,CB: FnMut(Vec<MemberJSON>)  + 'static,OE: FnMut() + 'static>(room_id: &str,mut callback: CB, on_error: OE) -> Box<dyn FnOnce()> {
+pub fn sync_members<CB: FnMut(Vec<MemberJSON>)  + 'static,OE: FnMut() + 'static>(room_id: &str,mut callback:CB, on_error: OE) -> impl FnOnce() {
     let on_error = Rc::new(RefCell::new(Box::new(on_error) as Box<dyn FnMut()>));
     let on_parse_error = on_error.clone();
     let json_callback : Box<dyn FnMut(String)>= Box::new(
@@ -46,7 +54,13 @@ pub fn sync_members<'a,CB: FnMut(Vec<MemberJSON>)  + 'static,OE: FnMut() + 'stat
     let on_error = Closure::wrap(Box::new(move || on_error.borrow_mut()()) as Box<dyn FnMut()>);
     let callback = Closure::wrap(json_callback).into_js_value();
     let cleanup = syncMembersInner(room_id,callback,on_error.into_js_value());
-    Box::new(move || {
+    move || {
         cleanup.call0(&JsValue::NULL).unwrap();
-    })
+    }
+}
+
+pub fn add_room<CB: FnOnce(&str) + 'static>(on_complete: CB) {
+    addRoomInner(&Closure::once_into_js (move |val: JsValue| {
+        on_complete(val.as_string().unwrap().as_str());
+    }));
 }

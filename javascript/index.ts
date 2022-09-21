@@ -67,16 +67,24 @@ const syncMembers = (roomId: string,callback: (res: string) => void,onError: () 
     )
 }
 
-const addMembers = async (roomId: string): Promise<string> => {
+const addMembers = (roomId: string,name: string,onComplete: (id: string) => void): void => {
     const memberCol = collection(doc(roomCollection,roomId),"members");
-    return (await addDoc(memberCol,{
-        id: Math.floor(Math.random() * 10000).toString(),
-        name: "test"
-    })).id;
+    addDoc(memberCol,{
+        name
+    }).then((res) => {
+        onComplete(res.id);
+    })
+}
+
+const addRoom = (onComplete: (id: string) => void): void => {
+    addDoc(roomCollection,{}).then((res) => {
+        onComplete(res.id);
+    })
 }
 
 //@ts-expect-error
 window._wasm_js_bridge = {
     addMembers,
-    syncMembers
+    syncMembers,
+    addRoom
 }

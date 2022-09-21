@@ -1,7 +1,7 @@
 use presentational::{button, loading};
 use yew::{function_component, html, use_effect_with_deps, use_state, UseStateHandle, Callback};
 
-use crate::firestore::{sync_members, MemberJSON};
+use crate::firestore::{sync_members, MemberJSON, MemberInput};
 
 
 enum LobbyState {
@@ -28,8 +28,12 @@ pub fn lobby() -> Html {
             (),
         );
     }
-    let add_member = Callback::from(|_| {
-        crate::firestore::add_members("test");
+    let add_member = Callback::from(|e| {
+        crate::firestore::add_members("test",&MemberInput {
+            name:"a".to_string(),
+        },|_| {
+
+        });
     });
 
     match &*state {

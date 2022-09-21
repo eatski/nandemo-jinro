@@ -1,6 +1,8 @@
-use web_sys::console;
-use yew::{function_component, html, Callback};
-use presentational::{title, CardListContainer,Card,Heading2WithDescription, Main, CardBgType, CardContent,InputAndButton,tag_list, footer, list};
+use yew::{function_component, html, Callback, use_state};
+use presentational::{title, CardListContainer,Card,Heading2WithDescription, Main, CardBgType, CardContent,InputAndButton,tag_list, footer, list, loading};
+use yew_router::prelude::{use_history, History};
+
+use crate::{router::Route, firestore::{self, MemberInput}};
 
 #[function_component(Landing)]
 pub fn landing() -> Html {
@@ -22,9 +24,9 @@ pub fn landing() -> Html {
                 </Card>
             </CardListContainer>
             {list("遊び方",vec![
-                "好きなルールを選ぶor作成して",
-                "みんなに部屋のURLを共有して",
-                "全員に秘密の役職が配られるからそれを使って自由に遊ぼう！",
+                "好きなルールを選ぶor作成",
+                "みんなに部屋のURLを共有",
+                "全員に配られる秘密の役職で自由に遊ぼう！",
             ])}
             // <Lobby />
         </Main>
@@ -34,9 +36,35 @@ pub fn landing() -> Html {
 
 #[function_component(CreateRule)]
 fn create_rule_view() -> Html {
-    html! {
-        <InputAndButton label="作成" placeholder="あなたの名前" onsubmit={Callback::from(|val: String| {
-            console::log_1(&val.into());
-        })}/>
+
+    enum State {
+        Input,
+        Loading,
+        Error
     }
+    let history = use_history().unwrap();
+    let state = use_state(|| State::Input);
+    match &*state {
+    State::Input => html! {
+        <InputAndButton label="作成" placeholder="あなたの名前" onsubmit={Callback::once(move |name: String| {
+            state.set(State::Loading);
+            firestore::add_room(move |room_id| {
+                let room_id_string = room_id.to_string();
+                firestore::add_members(
+                    room_id, 
+                    &MemberInput {
+                        name 
+                    }, 
+                    move |_| {
+                        history.push(Route::Room { id: room_id_string});
+                    })
+            })
+        })}/>
+    },
+    State::Loading => html! {
+        {loading()}
+    },
+    State::Error => todo!(),
+}
+    
 }
