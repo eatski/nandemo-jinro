@@ -127,7 +127,7 @@ pub fn input_and_button(props: &InputAndButtonProps) -> Html {
     });
     html! {
         <div class="flex justify-center">
-            <input {onchange} class="border-line border-solid border rounded-md py-2 px-2 text-black mr-3" type="text" placeholder={props.placeholder}/>
+            <input {onchange} class="w-3/5 border-line border-solid border rounded-md py-2 px-2 text-black mr-3" type="text" placeholder={props.placeholder}/>
             <button onclick={props.onsubmit.reform(move |_| state_cloned.to_string())} class={"bg-feature hover:bg-feature-light text-white py-2 px-4 rounded-md"}>{&props.label}</button>
         </div>
     }
