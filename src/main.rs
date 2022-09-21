@@ -1,5 +1,5 @@
 
-use presentational::{header, title, CardListContainer, card_case};
+use presentational::{header, title, CardListContainer,Card,Heading2WithDescription, input_and_button, Main, CardBgType, CardContent,tag_list, footer, list};
 use yew::prelude::*;
 
 mod members;
@@ -26,12 +26,30 @@ impl Component for Model {
         html! {
             <div>
                 {header()}
-                {title()}
-                <CardListContainer>
-                    {card_case()}
-                    {card_case()}
-                </CardListContainer>
-                <Lobby />
+                <Main>
+                    {title()}
+                    <CardListContainer>
+                        <Card bg_type={CardBgType::Colored}>
+                            <Heading2WithDescription title="ルール作成から" description="オリジナルのルールで遊ぶ"/>
+                            <CardContent>
+                                {input_and_button("作成","あなたの名前",Callback::from(|_| {}))}
+                            </CardContent>
+                        </Card>
+                        <Card bg_type={CardBgType::Colored}>
+                            <Heading2WithDescription title="テンプレから" description="誰かが作ったルールで遊ぶ"/>
+                            <CardContent>
+                                {tag_list()}
+                            </CardContent>
+                        </Card>
+                    </CardListContainer>
+                    {list("遊び方",vec![
+                        "好きなルールを選ぶor作成して",
+                        "みんなに部屋のURLを共有して",
+                        "全員に秘密の役職が配られるからそれを使って自由に遊ぼう！",
+                    ])}
+                    // <Lobby />
+                </Main>
+                {footer()}
             </div>
         }
     }
