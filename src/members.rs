@@ -6,7 +6,7 @@ use crate::{firestore::{sync_members, MemberJSON, MemberInput}, storage::{is_hos
 
 enum LobbyState {
     Loading,
-    Loaded(Vec<MemberJSON>,LobbyType),
+    Loaded(Vec<MemberJSON>,UserStatus),
 }
 
 struct Member {
@@ -14,9 +14,13 @@ struct Member {
     id: String,
 }
 
-enum LobbyType {
+enum MemberType {
     Host,
     Guest,
+}
+
+enum UserStatus {
+    Joined(MemberType),
     NotJoined,
 }
 
@@ -34,20 +38,21 @@ pub fn lobby(props: &LobbyProps) -> Html {
         let room_id = props.room_id.clone();
         use_effect_with_deps(
             |room_id| {
-                let room_id_cloned = room_id.clone();
+                let cloned_room_id = room_id.clone();
                 sync_members(
                     room_id.as_str(),
                     move |members| {
-                        let lobby_type = if is_host(room_id_cloned.as_str()) {
-                            LobbyType::Host
-                        } else {
-                            if let Some(_) = get_user_id(room_id_cloned.as_str()) {
-                                LobbyType::Guest
+                        let user_id = get_user_id(cloned_room_id.as_str());
+                        let user_status = if user_id.is_some() {
+                            if is_host(cloned_room_id.as_str()) {
+                                UserStatus::Joined(MemberType::Host)
                             } else {
-                                LobbyType::NotJoined
+                                UserStatus::Joined(MemberType::Guest)
                             }
+                        } else {
+                            UserStatus::NotJoined
                         };
-                        state.set(LobbyState::Loaded(members,lobby_type))
+                        state.set(LobbyState::Loaded(members,user_status))
                     },
                     || {},
                 )
@@ -60,7 +65,7 @@ pub fn lobby(props: &LobbyProps) -> Html {
         crate::firestore::add_members(room_id.as_str(),&MemberInput {
             name:"testes".to_string(),
         },|_| {
-
+            
         });
     });
 
@@ -75,9 +80,9 @@ pub fn lobby(props: &LobbyProps) -> Html {
                     </ul>
                     {
                         match lobby_type {
-                            LobbyType::Host => html! { <button>{ "Start" }</button> },
-                            LobbyType::Guest => html! {<button onclick={add_member}>{"Add Member"}</button> },
-                            LobbyType::NotJoined => html! { <button>{"Join"}</button> },
+                            UserStatus::Joined(MemberType::Host) => html! { <button>{ "Start" }</button> },
+                            UserStatus::Joined(MemberType::Guest) => html! { "待っててね" },
+                            UserStatus::NotJoined => html! { <button onclick={add_member}>{"Join"}</button> },
                         }
                     }
                 </div>
