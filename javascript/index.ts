@@ -62,7 +62,7 @@ const syncMembers = (roomId: string,callback: (res: string) => void,onError: () 
     const memberCol = collection(doc(roomCollection,roomId),"members");
     return onSnapshotWhenActive(
         memberCol,
-        (res) => { callback(JSON.stringify(res.docs.map(doc => doc.data())))},
+        (res) => { callback(JSON.stringify(res.docs.map(doc => ({id: doc.id,...doc.data()}))))},
         onError
     )
 }

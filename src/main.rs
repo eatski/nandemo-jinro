@@ -4,6 +4,7 @@ use router::Route;
 use yew::prelude::*;
 use landing::Landing;
 use yew_router::prelude::*;
+use members::Lobby;
 
 
 mod members;
@@ -43,7 +44,9 @@ impl Component for Root {
 fn switch(route: &Route) -> Html {
     match route {
         Route::Home => html! { <Landing /> },
-        Route::Room { id } => html! {<p>{format!("You are looking at Post {}", id)}</p>},
+        Route::Room { id } => html! {
+            <Lobby room_id={id.to_string()}/>
+        },
         Route::NotFound => todo!(),
     }
 }
