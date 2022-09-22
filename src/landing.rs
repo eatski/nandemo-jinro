@@ -46,7 +46,7 @@ fn create_rule_view() -> Html {
     let state = use_state(|| State::Input);
     match &*state {
     State::Input => html! {
-        <InputAndButton label="作成" placeholder="あなたの名前" onsubmit={Callback::once(move |name: String| {
+        <InputAndButton label="作成" default="ホスト" placeholder="あなたの名前" onsubmit={Callback::once(move |name: String| {
             state.set(State::Loading);
             firestore::add_room(move |room_id| {
                 let room_id_string = room_id.to_string();

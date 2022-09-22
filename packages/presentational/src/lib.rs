@@ -1,5 +1,5 @@
-use yew::{Callback, html, Html, MouseEvent, Properties, Children, function_component, use_state, Event,TargetCast};
-use web_sys::{HtmlInputElement};
+use yew::{Callback, html, Html, MouseEvent, Properties, Children, function_component, use_state,TargetCast};
+use web_sys::{HtmlInputElement, InputEvent};
 
 pub fn button(label: &str,onclick: Callback<MouseEvent>) -> Html {
     html! {
@@ -113,22 +113,33 @@ pub struct InputAndButtonProps {
     pub label:  &'static str,
     pub placeholder: &'static str,
     pub onsubmit: Callback<String>,
+    pub default: Option<&'static str>
 }
 
 #[function_component(InputAndButton)]
 pub fn input_and_button(props: &InputAndButtonProps) -> Html {
     let state = use_state(|| "".to_string());
     let state_cloned = state.clone();
-    let onchange = Callback::from(move |e: Event| {
+    let oninput = Callback::from(move |e: InputEvent| {
         let input = e.target_dyn_into::<HtmlInputElement>();
         if let Some(input) = input {
-            state.set(input.value());
+            state_cloned.set(input.value());
         }
     });
+    let input_clicked = use_state(|| false);
+    let input_clicked_cloned = input_clicked.clone();
+    let on_input_click = Callback::from(move |_| {
+        input_clicked_cloned.set(true);
+    });
+    let value = match (props.default, &*input_clicked) {
+        (Some(default), false) => default,
+        _ => &*state
+    };
+    let disabled = value.is_empty();
     html! {
         <div class="flex justify-center">
-            <input {onchange} class="w-3/5 border-line border-solid border rounded-md py-2 px-2 text-black mr-3" type="text" placeholder={props.placeholder}/>
-            <button onclick={props.onsubmit.reform(move |_| state_cloned.to_string())} class={"bg-feature hover:bg-feature-light text-white py-2 px-4 rounded-md"}>{&props.label}</button>
+            <input onclick={on_input_click} value={value.to_owned()} {oninput} class="w-3/5 border-line border-solid border rounded-md py-2 px-2 text-black mr-3" type="text" placeholder={props.placeholder}/>
+            <button onclick={props.onsubmit.reform(move |_| state.to_string())} {disabled} class={"bg-feature transition-colors hover:bg-feature-light disabled:bg-quiet text-white py-2 px-4 rounded-md"}>{&props.label}</button>
         </div>
     }
 }
