@@ -93,7 +93,7 @@ impl CardBgType {
 #[function_component(Card)]
 pub fn card(props:&CardProps) -> Html {
     html! {
-        <section class="w-full max-w-2xl">
+        <section class="w-full max-w-xl">
             <div class={format!("h-full rounded-md p-3 {}", props.bg_type.to_class())}>
                 {props.children.clone()}
             </div>
