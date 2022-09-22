@@ -1,4 +1,4 @@
-use presentational::{InputAndButton, loading, BoxListContainer, title,SimpleCenteringSection,Heading2WithDescription,Heading2, item_box};
+use presentational::{InputAndButton, loading, BoxListContainer, title,SimpleCenteringSection,Heading2WithDescription,Heading2, SimpleCenteringDiv,item_box, button};
 use yew::{function_component, html, use_effect_with_deps, use_state, UseStateHandle, Callback, Properties};
 
 use crate::{storage::{get_user_id}};
@@ -67,6 +67,7 @@ pub fn lobby(props: &LobbyProps) -> Html {
             match user_status {
                 UserStatus::Joined(member_type, user_id) => {
                     html! {
+                        <>
                         <SimpleCenteringSection>
                             {
                                 match member_type {
@@ -90,7 +91,26 @@ pub fn lobby(props: &LobbyProps) -> Html {
                                     })
                                 }
                             </BoxListContainer>
+                            <SimpleCenteringDiv>
+                                {
+                                    match member_type {
+                                        MemberType::Host => button("メンバー確定", Callback::from(|_| {}) ),
+                                        MemberType::Guest => html! {},
+                                    }
+                                }
+                            </SimpleCenteringDiv>
                         </SimpleCenteringSection>
+                        {
+                            match member_type {
+                                MemberType::Host => html! {
+                                    <SimpleCenteringSection>
+                                        <Heading2WithDescription title={"ルールを決めましょう"} description={"役職とその人数を決めましょう"}/>
+                                    </SimpleCenteringSection>
+                                },
+                                MemberType::Guest => html! {},
+                            }
+                        }
+                        </>
                     }
                     
                 },

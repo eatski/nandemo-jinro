@@ -3,7 +3,7 @@ use web_sys::{HtmlInputElement, InputEvent};
 
 pub fn button(label: &str,onclick: Callback<MouseEvent>) -> Html {
     html! {
-        <button onclick={onclick} class={"bg-feature hover:bg-feature-light text-white py-2 px-4 rounded-md"}>{label}</button>
+        <button onclick={onclick} class={"bg-feature hover:bg-feature-light text-white py-1 px-4 rounded-md"}>{label}</button>
     }
 }
 
@@ -243,5 +243,16 @@ pub fn box_list_conatiner(props: &ChildrenOnlyProps) -> Html {
         <ul class="flex flex-col gap-2">
             {props.children.clone()}
         </ul>
+    }
+}
+
+#[function_component(SimpleCenteringDiv)]
+pub fn simple_centering_div(props: &ChildrenOnlyProps) -> Html {
+    html! {
+        <div class="mx-auto flex justify-center w-full max-w-2xl py-2">
+            <div>
+                {props.children.clone()}
+            </div>
+        </div>
     }
 }
