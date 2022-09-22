@@ -18,10 +18,12 @@ const NAMESPACE = "rollrole/v1";
 
 const roomCollection = collection(store,NAMESPACE,"rooms");
 
-const onSnapshotWhenActive = (
-    ref: CollectionReference,
-    callback: (data: QuerySnapshot<DocumentData>) => void,
-    onError: () => void
+type onSnapshot = typeof onSnapshot;
+
+const onSnapshotWhenActive: onSnapshot = (
+    ref,
+    callback,
+    ...args
 ): (() => void) => {
     let unsubscribe: Unsubscribe | null = null;
     const INTERBAL = 1000 * 60 * 10;
@@ -39,7 +41,7 @@ const onSnapshotWhenActive = (
     const call = () => onSnapshot(ref,(data) => {
         restart();
         callback(data);
-    },onError)
+    },...args)
     unsubscribe = call();
    
     const onMouseMove = () => {
