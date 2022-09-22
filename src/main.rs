@@ -10,6 +10,7 @@ mod lobby;
 mod landing;
 mod router;
 mod storage;
+mod entrance;
 
 #[function_component(Root)]
 fn root() -> Html {

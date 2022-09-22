@@ -1,8 +1,9 @@
-use presentational::{InputAndButton, loading, BoxListContainer, title,SimpleCenteringSection,Heading2WithDescription,Heading2, SimpleCenteringDiv,item_box, button};
+use presentational::{loading, BoxListContainer,SimpleCenteringSection,Heading2WithDescription, SimpleCenteringDiv,item_box, button};
 use yew::{function_component, html, use_effect_with_deps, use_state, UseStateHandle, Callback, Properties};
+use crate::entrance::{GuestEntrance};
 
 use crate::{storage::{get_user_id}};
-use firestore::{sync_members, MemberJSON, MemberInput, add_members};
+use firestore::{sync_members, MemberJSON};
 
 enum LobbyState {
     Loading,
@@ -119,77 +120,5 @@ pub fn lobby(props: &LobbyProps) -> Html {
                 },
             }
         },
-    }
-}
-
-#[derive(Properties, PartialEq)]
-struct GuestEntranceProps {
-    room_id: String,
-}
-
-#[function_component(GuestEntrance)]
-fn guest_entrance(props: &GuestEntranceProps) -> Html {
-    enum State {
-        Loading,
-        Loaded {
-            host_name: String,
-        },
-        Error,
-    }
-    let state: UseStateHandle<State> = use_state(|| State::Loading);
-    {
-        let state = state.clone();
-        let state_on_error = state.clone();
-        let room_id = props.room_id.clone();
-        use_effect_with_deps(
-            |room_id| {
-                firestore::get_members(
-                    room_id.as_str(),
-                    move |members| {
-                        let host_name = members
-                            .iter()
-                            .find(|member| member.is_host)
-                            .map(|member| member.name.clone());
-                        match host_name {
-                            Some(host_name) => state.set(State::Loaded { host_name }),
-                            None => state.set(State::Error),
-                        };
-                    },
-                    move || {
-                        state_on_error.set(State::Error);
-                    },
-                );
-                || {}
-            },
-            room_id,
-        );
-    }
-    let room_id = props.room_id.clone();
-    let add_member = Callback::from(move |name| {
-        let room_id_cloned = room_id.clone();
-        let user_id = add_members(
-            room_id.as_str(),
-            &MemberInput {
-                name,
-                is_host: false,
-            },
-            move || {},
-            || {}
-        );
-        crate::storage::save_user_id(room_id_cloned.as_str(),user_id.as_str());
-    });
-
-    match &*state {
-        State::Loading => loading(),
-        State::Loaded { host_name } => html! {
-            <div>
-                {title()}
-                <SimpleCenteringSection>
-                    <Heading2>{ format!("「{}」の部屋",host_name)}</Heading2>
-                    <InputAndButton label="参加" placeholder="あなたの名前" onsubmit={add_member} />
-                </SimpleCenteringSection>
-            </div>
-        },
-        State::Error => todo!(),
     }
 }
