@@ -64,7 +64,7 @@ fn create_rule_view() -> Html {
                 );
                 save_user_id(room_id,member_id.as_str());
                 save_is_host(room_id);
-            })
+            });
         })}/>
     },
     State::Loading => html! {

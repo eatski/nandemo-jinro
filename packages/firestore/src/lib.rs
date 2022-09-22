@@ -8,12 +8,10 @@ use web_sys::console;
 
 #[wasm_bindgen()]
 extern "C" {
-    #[wasm_bindgen(js_name = "addMembers",js_namespace = ["window","_wasm_js_bridge"])]
-    fn addMembersInner(room_id: &str, name: &str, on_complete: &JsValue, on_error: &JsValue) -> String;
-    #[wasm_bindgen(js_name = "addRoom",js_namespace = ["window","_wasm_js_bridge"])]
-    fn addRoomInner(on_complete: &JsValue);
     #[wasm_bindgen(js_name = "syncCollection",js_namespace = ["window","_wasm_js_bridge"])]
     fn syncCollectionInner(path: &str,callback: JsValue,on_error: JsValue) -> Function;
+    #[wasm_bindgen(js_name = "addDocument",js_namespace = ["window","_wasm_js_bridge"])]
+    fn addDocument(path: &str, data: &str, on_complete: &JsValue, on_error: &JsValue) -> String;
 }
 
 fn sync_collection_json(path: &str,callback:impl FnMut(String) + 'static , on_error: impl FnMut() + 'static) -> impl FnOnce() {
@@ -26,14 +24,25 @@ fn sync_collection_json(path: &str,callback:impl FnMut(String) + 'static , on_er
     }
 }
 
+fn add_document(path: &str, json: &str, on_complete: impl FnOnce(&str) + 'static, on_error: impl FnOnce() + 'static) -> String {
+    let on_complete : JsValue = Closure::once_into_js(|val: JsValue| {
+        on_complete(&val.as_string().unwrap());
+    });
+    let on_error : JsValue = Closure::once_into_js(on_error);
+    addDocument(path,json,&on_complete,&on_error)
+}
+
 const NAME_SPACE: &str = "rollrole/v1";
 
+#[derive(Serialize, Deserialize)]
 pub struct MemberInput {
     pub name: String,
 }
 
 pub fn add_members(room_id: &str,member: &MemberInput, on_complete: impl FnOnce() + 'static, on_error: impl FnOnce() + 'static) -> String {
-    addMembersInner(room_id,&member.name,&Closure::once_into_js(on_complete),&Closure::once_into_js(on_error))
+    let path: &str = &format!("{}/rooms/{}/members",NAME_SPACE,room_id);
+    let json: &str = &serde_json::to_string(member).expect("Failed to serialize member");
+    add_document(path,json,|_| on_complete(),on_error)
 }
 
 #[derive(Serialize, Deserialize)]
@@ -68,8 +77,7 @@ pub fn sync_members(room_id: &str,mut callback:impl FnMut(Vec<MemberJSON>)  + 's
     )
 }
 
-pub fn add_room<CB: FnOnce(&str) + 'static>(on_complete: CB) {
-    addRoomInner(&Closure::once_into_js (move |val: JsValue| {
-        on_complete(val.as_string().unwrap().as_str());
-    }));
+pub fn add_room(on_complete: impl FnOnce(&str) + 'static) -> String {
+    let path: &str = &format!("{}/rooms",NAME_SPACE);
+    add_document(path,"{}",on_complete,|| {})
 }

@@ -1,4 +1,4 @@
-import { initializeFirestore, doc,addDoc, collection,onSnapshot, QuerySnapshot, DocumentData, DocumentReference, CollectionReference, Unsubscribe, setDoc } from "@firebase/firestore"
+import { initializeFirestore, doc, collection,onSnapshot, Unsubscribe, setDoc } from "@firebase/firestore"
 import { initializeApp } from "@firebase/app";
 
 const app = initializeApp(
@@ -13,10 +13,6 @@ const app = initializeApp(
 });
 
 const store = initializeFirestore(app,{})
-
-const NAMESPACE = "rollrole/v1";
-
-const roomCollection = collection(store,NAMESPACE,"rooms");
 
 type onSnapshot = typeof onSnapshot;
 
@@ -68,22 +64,15 @@ const syncCollection = (path: string,callback: (res: string) => void, onError: (
     )
 }
 
-const addMembers = (roomId: string,name: string,onComplete: () => void,onError: () => void): string => {
-    const memberCol = collection(doc(roomCollection,roomId),"members");
-    const docRef = doc(memberCol);
-    setDoc(docRef, {name}).then(onComplete).catch(onError);
+const addDocument = (path: string, data: string,onComplete: (id: string) => void,onError: () => void): string => {
+    const col = collection(store,path);
+    const docRef = doc(col);
+    setDoc(docRef, JSON.parse(data)).then(() => onComplete(docRef.id)).catch(onError);
     return docRef.id;
-}
-
-const addRoom = (onComplete: (id: string) => void): void => {
-    addDoc(roomCollection,{}).then((res) => {
-        onComplete(res.id);
-    })
 }
 
 //@ts-expect-error
 window._wasm_js_bridge = {
-    addMembers,
-    addRoom,
-    syncCollection
+    syncCollection,
+    addDocument
 }
