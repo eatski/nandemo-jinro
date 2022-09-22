@@ -53,7 +53,8 @@ fn create_rule_view() -> Html {
                 let member_id = firestore::add_members(
                     room_id, 
                     &MemberInput {
-                        name 
+                        name,
+                        is_host: true
                     }, 
                     move || {
                         history.push(Route::Room { id: room_id_string});

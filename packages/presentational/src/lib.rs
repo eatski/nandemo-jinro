@@ -52,6 +52,13 @@ pub struct Heading2WithDescriptionProps {
     pub title: String,
 }
 
+#[function_component(Heading2)]
+pub fn heading2(props: &ChildrenOnlyProps) -> Html {
+    html! {
+        <h2 class="w-full text-center text-2xl text-black">{props.children.clone()}</h2>
+    }
+}
+
 #[function_component(Heading2WithDescription)]
 pub fn heading2_with_description(props: &Heading2WithDescriptionProps) -> Html {
     html! {
@@ -204,5 +211,14 @@ pub fn list(title: &'static str,items: Vec<&'static str>) -> Html {
 pub fn mark(label: &str) -> Html {
     html! {
         <span class="bg-feature text-white">{label}</span>
+    }
+}
+
+#[function_component(SimpleCenteringSection)]
+pub fn simple_centering_section(props:&ChildrenOnlyProps) -> Html {
+    html! {
+        <section class="mx-auto flex justify-center w-full max-w-2xl py-2">
+            {props.children.clone()}
+        </section>
     }
 }

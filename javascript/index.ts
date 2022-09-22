@@ -1,4 +1,4 @@
-import { initializeFirestore, doc, collection,onSnapshot, Unsubscribe, setDoc } from "@firebase/firestore"
+import { initializeFirestore, doc, collection,onSnapshot, Unsubscribe, setDoc,getDocs } from "@firebase/firestore"
 import { initializeApp } from "@firebase/app";
 
 const app = initializeApp(
@@ -64,6 +64,11 @@ const syncCollection = (path: string,callback: (res: string) => void, onError: (
     )
 }
 
+const getCollection = (path: string,onComplete: (res: string) => void, onError: () => void) => {
+    const col = collection(store,path);
+    getDocs(col).then((res) => onComplete(JSON.stringify(res.docs.map(doc => ({id: doc.id,...doc.data()}))))).catch(onError);
+}
+
 const addDocument = (path: string, data: string,onComplete: (id: string) => void,onError: () => void): string => {
     const col = collection(store,path);
     const docRef = doc(col);
@@ -74,5 +79,6 @@ const addDocument = (path: string, data: string,onComplete: (id: string) => void
 //@ts-expect-error
 window._wasm_js_bridge = {
     syncCollection,
-    addDocument
+    addDocument,
+    getCollection
 }
