@@ -59,11 +59,10 @@ const onSnapshotWhenActive: onSnapshot = (
     }
 }
 
-
-const syncMembers = (roomId: string,callback: (res: string) => void,onError: () => void): () => void => {
-    const memberCol = collection(doc(roomCollection,roomId),"members");
+const syncCollection = (path: string,callback: (res: string) => void, onError: () => void): () => void => {
+    const col = collection(store,path);
     return onSnapshotWhenActive(
-        memberCol,
+        col,
         (res) => { callback(JSON.stringify(res.docs.map(doc => ({id: doc.id,...doc.data()}))))},
         onError
     )
@@ -85,6 +84,6 @@ const addRoom = (onComplete: (id: string) => void): void => {
 //@ts-expect-error
 window._wasm_js_bridge = {
     addMembers,
-    syncMembers,
-    addRoom
+    addRoom,
+    syncCollection
 }
