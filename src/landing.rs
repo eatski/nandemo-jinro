@@ -2,7 +2,8 @@ use yew::{function_component, html, Callback, use_state};
 use presentational::{title, CardListContainer,Card,Heading2WithDescription, Main, CardBgType, CardContent,InputAndButton,tag_list, footer, list, loading};
 use yew_router::prelude::{use_history, History};
 
-use crate::{router::Route, firestore::{self, MemberInput}, storage::{save_user_id, save_is_host}};
+use crate::{router::Route,storage::{save_user_id, save_is_host}};
+use firestore::{self, MemberInput};
 
 #[function_component(Landing)]
 pub fn landing() -> Html {
@@ -28,7 +29,6 @@ pub fn landing() -> Html {
                 "みんなに部屋のURLを共有",
                 "全員に配られる秘密の役職で自由に遊ぼう！",
             ])}
-            // <Lobby />
         </Main>
     }
 }

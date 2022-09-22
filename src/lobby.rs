@@ -1,8 +1,8 @@
 use presentational::{InputAndButton, loading, mark};
 use yew::{function_component, html, use_effect_with_deps, use_state, UseStateHandle, Callback, Properties};
 
-use crate::{firestore::{sync_members, MemberJSON, MemberInput, add_members}, storage::{is_host, get_user_id}};
-
+use crate::{storage::{is_host, get_user_id}};
+use firestore::{sync_members, MemberJSON, MemberInput, add_members};
 
 enum LobbyState {
     Loading,
@@ -106,6 +106,4 @@ pub fn lobby(props: &LobbyProps) -> Html {
             }
         },
     }
-
-    
 }

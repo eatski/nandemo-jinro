@@ -6,9 +6,7 @@ use landing::Landing;
 use yew_router::prelude::*;
 use lobby::Lobby;
 
-
 mod lobby;
-mod firestore;
 mod landing;
 mod router;
 mod storage;

@@ -37,6 +37,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "firestore"
+version = "0.1.0"
+dependencies = [
+ "js-sys",
+ "serde",
+ "serde_json",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "fnv"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -290,11 +301,9 @@ dependencies = [
 name = "roleroll"
 version = "0.1.0"
 dependencies = [
+ "firestore",
  "js-sys",
  "presentational",
- "serde",
- "serde_json",
- "wasm-bindgen",
  "web-sys",
  "yew",
  "yew-router",
