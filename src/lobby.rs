@@ -1,7 +1,7 @@
 use presentational::{InputAndButton, loading, BoxListContainer, title,SimpleCenteringSection,Heading2WithDescription,Heading2, item_box};
 use yew::{function_component, html, use_effect_with_deps, use_state, UseStateHandle, Callback, Properties};
 
-use crate::{storage::{is_host, get_user_id}};
+use crate::{storage::{get_user_id}};
 use firestore::{sync_members, MemberJSON, MemberInput, add_members};
 
 enum LobbyState {
@@ -37,8 +37,13 @@ pub fn lobby(props: &LobbyProps) -> Html {
                     room_id.as_str(),
                     move |members| {
                         let user_id = get_user_id(cloned_room_id.as_str());
+                       
                         let user_status = if let Some(user_id) = user_id {
-                            if is_host(cloned_room_id.as_str()) {
+                            let is_host = members.iter()
+                                .find(|member| member.id == user_id)
+                                .map(|member| member.is_host)
+                                .unwrap_or(false);
+                            if is_host {
                                 UserStatus::Joined(MemberType::Host,user_id)
                             } else {
                                 UserStatus::Joined(MemberType::Guest,user_id)

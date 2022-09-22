@@ -2,7 +2,7 @@ use yew::{function_component, html, Callback, use_state};
 use presentational::{title, CardListContainer,Card,Heading2WithDescription, Main, CardBgType, CardContent,InputAndButton,tag_list, list, loading};
 use yew_router::prelude::{use_history, History};
 
-use crate::{router::Route,storage::{save_user_id, save_is_host}};
+use crate::{router::Route,storage::{save_user_id}};
 use firestore::{self, MemberInput};
 
 #[function_component(Landing)]
@@ -64,7 +64,6 @@ fn create_rule_view() -> Html {
                     }
                 );
                 save_user_id(room_id,member_id.as_str());
-                save_is_host(room_id);
             });
         })}/>
     },
