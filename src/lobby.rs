@@ -8,12 +8,6 @@ enum LobbyState {
     Loading,
     Loaded(Vec<MemberJSON>,UserStatus),
 }
-
-struct Member {
-    name: String,
-    id: String,
-}
-
 enum MemberType {
     Host,
     Guest,
@@ -66,7 +60,8 @@ pub fn lobby(props: &LobbyProps) -> Html {
         let user_id = add_members(
             room_id.as_str(),
             &MemberInput {name},
-            move || {}
+            move || {},
+            || {}
         );
         crate::storage::save_user_id(room_id_cloned.as_str(),user_id.as_str());
     });

@@ -1,5 +1,5 @@
 use yew::{function_component, html, Callback, use_state};
-use presentational::{title, CardListContainer,Card,Heading2WithDescription, Main, CardBgType, CardContent,InputAndButton,tag_list, footer, list, loading};
+use presentational::{title, CardListContainer,Card,Heading2WithDescription, Main, CardBgType, CardContent,InputAndButton,tag_list, list, loading};
 use yew_router::prelude::{use_history, History};
 
 use crate::{router::Route,storage::{save_user_id, save_is_host}};
@@ -57,6 +57,9 @@ fn create_rule_view() -> Html {
                     }, 
                     move || {
                         history.push(Route::Room { id: room_id_string});
+                    },
+                    move || {
+                        state.set(State::Error);
                     }
                 );
                 save_user_id(room_id,member_id.as_str());

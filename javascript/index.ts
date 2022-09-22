@@ -67,10 +67,10 @@ const syncMembers = (roomId: string,callback: (res: string) => void,onError: () 
     )
 }
 
-const addMembers = (roomId: string,name: string,onComplete: () => void): string => {
+const addMembers = (roomId: string,name: string,onComplete: () => void,onError: () => void): string => {
     const memberCol = collection(doc(roomCollection,roomId),"members");
     const docRef = doc(memberCol);
-    setDoc(docRef, {name}).then(() => { onComplete() });
+    setDoc(docRef, {name}).then(onComplete).catch(onError);
     return docRef.id;
 }
 
