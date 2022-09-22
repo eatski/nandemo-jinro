@@ -1,4 +1,4 @@
-use presentational::{InputAndButton, loading, mark, title,SimpleCenteringSection,Heading2};
+use presentational::{InputAndButton, loading, BoxListContainer, title,SimpleCenteringSection,Heading2WithDescription,Heading2, item_box};
 use yew::{function_component, html, use_effect_with_deps, use_state, UseStateHandle, Callback, Properties};
 
 use crate::{storage::{is_host, get_user_id}};
@@ -58,35 +58,40 @@ pub fn lobby(props: &LobbyProps) -> Html {
 
     match &*state {
         LobbyState::Loading => loading(),
-        LobbyState::Loaded(state,lobby_type) => {
-            html! { 
-                <div>
-                    {
-                        if let UserStatus::Joined(_,user_id) = lobby_type {
-                            html! {
-                                <ul>
-                                    {for state.iter().map(|member| 
-                                        {
-                                            let is_you = member.id.as_str() == user_id;
-                                            html! { 
-                                                <li key={member.id.to_string()}>{&member.name}{if is_you { mark("you") } else {html!{}}}</li> 
-                                            }
-                                        }) 
-                                    }
-                                </ul>
+        LobbyState::Loaded(members,user_status) => {
+            match user_status {
+                UserStatus::Joined(member_type, user_id) => {
+                    html! {
+                        <SimpleCenteringSection>
+                            {
+                                match member_type {
+                                    MemberType::Host =>  html! {
+                                        <Heading2WithDescription title={"メンバーを集めましょう"} description={"このページのURLを一緒に遊ぶメンバーに共有しましょう"}/>
+                                    },
+                                    MemberType::Guest => html! {
+                                        <Heading2WithDescription title={"部屋に参加しました"} description={"ホストがゲームを始めるのを待ちましょう"}/>
+                                    },
+                                }
                             }
-                        } else {
-                            html! {}
-                        }
+                            <BoxListContainer>
+                                {
+                                    for members.iter().map(|member| {
+                                        let is_you = member.id == *user_id;
+                                        html! {
+                                            <li>
+                                                {item_box(member.name.as_str(),is_you.then(|| "あなた"))}
+                                            </li>
+                                        }
+                                    })
+                                }
+                            </BoxListContainer>
+                        </SimpleCenteringSection>
                     }
-                    {
-                        match lobby_type {
-                            UserStatus::Joined(MemberType::Host,_) => html! { <button>{ "Start" }</button> },
-                            UserStatus::Joined(MemberType::Guest,_) => html! { "待っててね" },
-                            UserStatus::NotJoined => html! { <GuestEntrance {room_id}/> },
-                        }
-                    }
-                </div>
+                    
+                },
+                UserStatus::NotJoined => {
+                    html! { <GuestEntrance {room_id}/> }
+                },
             }
         },
     }
@@ -155,10 +160,8 @@ fn guest_entrance(props: &GuestEntranceProps) -> Html {
             <div>
                 {title()}
                 <SimpleCenteringSection>
-                    <div>
-                        <Heading2>{ format!("「{}」の部屋",host_name)}</Heading2>
-                        <InputAndButton label="参加" placeholder="あなたの名前" onsubmit={add_member} />
-                    </div>
+                    <Heading2>{ format!("「{}」の部屋",host_name)}</Heading2>
+                    <InputAndButton label="参加" placeholder="あなたの名前" onsubmit={add_member} />
                 </SimpleCenteringSection>
             </div>
         },
