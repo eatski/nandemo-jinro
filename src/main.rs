@@ -4,10 +4,10 @@ use router::Route;
 use yew::prelude::*;
 use landing::Landing;
 use yew_router::prelude::*;
-use members::Lobby;
+use lobby::Lobby;
 
 
-mod members;
+mod lobby;
 mod firestore;
 mod landing;
 mod router;
