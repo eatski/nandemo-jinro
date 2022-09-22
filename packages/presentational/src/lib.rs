@@ -153,7 +153,7 @@ pub fn input_and_button(props: &InputAndButtonProps) -> Html {
     let disabled = value.is_empty();
     html! {
         <div class="flex justify-center">
-            <input onclick={on_input_click} value={value.clone()} {oninput} class="w-3/5 border-line border-solid border rounded-md py-2 px-2 text-black mr-3" type="text" placeholder={props.placeholder}/>
+            <input onclick={on_input_click} value={value.clone()} {oninput} class="w-3/5 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black mr-3 outline-none" type="text" placeholder={props.placeholder}/>
             <button onclick={props.onsubmit.reform(move |_| value.clone())} {disabled} class={"bg-feature transition-colors hover:bg-feature-light disabled:bg-quiet text-white py-2 px-4 rounded-md"}>{&props.label}</button>
         </div>
     }
