@@ -58,17 +58,15 @@ fn json_to_members(json:&str) -> Result<Vec<MemberJSON>,String> {
 pub fn sync_members(room_id: &str,mut callback:impl FnMut(Vec<MemberJSON>)  + 'static , on_error: impl FnMut() + 'static) -> impl FnOnce() {
     let on_error = Rc::new(RefCell::new(Box::new(on_error) as Box<dyn FnMut()>));
     let on_parse_error = on_error.clone();
-    let callback : Box<dyn FnMut(String)>= Box::new(
-        move |json:String| {
-            match json_to_members(json.as_str()) {
-                Ok(members) => callback(members),
-                Err(e) => {
-                    console::log_1(&e.into());
-                    on_parse_error.borrow_mut()();
-                },
-            } 
-        }
-    );
+    let callback = move |json:String| {
+        match json_to_members(json.as_str()) {
+            Ok(members) => callback(members),
+            Err(e) => {
+                console::log_1(&e.into());
+                on_parse_error.borrow_mut()();
+            },
+        } 
+    };
     let on_error = move || on_error.borrow_mut()();
     sync_collection_json(
         &format!("{}/rooms/{}/members",NAME_SPACE,room_id),
