@@ -28,7 +28,7 @@ pub fn rule_make(props: &Props) -> Html {
     let captured_state = (*state).clone();
     let room_id = props.room_id.clone();
     let publish_rule = Callback::from(move |_| {
-        firestore::add_rule(
+        firestore::set_rule(
             room_id.as_str(),
             &Rule {
                 roles: captured_state
@@ -36,7 +36,7 @@ pub fn rule_make(props: &Props) -> Html {
                     .enumerate()
                     .map(|(index,item)| Role {name: item.name.clone(),number: item.count, id: index.to_string()}).collect(),
             },
-            |_| {},
+            || {},
             || {},
         );
     });

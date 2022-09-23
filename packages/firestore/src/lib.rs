@@ -14,6 +14,8 @@ extern "C" {
     fn addDocument(path: &str, data: &str, on_complete: &JsValue, on_error: &JsValue) -> String;
     #[wasm_bindgen(js_name = "getCollection",js_namespace = ["window","_wasm_js_bridge"])]
     fn getCollection(path: &str, on_complete: &JsValue, on_error: &JsValue);
+    #[wasm_bindgen(js_name = "setField",js_namespace = ["window","_wasm_js_bridge"])]
+    fn setField(path: &str, field: &str, value: &str, on_complete: &JsValue, on_error: &JsValue);
 }
 
 fn sync_collection_json(path: &str,callback:impl FnMut(String) + 'static , on_error: impl FnMut() + 'static) -> impl FnOnce() {
@@ -40,6 +42,12 @@ fn get_collection_json(path: &str,on_complete: impl FnOnce(&str) + 'static, on_e
     });
     let on_error : JsValue = Closure::once_into_js(on_error);
     getCollection(path,&on_complete,&on_error)
+}
+
+fn set_field(path: &str, field: &str, value: &str, on_complete: impl FnOnce() + 'static, on_error: impl FnOnce() + 'static)  {
+    let on_complete : JsValue = Closure::once_into_js(on_complete);
+    let on_error : JsValue = Closure::once_into_js(on_error);
+    setField(path,field,value,&on_complete,&on_error)
 }
 
 const NAME_SPACE: &str = "rollrole/v1";
@@ -112,10 +120,10 @@ pub fn add_room(on_complete: impl FnOnce(&str) + 'static) -> String {
     add_document(path,"{}",on_complete,|| {})
 }
 
-pub fn add_rule(room_id: &str,rule: &Rule, on_complete: impl FnOnce(&str) + 'static, on_error: impl FnOnce() + 'static) -> String {
-    let path: &str = &format!("{}/rooms/{}/rules",NAME_SPACE,room_id);
+pub fn set_rule(room_id: &str,rule: &Rule, on_complete: impl FnOnce() + 'static, on_error: impl FnOnce() + 'static) {
+    let path: &str = &format!("{}/rooms/{}",NAME_SPACE,room_id);
     let json = serde_json::to_string(rule).expect("Failed to serialize rule");
-    add_document(path,json.as_str(),on_complete,on_error)
+    set_field(path,"rule",json.as_str(),on_complete,on_error);
 }
 
 #[derive(Serialize, Deserialize)]

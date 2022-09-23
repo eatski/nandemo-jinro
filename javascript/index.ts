@@ -1,4 +1,4 @@
-import { initializeFirestore, doc, collection,onSnapshot, Unsubscribe, setDoc,getDocs } from "@firebase/firestore"
+import { initializeFirestore, doc, collection,onSnapshot, Unsubscribe, setDoc,getDocs,runTransaction } from "@firebase/firestore"
 import { initializeApp } from "@firebase/app";
 
 const app = initializeApp(
@@ -76,9 +76,23 @@ const addDocument = (path: string, data: string,onComplete: (id: string) => void
     return docRef.id;
 }
 
+const setField = (path: string, fieldname: string,data: string,onComplete: () => void,onError: () => void) => {
+    const docRef = doc(store,path);
+    runTransaction(store, async (transaction) => {
+        const dacSnap = await transaction.get(docRef);
+        const newData = {[fieldname]:JSON.parse(data)};
+        if(!dacSnap.exists()){
+            transaction.set(docRef, newData);
+        } else {
+            transaction.update(docRef,newData);
+        }
+    }).then(onComplete).catch(onError);
+}
+
 //@ts-expect-error
 window._wasm_js_bridge = {
     syncCollection,
     addDocument,
-    getCollection
+    getCollection,
+    setField
 }
