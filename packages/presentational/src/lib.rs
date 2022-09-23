@@ -230,8 +230,8 @@ pub fn simple_centering_section(props:&ChildrenOnlyProps) -> Html {
 pub fn item_box(label: &str,subtext: Option<&str>) -> Html {
     html! {
         <div class="flex justify-center">
-            <div class="relative bg-colored-light w-4/5 border-line border-solid border rounded-md py-0.5 text-center text-md text-black-light">
-                {label}<span class="absolute top-1/2 right-4">{subtext.map(point).unwrap_or(html!{})}</span>
+            <div class="relative bg-colored-light w-4/5 border-line border-solid border rounded-full py-0.5 text-center text-md text-black-light">
+                {label}<span class="absolute top-1/2 right-5">{subtext.map(point).unwrap_or(html!{})}</span>
             </div>
         </div>
     }
