@@ -19,40 +19,25 @@ pub fn rule_make() -> Html {
             count: 1,
         },
     ]);
+    let captured_state = (*state).clone();
     html! {
         <>
             <ListContainer>
                 {for (*state).iter().enumerate().map(|(index,item)| {
                     let on_number_input = {
+                        let mut captured_state = captured_state.clone();
                         let state = state.clone();  
-                        Callback::from(move |count| {
-                            let items = &*state;
-                            state.set(items.iter().enumerate().map(|(i,item)| {
-                                if i == index {
-                                    Item {
-                                        name: item.name.clone(),
-                                        count,
-                                    }
-                                } else {
-                                    item.clone()
-                                }
-                            }).collect())
+                        Callback::once(move |count| {
+                            captured_state[index].count = count;
+                            state.set(captured_state)
                         })
                     };
                     let on_text_input = {
+                        let mut captured_state = captured_state.clone();
                         let state = state.clone();  
-                        Callback::from(move |name: String| {
-                            let items = &*state;
-                            state.set(items.iter().enumerate().map(|(i,item)| {
-                                if i == index {
-                                    Item {
-                                        name:name.clone(),
-                                        count: item.count,
-                                    }
-                                } else {
-                                    item.clone()
-                                }
-                            }).collect())
+                        Callback::once(move |name| {
+                            captured_state[index].name = name;
+                            state.set(captured_state)
                         })
                     };
                     html! {
