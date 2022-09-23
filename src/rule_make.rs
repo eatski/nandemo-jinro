@@ -61,7 +61,7 @@ pub fn rule_make() -> Html {
                     let mut captured_state = captured_state.clone();
                     captured_state.push(Item {
                         name: "".to_string(),
-                        count: 0,
+                        count: 1,
                     });
                     state.set(captured_state)
                 })}  />
