@@ -230,7 +230,7 @@ pub fn simple_centering_section(props:&ChildrenOnlyProps) -> Html {
 pub fn item_box(label: &str,subtext: Option<&str>) -> Html {
     html! {
         <div class="flex justify-center">
-            <div class="relative bg-colored-light w-4/5 border-line border-solid border rounded-lg py-0.5 text-center text-md text-black-light">
+            <div class="relative bg-colored-light w-4/5 border-line border-solid border rounded-md py-0.5 text-center text-md text-black-light">
                 {label}<span class="absolute top-1/2 right-4">{subtext.map(point).unwrap_or(html!{})}</span>
             </div>
         </div>
@@ -261,6 +261,7 @@ pub fn simple_centering_div(props: &ChildrenOnlyProps) -> Html {
 pub struct InputTextProps {
     pub placeholder: &'static str,
     pub oninput: Callback<String>,
+    pub value: String
 }
 
 #[function_component(InputText)]
@@ -275,7 +276,7 @@ pub fn input_text(props: &InputTextProps) -> Html {
         })
     };
     html! {
-        <input oninput={oninput} class="w-3/5 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="text" placeholder={props.placeholder}/>
+        <input oninput={oninput} value={props.value.clone()} class="w-3/5 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="text" placeholder={props.placeholder}/>
     }
 }
 
@@ -283,7 +284,7 @@ pub fn input_text(props: &InputTextProps) -> Html {
 #[derive(Properties, PartialEq)]
 pub struct InputNumberProps {
     pub oninput: Callback<u32>,
-    pub default: Option<&'static str>
+    pub value: u32,
 }
 #[function_component(InputSmallNumber)]
 pub fn input_small_number(props: &InputNumberProps) -> Html {
@@ -299,7 +300,7 @@ pub fn input_small_number(props: &InputNumberProps) -> Html {
         })
     };
     html! {
-        <input {oninput} class="w-14 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="number" />
+        <input {oninput} min="0" value={props.value.to_string()} class="w-14 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="number" />
     }
 }
 
@@ -311,7 +312,7 @@ pub struct AddProps {
 #[function_component(AddButton)]
 pub fn add_button(props: &AddProps) -> Html {
     html! {
-        <div class="h-auto w-6 relative">
+        <div class="h-6 w-6 relative">
             <button onclick={props.onclick.reform(|_| ())} class="
                 absolute -translate-y-1/2 -translate-x-1/2 top-1/2 left-1/2
                 w-5 h-5 rounded-full
@@ -330,7 +331,7 @@ pub fn add_button(props: &AddProps) -> Html {
 #[function_component(ListItemRow)]
 pub fn list_item_row(props: &ChildrenOnlyProps) -> Html {
     html! {
-        <li class="flex justify-items-start gap-2 w-full justify-start">
+        <li class="flex justify-center gap-2 w-full">
             {props.children.clone()}
         </li>
     }
