@@ -126,6 +126,11 @@ pub fn set_rule(room_id: &str,rule: &Rule, on_complete: impl FnOnce() + 'static,
     set_field(path,"rule",json.as_str(),on_complete,on_error);
 }
 
+pub fn set_can_join_false(room_id: &str,on_complete: impl FnOnce() + 'static, on_error: impl FnOnce() + 'static) {
+    let path: &str = &format!("{}/rooms/{}",NAME_SPACE,room_id);
+    set_field(path,"can_join","false",on_complete,on_error);
+}
+
 #[derive(Serialize, Deserialize)]
 pub struct Role {
     pub id: String,

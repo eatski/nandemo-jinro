@@ -94,12 +94,15 @@ pub fn lobby(props: &LobbyProps) -> Html {
                                 }
                             </BoxListContainer>
                             <SimpleCenteringDiv>
-                                {
+                                {{   
+                                    let room_id = room_id.clone();
                                     match member_type {
-                                        MemberType::Host => button("メンバー確定", Callback::from(|_| {}) ),
+                                        MemberType::Host => button("締め切る", Callback::from(move |_| {
+                                            firestore::set_can_join_false(room_id.as_str(), || {}, || {});
+                                        }) ),
                                         MemberType::Guest => html! {},
                                     }
-                                }
+                                }}
                             </SimpleCenteringDiv>
                         </SimpleCenteringSection>
                         {
