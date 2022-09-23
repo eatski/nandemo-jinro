@@ -11,6 +11,7 @@ module.exports = {
         black: "#334155",
         "black-light": "#64748b",
         colored: "#f5f5f4",
+        "colored-light": "#fafaf9",
         marked: "#fb923c",
       }
     },

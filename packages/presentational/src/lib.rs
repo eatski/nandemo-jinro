@@ -230,7 +230,7 @@ pub fn simple_centering_section(props:&ChildrenOnlyProps) -> Html {
 pub fn item_box(label: &str,subtext: Option<&str>) -> Html {
     html! {
         <div class="flex justify-center">
-            <div class="relative w-4/5 border-line border-solid border rounded-lg py-0.5 text-center text-md text-black-light">
+            <div class="relative bg-colored-light w-4/5 border-line border-solid border rounded-lg py-0.5 text-center text-md text-black-light">
                 {label}<span class="absolute top-1/2 right-4">{subtext.map(point).unwrap_or(html!{})}</span>
             </div>
         </div>
@@ -254,5 +254,34 @@ pub fn simple_centering_div(props: &ChildrenOnlyProps) -> Html {
                 {props.children.clone()}
             </div>
         </div>
+    }
+}
+
+#[derive(Properties, PartialEq)]
+pub struct InputTextProps {
+    pub label: &'static str,
+    pub placeholder: &'static str,
+    pub oninput: Callback<String>,
+    pub default: Option<&'static str>
+}
+
+#[function_component(InputText)]
+pub fn input_text(props: &InputTextProps) -> Html {
+    html! {
+        <input class="w-3/5 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black mr-3 outline-none" type="text" placeholder={props.placeholder}/>
+    }
+}
+
+
+#[derive(Properties, PartialEq)]
+pub struct InputNumberProps {
+    pub label: &'static str,
+    pub placeholder: &'static str,
+    pub oninput: Callback<u32>,
+    pub default: Option<&'static str>
+}
+pub fn input_small_number(props: &InputNumberProps) -> Html {
+    html! {
+        <input class="w-4 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black mr-3 outline-none" type="number" placeholder={props.placeholder}/>
     }
 }
