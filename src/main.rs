@@ -11,6 +11,7 @@ mod landing;
 mod router;
 mod storage;
 mod entrance;
+mod rule_make;
 
 #[function_component(Root)]
 fn root() -> Html {

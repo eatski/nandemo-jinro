@@ -259,29 +259,88 @@ pub fn simple_centering_div(props: &ChildrenOnlyProps) -> Html {
 
 #[derive(Properties, PartialEq)]
 pub struct InputTextProps {
-    pub label: &'static str,
     pub placeholder: &'static str,
     pub oninput: Callback<String>,
-    pub default: Option<&'static str>
 }
 
 #[function_component(InputText)]
 pub fn input_text(props: &InputTextProps) -> Html {
+    let oninput = {
+        let oninput = props.oninput.clone();
+        Callback::from(move |e: InputEvent| {
+            let input = e.target_dyn_into::<HtmlInputElement>();
+            if let Some(input) = input {
+                oninput.emit(input.value());
+            }
+        })
+    };
     html! {
-        <input class="w-3/5 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black mr-3 outline-none" type="text" placeholder={props.placeholder}/>
+        <input oninput={oninput} class="w-3/5 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="text" placeholder={props.placeholder}/>
     }
 }
 
 
 #[derive(Properties, PartialEq)]
 pub struct InputNumberProps {
-    pub label: &'static str,
-    pub placeholder: &'static str,
     pub oninput: Callback<u32>,
     pub default: Option<&'static str>
 }
+#[function_component(InputSmallNumber)]
 pub fn input_small_number(props: &InputNumberProps) -> Html {
+    let oninput = {
+        let oninput = props.oninput.clone();
+        Callback::from(move |e: InputEvent| {
+            let input = e.target_dyn_into::<HtmlInputElement>();
+            if let Some(input) = input {
+                if let Ok(value) = input.value().parse::<u32>() {
+                    oninput.emit(value);
+                }
+            }
+        })
+    };
     html! {
-        <input class="w-4 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black mr-3 outline-none" type="number" placeholder={props.placeholder}/>
+        <input {oninput} class="w-14 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="number" />
+    }
+}
+
+#[derive(Properties, PartialEq)]
+pub struct AddProps {
+    pub onclick: Callback<()>
+}
+
+#[function_component(AddButton)]
+pub fn add_button(props: &AddProps) -> Html {
+    html! {
+        <div class="h-auto w-6 relative">
+            <button onclick={props.onclick.reform(|_| ())} class="
+                absolute -translate-y-1/2 -translate-x-1/2 top-1/2 left-1/2
+                w-5 h-5 rounded-full
+                bg-feature transition-colors hover:bg-feature-light
+            " 
+            >
+                <span role="img" aria-label="追加" style="top:45%;" class="absolute -translate-y-1/2 -translate-x-1/2 left-1/2 text-white">{"+"}</span>
+            </button>
+        </div>
+        
+    }
+}
+
+
+
+#[function_component(ListItemRow)]
+pub fn list_item_row(props: &ChildrenOnlyProps) -> Html {
+    html! {
+        <li class="flex justify-items-start gap-2 w-full justify-start">
+            {props.children.clone()}
+        </li>
+    }
+}
+
+#[function_component(ListContainer)]
+pub fn lsit_container(props: &ChildrenOnlyProps) -> Html {
+    html! {
+        <ul class="flex flex-col gap-2">
+            {props.children.clone()}
+        </ul>
     }
 }

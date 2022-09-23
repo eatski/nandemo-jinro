@@ -3,6 +3,7 @@ use yew::{function_component, html, use_effect_with_deps, use_state, UseStateHan
 use crate::entrance::{GuestEntrance};
 
 use crate::{storage::{get_user_id}};
+use crate::rule_make::{RuleMake};
 use firestore::{sync_members, MemberJSON};
 
 enum LobbyState {
@@ -106,6 +107,7 @@ pub fn lobby(props: &LobbyProps) -> Html {
                                 MemberType::Host => html! {
                                     <SimpleCenteringSection>
                                         <Heading2WithDescription title={"ルールを決めましょう"} description={"役職とその人数を決めましょう"}/>
+                                        <RuleMake />
                                     </SimpleCenteringSection>
                                 },
                                 MemberType::Guest => html! {},
