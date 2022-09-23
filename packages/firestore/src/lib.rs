@@ -111,3 +111,21 @@ pub fn add_room(on_complete: impl FnOnce(&str) + 'static) -> String {
     let path: &str = &format!("{}/rooms",NAME_SPACE);
     add_document(path,"{}",on_complete,|| {})
 }
+
+pub fn add_rule(room_id: &str,rule: &Rule, on_complete: impl FnOnce(&str) + 'static, on_error: impl FnOnce() + 'static) -> String {
+    let path: &str = &format!("{}/rooms/{}/rules",NAME_SPACE,room_id);
+    let json = serde_json::to_string(rule).expect("Failed to serialize rule");
+    add_document(path,json.as_str(),on_complete,on_error)
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct Role {
+    pub id: String,
+    pub name: String,
+    pub number: u32
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct Rule {
+    pub roles: Vec<Role>,
+}

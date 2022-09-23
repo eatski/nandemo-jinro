@@ -107,7 +107,7 @@ pub fn lobby(props: &LobbyProps) -> Html {
                                 MemberType::Host => html! {
                                     <SimpleCenteringSection>
                                         <Heading2WithDescription title={"ルールを決めましょう"} description={"役職とその人数を決めましょう"}/>
-                                        <RuleMake />
+                                        <RuleMake room_id={room_id}/>
                                     </SimpleCenteringSection>
                                 },
                                 MemberType::Guest => html! {},

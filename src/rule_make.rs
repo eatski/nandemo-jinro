@@ -1,4 +1,5 @@
-use yew::{function_component, html, Callback, use_state};
+use firestore::{Rule, Role};
+use yew::{function_component, html, Callback, use_state, Properties};
 use presentational::{InputText,InputSmallNumber,AddButton,ListItemRow,ListContainer,SimpleCenteringDiv, button};
 
 #[derive(Clone)]
@@ -7,8 +8,13 @@ struct Item {
     count: u32,
 }
 
+#[derive(Properties,PartialEq)]
+pub struct Props {
+    pub room_id: String,
+}
+
 #[function_component(RuleMake)]
-pub fn rule_make() -> Html {
+pub fn rule_make(props: &Props) -> Html {
     let state = use_state(|| vec![
         Item {
             name: "市民".to_string(),
@@ -19,6 +25,21 @@ pub fn rule_make() -> Html {
             count: 1,
         },
     ]);
+    let captured_state = (*state).clone();
+    let room_id = props.room_id.clone();
+    let publish_rule = Callback::from(move |_| {
+        firestore::add_rule(
+            room_id.as_str(),
+            &Rule {
+                roles: captured_state
+                    .iter()
+                    .enumerate()
+                    .map(|(index,item)| Role {name: item.name.clone(),number: item.count, id: index.to_string()}).collect(),
+            },
+            |_| {},
+            || {},
+        );
+    });
     let captured_state = (*state).clone();
     html! {
         <>
@@ -67,7 +88,7 @@ pub fn rule_make() -> Html {
                 })}  />
             </SimpleCenteringDiv>
             <SimpleCenteringDiv>
-                {button("ルールを確定",Callback::from(move |_| {}))}
+                {button("ルールを確定",publish_rule)}
             </SimpleCenteringDiv>
         </>
     }
