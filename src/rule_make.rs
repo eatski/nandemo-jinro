@@ -1,5 +1,5 @@
 use yew::{function_component, html, Callback, use_state};
-use presentational::{InputText,InputSmallNumber,AddButton,ListItemRow,ListContainer,SimpleCenteringDiv};
+use presentational::{InputText,InputSmallNumber,AddButton,ListItemRow,ListContainer,SimpleCenteringDiv, button};
 
 #[derive(Clone)]
 struct Item {
@@ -65,6 +65,9 @@ pub fn rule_make() -> Html {
                     });
                     state.set(captured_state)
                 })}  />
+            </SimpleCenteringDiv>
+            <SimpleCenteringDiv>
+                {button("ルールを確定",Callback::from(move |_| {}))}
             </SimpleCenteringDiv>
         </>
     }
