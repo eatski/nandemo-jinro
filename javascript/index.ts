@@ -89,10 +89,20 @@ const setField = (path: string, fieldname: string,data: string,onComplete: () =>
     }).then(onComplete).catch(onError);
 }
 
+const syncDocument = (path: string,callback: (res: string) => void, onError: () => void): () => void => {
+    const docRef = doc(store,path);
+    return onSnapshotWhenActive(
+        docRef,
+        (res) => {callback(JSON.stringify(res.data()))},
+        onError
+    )
+}
+
 //@ts-expect-error
 window._wasm_js_bridge = {
     syncCollection,
     addDocument,
     getCollection,
-    setField
+    setField,
+    syncDocument
 }

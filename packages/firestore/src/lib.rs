@@ -16,6 +16,8 @@ extern "C" {
     fn getCollection(path: &str, on_complete: &JsValue, on_error: &JsValue);
     #[wasm_bindgen(js_name = "setField",js_namespace = ["window","_wasm_js_bridge"])]
     fn setField(path: &str, field: &str, value: &str, on_complete: &JsValue, on_error: &JsValue);
+    #[wasm_bindgen(js_name = "syncDocument",js_namespace = ["window","_wasm_js_bridge"])]
+    fn syncDocument(path: &str, on_complete: &JsValue, on_error: &JsValue) -> Function;
 }
 
 fn sync_collection_json(path: &str,callback:impl FnMut(String) + 'static , on_error: impl FnMut() + 'static) -> impl FnOnce() {
@@ -48,6 +50,16 @@ fn set_field(path: &str, field: &str, value: &str, on_complete: impl FnOnce() + 
     let on_complete : JsValue = Closure::once_into_js(on_complete);
     let on_error : JsValue = Closure::once_into_js(on_error);
     setField(path,field,value,&on_complete,&on_error)
+}
+
+fn sync_document_json(path: &str, on_complete: impl FnMut(String) + 'static, on_error: impl FnOnce() + 'static) -> impl FnOnce() {
+    let on_complete : Box<dyn FnMut(String)> = Box::new(on_complete);
+    let on_error : JsValue = Closure::once_into_js(on_error);
+    let on_complete = Closure::wrap(on_complete).into_js_value();
+    let cleanup = syncDocument(path,&on_complete,&on_error);
+    move || {
+        cleanup.call0(&JsValue::NULL).unwrap();
+    }
 }
 
 const NAME_SPACE: &str = "rollrole/v1";
@@ -115,9 +127,10 @@ pub fn get_members(room_id: &str,on_complete: impl FnOnce(Vec<MemberJSON>) + 'st
     )
 }
 
-pub fn add_room(on_complete: impl FnOnce(&str) + 'static) -> String {
+pub fn add_room(room: &Room,on_complete: impl FnOnce(&str) + 'static) -> String {
     let path: &str = &format!("{}/rooms",NAME_SPACE);
-    add_document(path,"{}",on_complete,|| {})
+    let json: &str = &serde_json::to_string(room).expect("Failed to serialize room");
+    add_document(path,json,on_complete,|| {})
 }
 
 pub fn set_rule(room_id: &str,rule: &Rule, on_complete: impl FnOnce() + 'static, on_error: impl FnOnce() + 'static) {
@@ -129,6 +142,34 @@ pub fn set_rule(room_id: &str,rule: &Rule, on_complete: impl FnOnce() + 'static,
 pub fn set_can_join_false(room_id: &str,on_complete: impl FnOnce() + 'static, on_error: impl FnOnce() + 'static) {
     let path: &str = &format!("{}/rooms/{}",NAME_SPACE,room_id);
     set_field(path,"can_join","false",on_complete,on_error);
+}
+
+pub fn sync_room(room_id: &str,mut callback: impl FnMut(Room) + 'static, on_error: impl FnMut() + 'static) -> impl FnOnce() {
+    let on_error = Rc::new(RefCell::new(Box::new(on_error) as Box<dyn FnMut()>));
+    let on_parse_error = on_error.clone();
+    let callback = move |json:String| {
+        match serde_json::from_str(json.as_str()) {
+            Ok(room) => callback(room),
+            Err(e) => {
+                console::log_1(&e.to_string().into());
+                on_parse_error.borrow_mut()();
+            },
+        } 
+    };
+    let on_error = move || on_error.borrow_mut()();
+    sync_document_json(
+        &format!("{}/rooms/{}",NAME_SPACE,room_id),
+        callback,
+        on_error
+    )
+}
+
+
+
+#[derive(Serialize, Deserialize)]
+pub struct Room {
+    pub rule: Option<Rule> ,
+    pub can_join: bool,
 }
 
 #[derive(Serialize, Deserialize)]
