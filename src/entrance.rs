@@ -6,6 +6,7 @@ use yew::{function_component, Properties, use_state, use_effect_with_deps, Callb
 #[derive(Properties, PartialEq)]
 pub struct GuestEntranceProps {
     pub room_id: String,
+    pub on_join: Callback<String>,
 }
 
 #[function_component(GuestEntrance)]
@@ -46,6 +47,7 @@ pub fn guest_entrance(props: &GuestEntranceProps) -> Html {
         );
     }
     let room_id = props.room_id.clone();
+    let on_join = props.on_join.clone();
     let add_member = Callback::from(move |name| {
         let room_id_cloned = room_id.clone();
         let user_id = add_members(
@@ -58,6 +60,7 @@ pub fn guest_entrance(props: &GuestEntranceProps) -> Html {
             || {}
         );
         crate::storage::save_user_id(room_id_cloned.as_str(),user_id.as_str());
+        on_join.emit(user_id);
     });
 
     enum CanJoinState {

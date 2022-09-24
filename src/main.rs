@@ -12,6 +12,7 @@ mod router;
 mod storage;
 mod entrance;
 mod rule_make;
+mod lobby;
 
 #[function_component(Root)]
 fn root() -> Html {
