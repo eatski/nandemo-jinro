@@ -6,7 +6,7 @@ use crate::{storage::{get_user_id}};
 use crate::rule_make::{RuleMake};
 use firestore::{sync_members, MemberJSON};
 
-enum LobbyState {
+enum RoomState {
     Loading,
     Loaded(Vec<MemberJSON>,UserStatus),
 }
@@ -22,13 +22,13 @@ enum UserStatus {
 
 
 #[derive(Properties, PartialEq)]
-pub struct LobbyProps {
+pub struct RoomProps {
     pub room_id: String,
 }
 
-#[function_component(Lobby)]
-pub fn lobby(props: &LobbyProps) -> Html {
-    let state: UseStateHandle<LobbyState>  = use_state(|| (LobbyState::Loading));
+#[function_component(Room)]
+pub fn room(props: &RoomProps) -> Html {
+    let state: UseStateHandle<RoomState>  = use_state(|| (RoomState::Loading));
     {
         let state = state.clone();
         let room_id = props.room_id.clone();
@@ -53,7 +53,7 @@ pub fn lobby(props: &LobbyProps) -> Html {
                         } else {
                             UserStatus::NotJoined
                         };
-                        state.set(LobbyState::Loaded(members,user_status))
+                        state.set(RoomState::Loaded(members,user_status))
                     },
                     || {},
                 )
@@ -64,8 +64,8 @@ pub fn lobby(props: &LobbyProps) -> Html {
     let room_id = props.room_id.clone();
 
     match &*state {
-        LobbyState::Loading => loading(),
-        LobbyState::Loaded(members,user_status) => {
+        RoomState::Loading => loading(),
+        RoomState::Loaded(members,user_status) => {
             match user_status {
                 UserStatus::Joined(member_type, user_id) => {
                     html! {
