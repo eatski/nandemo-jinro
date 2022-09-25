@@ -43,42 +43,42 @@ pub fn lobby(props: &Props) -> Html {
                 .unwrap_or(false);
             let user_id = props.user_id.clone();
             html! {
-            <>
-                <SimpleCenteringSection>
-                    {
-                        if is_host {
-                            html! {
-                                <Heading2WithDescription title={"メンバーを集めましょう"} description={"このページのURLを一緒に遊ぶメンバーに共有しましょう"}/>
-                            }
-                        } else {
-                            html! {
-                                <Heading2WithDescription title={"部屋に参加しました"} description={"ホストがゲームを始めるのを待ちましょう"}/>
-                            }
-                        }
-                    }
-                    <BoxListContainer>
+                <>
+                    <SimpleCenteringSection>
                         {
-                            for members.iter().map(|member| {
-                                let is_you = member.id == *user_id;
+                            if is_host {
                                 html! {
-                                    <li>
-                                        {item_box(member.name.as_str(),is_you.then(|| "あなた"))}
-                                    </li>
+                                    <Heading2WithDescription title={"メンバーを集めましょう"} description={"このページのURLを一緒に遊ぶメンバーに共有しましょう"}/>
                                 }
-                            })
+                            } else {
+                                html! {
+                                    <Heading2WithDescription title={"部屋に参加しました"} description={"ホストがゲームを始めるのを待ちましょう"}/>
+                                }
+                            }
                         }
-                    </BoxListContainer>
-                    <SimpleCenteringDiv>
-                        {{   
-                            let room_id = props.room_id.clone();
-                            is_host.then(|| {
-                                button("締め切る", Callback::from(move |_| {
-                                    firestore::set_can_join_false(room_id.as_str(), || {}, || {});
-                                }))
-                            }).unwrap_or_default()
-                        }}
-                    </SimpleCenteringDiv>
-                </SimpleCenteringSection>
+                        <BoxListContainer>
+                            {
+                                for members.iter().map(|member| {
+                                    let is_you = member.id == *user_id;
+                                    html! {
+                                        <li>
+                                            {item_box(member.name.as_str(),is_you.then(|| "あなた"))}
+                                        </li>
+                                    }
+                                })
+                            }
+                        </BoxListContainer>
+                        <SimpleCenteringDiv>
+                            {{   
+                                let room_id = props.room_id.clone();
+                                is_host.then(|| {
+                                    button("締め切る", Callback::from(move |_| {
+                                        firestore::set_can_join_false(room_id.as_str(), || {}, || {});
+                                    }))
+                                }).unwrap_or_default()
+                            }}
+                        </SimpleCenteringDiv>
+                    </SimpleCenteringSection>
                     {{
                         let room_id = props.room_id.clone();
                         is_host.then(|| {
