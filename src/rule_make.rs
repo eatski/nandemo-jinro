@@ -1,6 +1,6 @@
 use firestore::{Rule, Role};
 use yew::{function_component, html, Callback, use_state, Properties};
-use presentational::{InputText,InputSmallNumber,AddButton,ListItemRow,ListContainer,SimpleCenteringDiv, button};
+use presentational::{InputText,InputSmallNumber,AddButton,ListItemRow,ListContainer,SimpleCenteringDiv,Heading2WithDescription,SimpleCenteringSection, button};
 
 #[derive(Clone)]
 struct Item {
@@ -42,7 +42,8 @@ pub fn rule_make(props: &Props) -> Html {
     });
     let captured_state = (*state).clone();
     html! {
-        <>
+        <SimpleCenteringSection>
+            <Heading2WithDescription title={"ルールを決めましょう"} description={"役職とその人数を決めましょう"}/>
             <ListContainer>
                 {for (*state).iter().enumerate().map(|(index,item)| {
                     let on_number_input = {
@@ -90,6 +91,6 @@ pub fn rule_make(props: &Props) -> Html {
             <SimpleCenteringDiv>
                 {button("ルールを確定",publish_rule)}
             </SimpleCenteringDiv>
-        </>
+        </SimpleCenteringSection>
     }
 }

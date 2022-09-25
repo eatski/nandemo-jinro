@@ -83,10 +83,7 @@ pub fn lobby(props: &Props) -> Html {
                         let room_id = props.room_id.clone();
                         is_host.then(|| {
                             html! {
-                                <SimpleCenteringSection>
-                                    <Heading2WithDescription title={"ルールを決めましょう"} description={"役職とその人数を決めましょう"}/>
-                                    <RuleMake room_id={room_id}/>
-                                </SimpleCenteringSection>
+                                <RuleMake room_id={room_id}/>
                             }
                         }).unwrap_or_default()
                     }}
