@@ -68,16 +68,16 @@ pub fn lobby(props: &Props) -> Html {
                                 })
                             }
                         </BoxListContainer>
-                        <SimpleCenteringDiv>
-                            {{   
-                                let room_id = props.room_id.clone();
-                                is_host.then(|| {
-                                    button("締め切る", Callback::from(move |_| {
-                                        firestore::set_can_join_false(room_id.as_str(), || {}, || {});
-                                    }))
-                                }).unwrap_or_default()
-                            }}
-                        </SimpleCenteringDiv>
+                        {{   
+                            let room_id = props.room_id.clone();
+                            is_host.then(|| {
+                                html! {
+                                    <SimpleCenteringDiv>
+                                        <MemberClose room_id={room_id}/>
+                                    </SimpleCenteringDiv>
+                                }
+                            }).unwrap_or_default()
+                        }}
                     </SimpleCenteringSection>
                     {{
                         let room_id = props.room_id.clone();
@@ -93,5 +93,29 @@ pub fn lobby(props: &Props) -> Html {
                 </>
             }
         },
+    }
+}
+#[derive(Properties, PartialEq)]
+struct MemberCloseProps {
+    pub room_id: String,
+}
+
+#[function_component[MemberClose]]
+fn member_close(props: &MemberCloseProps) -> Html {
+    enum State {
+        Loading,
+        Clickable
+    }
+    let state = use_state(|| State::Clickable);
+    let room_id = props.room_id.clone();
+
+    match &*state {
+        State::Loading => loading(),
+        State::Clickable => {
+            button("締め切る", Callback::from(move |_| {
+                state.set(State::Loading);
+                firestore::set_can_join_false(room_id.as_str(), || {}, || {});
+            }))
+        }
     }
 }
