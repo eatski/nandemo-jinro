@@ -1,4 +1,3 @@
-use presentational::loading;
 use yew::{function_component, html, Properties, use_state_eq, Callback};
 use crate::entrance::{GuestEntrance};
 
@@ -51,7 +50,6 @@ fn view_when_has_userid(props: &HasUserIdProps) -> Html {
                             html! {
                                 <RuleMake room_id={props.room_id.clone()}/>
                             }
-                            
                         } else {
                             html! {}
                         }
