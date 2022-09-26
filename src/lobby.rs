@@ -1,7 +1,7 @@
 use firestore::{MemberJSON, sync_members};
 use presentational::{loading,SimpleCenteringSection,Heading2WithDescription, SimpleCenteringDiv,item_box, button,BoxListContainer};
 use yew::{Properties, function_component, html, UseStateHandle, use_state, use_effect_with_deps, Callback};
-use crate::{rule_make::{RuleMake}, state_hooks::{use_member, MemberState}};
+use crate::{state_hooks::{use_member, MemberState}};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
@@ -95,14 +95,6 @@ pub fn lobby(props: &Props) -> Html {
                             }).unwrap_or_default()
                         }}
                     </SimpleCenteringSection>
-                    {{
-                        let room_id = props.room_id.clone();
-                        is_host.then(|| {
-                            html! {
-                                <RuleMake room_id={room_id}/>
-                            }
-                        }).unwrap_or_default()
-                    }}
                 </>
             }
         },
