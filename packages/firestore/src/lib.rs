@@ -137,20 +137,20 @@ pub fn sync_room(room_id: &str,mut callback: impl FnMut(Room) + 'static, on_erro
 
 
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize,Clone)]
 pub struct Room {
-    pub rule: Option<Rule> ,
+    pub rule: Option<Rule>,
     pub can_join: bool,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize,Clone)]
 pub struct Role {
     pub id: String,
     pub name: String,
     pub number: u32
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize,Clone)]
 pub struct Rule {
     pub roles: Vec<Role>,
 }

@@ -1,7 +1,8 @@
+use presentational::loading;
 use yew::{function_component, html, Properties, use_state_eq, Callback};
 use crate::entrance::{GuestEntrance};
 
-use crate::state_hooks::{use_member, MemberState};
+use crate::state_hooks::{use_member, MemberState, use_room_sync, DataFetchState};
 use crate::{storage::{get_user_id}};
 use crate::lobby::Lobby;
 use crate::rule_make::RuleMake;
@@ -39,23 +40,26 @@ struct HasUserIdProps {
 #[function_component(HasUserId)]
 fn view_when_has_userid(props: &HasUserIdProps) -> Html {
     let member = use_member(props.room_id.as_str(),props.user_id.as_str());
-    html! {
-        <>
-            <Lobby room_id={props.room_id.clone()} user_id={props.user_id.clone()}/>
-            {
-                match member {
-                    MemberState::Loading => html!(),
-                    MemberState::Loaded(member) => {
-                        if member.is_host {
-                            html! {
-                                <RuleMake room_id={props.room_id.clone()}/>
-                            }
-                        } else {
-                            html! {}
-                        }
+    let room = use_room_sync(props.room_id.as_str());
+    let merged = room.merge(member);
+    
+    match merged {
+        DataFetchState::Loading => loading(),
+        DataFetchState::Loaded((room,member)) => {
+            if room.can_join || !member.is_host {
+                html! {
+                    <Lobby room_id={props.room_id.clone()} user_id={props.user_id.clone()} />
+                }
+            } else {
+                if member.is_host {
+                    html! {
+                        <RuleMake room_id={props.room_id.clone()}/>
                     }
+                } else {
+                    html! {}
                 }
             }
-        </>
+        },
     }
+    
 }
