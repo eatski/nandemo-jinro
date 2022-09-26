@@ -18,6 +18,8 @@ extern "C" {
     fn setField(path: &str, field: &str, value: &str, on_complete: &JsValue, on_error: &JsValue);
     #[wasm_bindgen(js_name = "syncDocument",js_namespace = ["window","_wasm_js_bridge"])]
     fn syncDocument(path: &str, on_complete: &JsValue, on_error: &JsValue) -> Function;
+    #[wasm_bindgen(js_name = "getDocument",js_namespace = ["window","_wasm_js_bridge"])]
+    fn getDocument(path: &str, on_complete: &JsValue, on_error: &JsValue);
 }
 
 fn sync_collection_json(path: &str,callback:impl FnMut(String) + 'static , on_error: impl FnMut() + 'static) -> impl FnOnce() {
@@ -62,6 +64,14 @@ fn sync_document_json(path: &str, on_complete: impl FnMut(String) + 'static, on_
     }
 }
 
+fn get_document_json(path: &str, on_complete: impl FnOnce(&str) + 'static, on_error: impl FnOnce() + 'static)  {
+    let on_complete : JsValue = Closure::once_into_js(|val: JsValue| {
+        on_complete(&val.as_string().unwrap());
+    });
+    let on_error : JsValue = Closure::once_into_js(on_error);
+    getDocument(path,&on_complete,&on_error)
+}
+
 const NAME_SPACE: &str = "rollrole/v1";
 
 #[derive(Serialize, Deserialize)]
@@ -76,7 +86,7 @@ pub fn add_members(room_id: &str,member: &MemberInput, on_complete: impl FnOnce(
     add_document(path,json,|_| on_complete(),on_error)
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize,Clone)]
 pub struct MemberJSON {
     pub name: String,
     pub id: String,
@@ -84,6 +94,10 @@ pub struct MemberJSON {
 }
 
 fn json_to_members(json:&str) -> Result<Vec<MemberJSON>,String> {
+    serde_json::from_str(json).map_err(|e| e.to_string())
+}
+
+fn json_to_member(json:&str) -> Result<MemberJSON,String> {
     serde_json::from_str(json).map_err(|e| e.to_string())
 }
 
@@ -125,6 +139,28 @@ pub fn get_members(room_id: &str,on_complete: impl FnOnce(Vec<MemberJSON>) + 'st
         callback,
         on_error
     )
+}
+
+pub fn get_member(room_id: &str,member_id: &str,on_complete: impl FnOnce(MemberJSON) + 'static, on_error: impl FnMut() + 'static) {
+    let on_error = Rc::new(RefCell::new(Box::new(on_error) as Box<dyn FnMut()>));
+    let on_parse_error = on_error.clone();
+    let callback = move |json:&str| {
+        match json_to_member(json) {
+            Ok(member) => {
+                on_complete(member)
+            },
+            Err(e) => {
+                console::log_1(&e.into());
+                on_parse_error.borrow_mut()();
+            },
+        } 
+    };
+    let on_error = move || on_error.borrow_mut()();
+    get_document_json(
+        &format!("{}/rooms/{}/members/{}",NAME_SPACE,room_id,member_id),
+        callback,
+        on_error
+    );
 }
 
 pub fn add_room(room: &Room,on_complete: impl FnOnce(&str) + 'static) -> String {

@@ -1,7 +1,7 @@
 use firestore::{MemberJSON, sync_members};
 use presentational::{loading,SimpleCenteringSection,Heading2WithDescription, SimpleCenteringDiv,item_box, button,BoxListContainer};
 use yew::{Properties, function_component, html, UseStateHandle, use_state, use_effect_with_deps, Callback};
-use crate::rule_make::{RuleMake};
+use crate::{rule_make::{RuleMake}, state_hooks::{use_member, MemberState}};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
@@ -9,23 +9,31 @@ pub struct Props {
     pub user_id: String,
 }
 
-enum LobbyState {
+enum MembersState {
     Loading,
     Loaded(Vec<MemberJSON>),
 }
 
+enum State {
+    Loading,
+    Loaded {
+        members: Vec<MemberJSON>,
+        you: MemberJSON,
+    },
+}
+
 #[function_component(Lobby)]
 pub fn lobby(props: &Props) -> Html {
-    let state: UseStateHandle<LobbyState>  = use_state(|| (LobbyState::Loading));
+    let members_state: UseStateHandle<MembersState>  = use_state(|| (MembersState::Loading));
     {
-        let state = state.clone();
+        let state = members_state.clone();
         let room_id = props.room_id.clone();
         use_effect_with_deps(
             |room_id| {
                 sync_members(
                     room_id.as_str(),
                     move |members| {
-                        state.set(LobbyState::Loaded(members))
+                        state.set(MembersState::Loaded(members))
                     },
                     || {},
                 )
@@ -33,14 +41,22 @@ pub fn lobby(props: &Props) -> Html {
             room_id,
         );
     }
+    let you_state = use_member(props.room_id.as_str(), props.user_id.as_str());
 
-    match &*state {
-        LobbyState::Loading => loading(),
-        LobbyState::Loaded(members) => {
-            let is_host = members.iter()
-                .find(|member| member.id.as_str() == props.user_id.as_str())
-                .map(|member| member.is_host)
-                .unwrap_or(false);
+    let state = {
+        let members_state = &*members_state;
+        let you_state = you_state;
+        match (members_state, you_state) {
+            (MembersState::Loading, MemberState::Loading) => State::Loading,
+            (MembersState::Loading, MemberState::Loaded(_)) => State::Loading,
+            (MembersState::Loaded(_), MemberState::Loading) => State::Loading,
+            (MembersState::Loaded(members), MemberState::Loaded(you)) => State::Loaded { members: members.clone(), you },
+        }
+    };
+    
+    match state {
+        State::Loaded{members,you} => {
+            let is_host = you.is_host;
             let user_id = props.user_id.clone();
             html! {
                 <>
@@ -90,6 +106,13 @@ pub fn lobby(props: &Props) -> Html {
                 </>
             }
         },
+        State::Loading => {
+            html! {
+                <SimpleCenteringSection>
+                    {loading()}
+                </SimpleCenteringSection>
+            }
+        }
     }
 }
 #[derive(Properties, PartialEq)]
