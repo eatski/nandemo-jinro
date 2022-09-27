@@ -1,5 +1,5 @@
 
-use std::{cell::RefCell, rc::Rc};
+use std::{cell::RefCell, rc::Rc, collections::HashMap};
 use serde::{Serialize, Deserialize};
 
 use bridge::{add_document, get_document_json, set_field, sync_collection_json, get_collection_json, sync_document_json};
@@ -135,6 +135,18 @@ pub fn sync_room(room_id: &str,mut callback: impl FnMut(Room) + 'static, on_erro
     )
 }
 
+pub fn add_roll(room_id: &str,roll: Roll,on_complete: impl FnOnce() + 'static) -> String {
+    let path: &str = &format!("{}/rooms/{}/rolls",NAME_SPACE,room_id);
+    let json: &str = &serde_json::to_string(&roll).expect("Failed to serialize rolls");
+    add_document(path,json,|_| on_complete(),|| {})
+}
+
+pub type UserToRole = HashMap<String,String>;
+
+#[derive(Serialize, Deserialize,Clone)]
+pub struct Roll {
+    pub user_to_role: UserToRole,
+}
 
 
 #[derive(Serialize, Deserialize,Clone)]
@@ -147,7 +159,7 @@ pub struct Room {
 pub struct Role {
     pub id: String,
     pub name: String,
-    pub number: u32
+    pub number: usize
 }
 
 #[derive(Serialize, Deserialize,Clone)]

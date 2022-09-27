@@ -18,3 +18,5 @@ web-sys = "0.3"
 presentational = {path = "./packages/presentational"}
 firestore = {path = "./packages/firestore"}
 yew-router = "0.16"
+rand = { version = "0.8" }
+getrandom = { version = "0.2", features = ["js"] }

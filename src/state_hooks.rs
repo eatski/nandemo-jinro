@@ -63,3 +63,23 @@ pub fn use_room_sync(room_id: &str) -> RoomState {
     );
     (*state_cloned).clone()
 }
+
+pub fn use_members(room_id: &str) -> DataFetchState<Vec<MemberJSON>> {
+    let state = use_state(|| DataFetchState::Loading);
+    let state_cloned = state.clone();
+    let room_id = room_id.to_string();
+    use_effect_with_deps(
+        |room_id| {
+            firestore::get_members(
+                room_id,
+                move |members| {
+                    state.set(DataFetchState::Loaded(members))
+                },
+                || {},
+            );
+            || {}
+        },
+        room_id,
+    );
+    (*state_cloned).clone()
+}

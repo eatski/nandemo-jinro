@@ -5,7 +5,7 @@ use presentational::{InputText,InputSmallNumber,AddButton,ListItemRow,ListContai
 #[derive(Clone)]
 struct Item {
     name: String,
-    count: u32,
+    count: usize,
 }
 
 #[derive(Properties,PartialEq)]

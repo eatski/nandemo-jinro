@@ -283,8 +283,8 @@ pub fn input_text(props: &InputTextProps) -> Html {
 
 #[derive(Properties, PartialEq)]
 pub struct InputNumberProps {
-    pub oninput: Callback<u32>,
-    pub value: u32,
+    pub oninput: Callback<usize>,
+    pub value: usize,
 }
 #[function_component(InputSmallNumber)]
 pub fn input_small_number(props: &InputNumberProps) -> Html {
@@ -293,7 +293,7 @@ pub fn input_small_number(props: &InputNumberProps) -> Html {
         Callback::from(move |e: InputEvent| {
             let input = e.target_dyn_into::<HtmlInputElement>();
             if let Some(input) = input {
-                if let Ok(value) = input.value().parse::<u32>() {
+                if let Ok(value) = input.value().parse::<usize>() {
                     oninput.emit(value);
                 }
             }
