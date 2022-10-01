@@ -16,6 +16,7 @@ mod lobby;
 mod state_hooks;
 mod roll;
 mod rolled;
+mod function;
 
 #[function_component(Root)]
 fn root() -> Html {
