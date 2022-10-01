@@ -29,10 +29,6 @@ pub struct MemberJSON {
     pub is_host: bool,
 }
 
-fn json_to_member(json:&str) -> Result<MemberJSON,String> {
-    serde_json::from_str(json).map_err(|e| e.to_string())
-}
-
 pub fn sync_members(room_id: &str,callback:impl FnMut(Vec<MemberJSON>)  + 'static , on_error: impl FnMut() + 'static) -> impl FnOnce() {
     sync_collection(
         &format!("{}/rooms/{}/members",NAME_SPACE,room_id),
