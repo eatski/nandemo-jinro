@@ -1,10 +1,11 @@
 
-use std::{cell::RefCell, rc::Rc, collections::HashMap};
+use std::{collections::HashMap};
+use future::{sync_collection, sync_document, get_collection, get_document};
 use serde::{Serialize, Deserialize};
 
-use bridge::{add_document, get_document_json, set_field, sync_collection_json, get_collection_json, sync_document_json};
-use web_sys::console;
+use bridge::{add_document, set_field};
 mod bridge;
+pub mod future;
 
 
 const NAME_SPACE: &str = "rollrole/v1";
@@ -28,28 +29,12 @@ pub struct MemberJSON {
     pub is_host: bool,
 }
 
-fn json_to_members(json:&str) -> Result<Vec<MemberJSON>,String> {
-    serde_json::from_str(json).map_err(|e| e.to_string())
-}
-
 fn json_to_member(json:&str) -> Result<MemberJSON,String> {
     serde_json::from_str(json).map_err(|e| e.to_string())
 }
 
-pub fn sync_members(room_id: &str,mut callback:impl FnMut(Vec<MemberJSON>)  + 'static , on_error: impl FnMut() + 'static) -> impl FnOnce() {
-    let on_error = Rc::new(RefCell::new(Box::new(on_error) as Box<dyn FnMut()>));
-    let on_parse_error = on_error.clone();
-    let callback = move |json:String| {
-        match json_to_members(json.as_str()) {
-            Ok(members) => callback(members),
-            Err(e) => {
-                console::log_1(&e.into());
-                on_parse_error.borrow_mut()();
-            },
-        } 
-    };
-    let on_error = move || on_error.borrow_mut()();
-    sync_collection_json(
+pub fn sync_members(room_id: &str,callback:impl FnMut(Vec<MemberJSON>)  + 'static , on_error: impl FnMut() + 'static) -> impl FnOnce() {
+    sync_collection(
         &format!("{}/rooms/{}/members",NAME_SPACE,room_id),
         callback,
         on_error
@@ -57,43 +42,17 @@ pub fn sync_members(room_id: &str,mut callback:impl FnMut(Vec<MemberJSON>)  + 's
 }
 
 pub fn get_members(room_id: &str,on_complete: impl FnOnce(Vec<MemberJSON>) + 'static, on_error: impl FnMut() + 'static) {
-    let on_error = Rc::new(RefCell::new(Box::new(on_error) as Box<dyn FnMut()>));
-    let on_parse_error = on_error.clone();
-    let callback = move |json:&str| {
-        match json_to_members(json) {
-            Ok(members) => on_complete(members),
-            Err(e) => {
-                console::log_1(&e.into());
-                on_parse_error.borrow_mut()();
-            },
-        } 
-    };
-    let on_error = move || on_error.borrow_mut()();
-    get_collection_json(
+    get_collection(
         &format!("{}/rooms/{}/members",NAME_SPACE,room_id),
-        callback,
+        on_complete,
         on_error
     )
 }
 
 pub fn get_member(room_id: &str,member_id: &str,on_complete: impl FnOnce(MemberJSON) + 'static, on_error: impl FnMut() + 'static) {
-    let on_error = Rc::new(RefCell::new(Box::new(on_error) as Box<dyn FnMut()>));
-    let on_parse_error = on_error.clone();
-    let callback = move |json:&str| {
-        match json_to_member(json) {
-            Ok(member) => {
-                on_complete(member)
-            },
-            Err(e) => {
-                console::log_1(&e.into());
-                on_parse_error.borrow_mut()();
-            },
-        } 
-    };
-    let on_error = move || on_error.borrow_mut()();
-    get_document_json(
+    get_document(
         &format!("{}/rooms/{}/members/{}",NAME_SPACE,room_id,member_id),
-        callback,
+        on_complete,
         on_error
     );
 }
@@ -115,20 +74,8 @@ pub fn set_can_join_false(room_id: &str,on_complete: impl FnOnce() + 'static, on
     set_field(path,"can_join","false",on_complete,on_error);
 }
 
-pub fn sync_room(room_id: &str,mut callback: impl FnMut(Room) + 'static, on_error: impl FnMut() + 'static) -> impl FnOnce() {
-    let on_error = Rc::new(RefCell::new(Box::new(on_error) as Box<dyn FnMut()>));
-    let on_parse_error = on_error.clone();
-    let callback = move |json:String| {
-        match serde_json::from_str(json.as_str()) {
-            Ok(room) => callback(room),
-            Err(e) => {
-                console::log_1(&e.to_string().into());
-                on_parse_error.borrow_mut()();
-            },
-        } 
-    };
-    let on_error = move || on_error.borrow_mut()();
-    sync_document_json(
+pub fn sync_room(room_id: &str,callback: impl FnMut(Room) + 'static, on_error: impl FnMut() + 'static) -> impl FnOnce() {
+    sync_document(
         &format!("{}/rooms/{}",NAME_SPACE,room_id),
         callback,
         on_error
@@ -141,20 +88,8 @@ pub fn add_roll(room_id: &str,roll: Roll,on_complete: impl FnOnce() + 'static) -
     add_document(path,json,|_| on_complete(),|| {})
 }
 
-pub fn sync_rolls(room_id: &str,mut callback: impl FnMut(Vec<Roll>) + 'static, on_error: impl FnMut() + 'static) -> impl FnOnce() {
-    let on_error = Rc::new(RefCell::new(Box::new(on_error) as Box<dyn FnMut()>));
-    let on_parse_error = on_error.clone();
-    let callback = move |json:String| {
-        match serde_json::from_str(json.as_str()) {
-            Ok(rolls) => callback(rolls),
-            Err(e) => {
-                console::log_1(&e.to_string().into());
-                on_parse_error.borrow_mut()();
-            },
-        } 
-    };
-    let on_error = move || on_error.borrow_mut()();
-    sync_collection_json(
+pub fn sync_rolls(room_id: &str,callback: impl FnMut(Vec<Roll>) + 'static, on_error: impl FnMut() + 'static) -> impl FnOnce() {
+    sync_collection(
         &format!("{}/rooms/{}/rolls",NAME_SPACE,room_id),
         callback,
         on_error
@@ -162,21 +97,9 @@ pub fn sync_rolls(room_id: &str,mut callback: impl FnMut(Vec<Roll>) + 'static, o
 }
 
 pub fn get_rolls(room_id: &str,on_complete: impl FnOnce(Vec<Roll>) + 'static, on_error: impl FnMut() + 'static) {
-    let on_error = Rc::new(RefCell::new(Box::new(on_error) as Box<dyn FnMut()>));
-    let on_parse_error = on_error.clone();
-    let callback = move |json:&str| {
-        match  serde_json::from_str(json)  {
-            Ok(rolls) => on_complete(rolls),
-            Err(e) => {
-                console::log_1(&e.to_string().into());
-                on_parse_error.borrow_mut()();
-            },
-        } 
-    };
-    let on_error = move || on_error.borrow_mut()();
-    get_collection_json(
+    get_collection(
         &format!("{}/rooms/{}/rolls",NAME_SPACE,room_id),
-        callback,
+        on_complete,
         on_error
     )
 }
