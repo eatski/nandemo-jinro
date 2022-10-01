@@ -1,7 +1,7 @@
 use presentational::loading;
 use yew::{html, Properties, function_component};
 
-use crate::state_hooks::{use_rolls, use_room_sync};
+use crate::{state_hooks::{use_rolls, use_room_sync, use_member}};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
@@ -13,10 +13,11 @@ pub struct Props {
 pub fn rolled(props: &Props) -> Html {
     let rolls = use_rolls(props.room_id.as_str());
     let room = use_room_sync(props.room_id.as_str());
-    let state = rolls.merge(room);
+    let member = use_member(props.room_id.as_str(), props.user_id.as_str());
+    let state = rolls.merge(room).merge(member);
     match state {
     crate::state_hooks::DataFetchState::Loading => loading(),
-    crate::state_hooks::DataFetchState::Loaded((mut rolls,room)) => {
+    crate::state_hooks::DataFetchState::Loaded(((mut rolls,room),member)) => {
         rolls.sort_by_key(|roll| roll.seq_num);
         let last_rolled = rolls
             .last();
@@ -28,6 +29,14 @@ pub fn rolled(props: &Props) -> Html {
                     <>
                         <h2>{"Rolled"}</h2>
                         <p>{role_name}</p>
+                        {
+                            member.is_host.then(|| {
+                                // TODO: Add a button to go to the next round
+                                html! {
+                                    <button>{"Next"}</button>
+                                }
+                            }).unwrap_or_default()
+                        }
                     </>
                 }
             }
