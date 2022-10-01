@@ -2,7 +2,7 @@ use presentational::loading;
 use yew::{function_component, html, Properties, use_state_eq, Callback};
 use crate::entrance::{GuestEntrance};
 
-use crate::state_hooks::{use_member, use_room_sync, DataFetchState};
+use crate::state_hooks::{use_member, use_room_sync, DataFetchState, use_rolls};
 use crate::{storage::{get_user_id}};
 use crate::lobby::Lobby;
 use crate::rule_make::RuleMake;
@@ -43,11 +43,12 @@ struct HasUserIdProps {
 fn view_when_has_userid(props: &HasUserIdProps) -> Html {
     let member = use_member(props.room_id.as_str(),props.user_id.as_str());
     let room = use_room_sync(props.room_id.as_str());
-    let merged = room.merge(member);
-
+    let roles = use_rolls(props.room_id.as_str());
+    let merged = room.merge(member).merge(roles);
     match merged {
         DataFetchState::Loading => loading(),
-        DataFetchState::Loaded((room,member)) => {
+        DataFetchState::Loaded(((room,member),rolls)) => {
+            let rolled = rolls.len() > 0;
             if member.is_host {
                 if room.can_join {
                     html! {
@@ -58,19 +59,25 @@ fn view_when_has_userid(props: &HasUserIdProps) -> Html {
                         <RuleMake room_id={props.room_id.clone()} />
                     }
                 } else {
-                    html! {
-                        <>
-                            <Rolled  room_id={props.room_id.clone()} user_id={props.user_id.clone()} />
+                    if rolled {
+                        html! {
+                            <Rolled room_id={props.room_id.clone()} user_id={props.user_id.clone()}/>
+                        }
+                     } else {
+                        html! {
                             <RollButton room_id={props.room_id.clone()} />
-                        </>
+                        }
                     }
                 }
             } else {
-                html! {
-                    <>
-                        <Lobby room_id={props.room_id.clone()} user_id={props.user_id.clone()}/>
+                if rolled {
+                    html! {
                         <Rolled room_id={props.room_id.clone()} user_id={props.user_id.clone()} />
-                    </>
+                    }
+                } else {
+                    html! {
+                        <Lobby room_id={props.room_id.clone()} user_id={props.user_id.clone()}/>
+                    }
                 }
             }
         },
