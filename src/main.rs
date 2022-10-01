@@ -15,6 +15,7 @@ mod rule_make;
 mod lobby;
 mod state_hooks;
 mod roll;
+mod rolled;
 
 #[function_component(Root)]
 fn root() -> Html {

@@ -7,6 +7,7 @@ use crate::{storage::{get_user_id}};
 use crate::lobby::Lobby;
 use crate::rule_make::RuleMake;
 use crate::roll::RollButton;
+use crate::rolled::Rolled;
 
 #[derive(Properties, PartialEq)]
 pub struct RoomProps {
@@ -58,12 +59,18 @@ fn view_when_has_userid(props: &HasUserIdProps) -> Html {
                     }
                 } else {
                     html! {
-                        <RollButton room_id={props.room_id.clone()} />
+                        <>
+                            <Rolled  room_id={props.room_id.clone()} user_id={props.user_id.clone()} />
+                            <RollButton room_id={props.room_id.clone()} />
+                        </>
                     }
                 }
             } else {
                 html! {
-                    <Lobby room_id={props.room_id.clone()} user_id={props.user_id.clone()}/>
+                    <>
+                        <Lobby room_id={props.room_id.clone()} user_id={props.user_id.clone()}/>
+                        <Rolled room_id={props.room_id.clone()} user_id={props.user_id.clone()} />
+                    </>
                 }
             }
         },

@@ -141,10 +141,51 @@ pub fn add_roll(room_id: &str,roll: Roll,on_complete: impl FnOnce() + 'static) -
     add_document(path,json,|_| on_complete(),|| {})
 }
 
+pub fn sync_rolls(room_id: &str,mut callback: impl FnMut(Vec<Roll>) + 'static, on_error: impl FnMut() + 'static) -> impl FnOnce() {
+    let on_error = Rc::new(RefCell::new(Box::new(on_error) as Box<dyn FnMut()>));
+    let on_parse_error = on_error.clone();
+    let callback = move |json:String| {
+        match serde_json::from_str(json.as_str()) {
+            Ok(rolls) => callback(rolls),
+            Err(e) => {
+                console::log_1(&e.to_string().into());
+                on_parse_error.borrow_mut()();
+            },
+        } 
+    };
+    let on_error = move || on_error.borrow_mut()();
+    sync_collection_json(
+        &format!("{}/rooms/{}/rolls",NAME_SPACE,room_id),
+        callback,
+        on_error
+    )
+}
+
+pub fn get_rolls(room_id: &str,on_complete: impl FnOnce(Vec<Roll>) + 'static, on_error: impl FnMut() + 'static) {
+    let on_error = Rc::new(RefCell::new(Box::new(on_error) as Box<dyn FnMut()>));
+    let on_parse_error = on_error.clone();
+    let callback = move |json:&str| {
+        match  serde_json::from_str(json)  {
+            Ok(rolls) => on_complete(rolls),
+            Err(e) => {
+                console::log_1(&e.to_string().into());
+                on_parse_error.borrow_mut()();
+            },
+        } 
+    };
+    let on_error = move || on_error.borrow_mut()();
+    get_collection_json(
+        &format!("{}/rooms/{}/rolls",NAME_SPACE,room_id),
+        callback,
+        on_error
+    )
+}
+
 pub type UserToRole = HashMap<String,String>;
 
 #[derive(Serialize, Deserialize,Clone)]
 pub struct Roll {
+    pub seq_num: usize,
     pub user_to_role: UserToRole,
 }
 
