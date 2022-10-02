@@ -1,10 +1,10 @@
 
 use std::{collections::HashMap};
-use future::{sync_collection, sync_document, get_collection, get_document, set_document_field, add_document};
+use json_bridge::{sync_collection, sync_document, get_collection, get_document, set_document_field, add_document};
 use serde::{Serialize, Deserialize};
 
-mod bridge;
-mod future;
+mod js_bridge;
+mod json_bridge;
 
 #[derive(Serialize, Deserialize)]
 pub struct MemberInput {
