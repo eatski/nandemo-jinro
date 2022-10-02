@@ -26,7 +26,7 @@ pub fn roll(props: &Props) -> Html {
             if let Some(rule) = room.rule {
                 get_rolls(room_id.as_str(), move |rolls| {
                     let roll = create_next_roll(&rule, &members, &rolls);
-                    add_roll(room_id_cloned.as_str(), roll, || {});
+                    add_roll(room_id_cloned.as_str(), &roll, || {});
                 },|| {});
             }
         });
