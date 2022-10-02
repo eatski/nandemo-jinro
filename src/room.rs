@@ -1,8 +1,9 @@
+use firestore::Roll;
 use presentational::loading;
 use yew::{function_component, html, Properties, use_state_eq, Callback};
 use crate::entrance::{GuestEntrance};
 
-use crate::hook::{use_member, use_room_sync, DataFetchState, use_rolls};
+use crate::hook::{use_member, use_room_sync, DataFetchState, use_collection_sync};
 use crate::{storage::{get_user_id}};
 use crate::lobby::Lobby;
 use crate::rule_make::RuleMake;
@@ -43,7 +44,7 @@ struct HasUserIdProps {
 fn view_when_has_userid(props: &HasUserIdProps) -> Html {
     let member = use_member(props.room_id.as_str(),props.user_id.as_str());
     let room = use_room_sync(props.room_id.as_str());
-    let roles = use_rolls(props.room_id.as_str());
+    let roles = use_collection_sync::<Roll>(&props.room_id);
     let merged = room.merge(member).merge(roles);
     match merged {
         DataFetchState::Loading => loading(),

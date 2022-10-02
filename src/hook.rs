@@ -1,4 +1,4 @@
-use firestore::MemberJSON;
+use firestore::{MemberJSON, future::FireStoreResource};
 use yew::{use_state, use_effect_with_deps};
 
 
@@ -84,21 +84,21 @@ pub fn use_members(room_id: &str) -> DataFetchState<Vec<MemberJSON>> {
     (*state_cloned).clone()
 }
 
-pub fn use_rolls(room_id: &str) -> DataFetchState<Vec<firestore::Roll>> {
+pub fn use_collection_sync<T>(param: &T::ParamForPath) -> DataFetchState<Vec<T>> where T: 'static + FireStoreResource + Clone ,T::ParamForPath: Clone + PartialEq {
     let state = use_state(|| DataFetchState::Loading);
     let state_cloned = state.clone();
-    let room_id = room_id.to_string();
+    let param = param.clone();
     use_effect_with_deps(
-        |room_id| {
-            firestore::sync_rolls(
-                room_id,
-                move |rolls| {
-                    state.set(DataFetchState::Loaded(rolls))
+        |param| {
+            firestore::future::sync_collection(
+                param,
+                move |collection| {
+                    state.set(DataFetchState::Loaded(collection))
                 },
                 || {},
             )
         },
-        room_id,
+        param,
     );
     (*state_cloned).clone()
 }

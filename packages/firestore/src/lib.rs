@@ -1,10 +1,12 @@
 
 use std::{collections::HashMap};
+use future::{FireStoreResource};
 use json_bridge::{sync_collection, sync_document, get_collection, get_document, set_document_field, add_document};
 use serde::{Serialize, Deserialize};
 
 mod js_bridge;
-mod json_bridge;
+pub mod json_bridge;
+pub mod future;
 
 #[derive(Serialize, Deserialize)]
 pub struct MemberInput {
@@ -20,6 +22,12 @@ pub struct Roll {
     pub user_to_role: UserToRole,
 }
 
+impl FireStoreResource for Roll {
+    fn path(room_id: &String) -> String {
+        format!("{}/rooms/{}/rolls",NAME_SPACE,room_id)
+    }
+    type ParamForPath = String;
+}
 
 #[derive(Serialize, Deserialize,Clone)]
 pub struct Room {
@@ -52,9 +60,16 @@ pub struct MemberJSON {
     pub is_host: bool,
 }
 
+impl FireStoreResource for MemberJSON {
+    fn path(room_id: &String) -> String {
+        format!("{}/rooms/{}/members",NAME_SPACE,room_id)
+    }
+    type ParamForPath = String;
+}
+
 pub fn sync_members(room_id: &str,callback:impl FnMut(Vec<MemberJSON>)  + 'static , on_error: impl FnMut() + 'static) -> impl FnOnce() {
-    sync_collection(
-        &format!("{}/rooms/{}/members",NAME_SPACE,room_id),
+    crate::future::sync_collection(
+        &room_id.to_string(),
         callback,
         on_error
     )
