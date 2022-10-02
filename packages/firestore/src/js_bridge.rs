@@ -47,12 +47,6 @@ pub fn get_collection_json(path: &str,on_complete: impl FnOnce(&str) + 'static, 
     getCollection(path,&on_complete,&on_error)
 }
 
-pub fn set_field(path: &str, field: &str, value: &str, on_complete: impl FnOnce() + 'static, on_error: impl FnOnce() + 'static)  {
-    let on_complete : JsValue = Closure::once_into_js(on_complete);
-    let on_error : JsValue = Closure::once_into_js(on_error);
-    setField(path,field,value,&on_complete,&on_error)
-}
-
 pub fn sync_document_json(path: &str, on_complete: impl FnMut(String) + 'static, on_error: impl FnOnce() + 'static) -> impl FnOnce() {
     let on_complete : Box<dyn FnMut(String)> = Box::new(on_complete);
     let on_error : JsValue = Closure::once_into_js(on_error);
