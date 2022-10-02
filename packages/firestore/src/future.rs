@@ -77,3 +77,7 @@ pub fn get_document<T>(params: &T::ParamForPath,document_id: &str, on_complete: 
 pub fn add_document<T>(params: &T::ParamForPath, document: &T,on_complete: impl FnOnce(&str) + 'static, on_error: impl FnMut() + 'static) -> String where T: FireStoreResource {
     crate::js_bridge::add_document(T::path(params).as_str(), serde_json::to_string(document).unwrap().as_str(), on_complete, on_error)
 }
+
+pub fn set_document<T>(params: &T::ParamForPath, document_id: &str, document: &T,on_complete: impl FnOnce() + 'static, on_error: impl FnMut() + 'static) where T: FireStoreResource {
+    crate::js_bridge::set_document_json((T::path(params) + "/" + document_id).as_str(), serde_json::to_string(document).unwrap().as_str(), on_complete, on_error)
+}

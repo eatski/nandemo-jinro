@@ -1,7 +1,6 @@
 
 use std::{collections::HashMap};
 use future::{FireStoreResource};
-use json_bridge::{set_document_field};
 use serde::{Serialize, Deserialize};
 
 mod js_bridge;
@@ -76,12 +75,26 @@ impl FireStoreResource for MemberJSON {
     type ParamForPath = String;
 }
 
-pub fn set_rule(room_id: &str,rule: &Rule, on_complete: impl FnOnce() + 'static, on_error: impl FnOnce() + 'static) {
-    let path: &str = &format!("{}/rooms/{}",NAME_SPACE,room_id);
-    set_document_field(path,"rule",rule,on_complete,on_error);
+#[derive(Serialize, Deserialize,Clone)]
+pub struct SetRule {
+    pub rule: Rule,
 }
 
-pub fn set_can_join_false(room_id: &str,on_complete: impl FnOnce() + 'static, on_error: impl FnOnce() + 'static) {
-    let path: &str = &format!("{}/rooms/{}",NAME_SPACE,room_id);
-    set_document_field(path,"can_join",&false,on_complete,on_error);
+impl FireStoreResource for SetRule {
+    fn path(_: &()) -> String {
+        format!("{}/rooms",NAME_SPACE)
+    }
+    type ParamForPath = ();
+}
+
+#[derive(Serialize, Deserialize,Clone)]
+pub struct SetCanJoin {
+    pub can_join: bool,
+}
+
+impl FireStoreResource for SetCanJoin {
+    fn path(_: &()) -> String {
+        format!("{}/rooms",NAME_SPACE)
+    }
+    type ParamForPath = ();
 }

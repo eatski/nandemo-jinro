@@ -17,6 +17,8 @@ extern "C" {
     fn syncDocument(path: &str, on_complete: &JsValue, on_error: &JsValue) -> Function;
     #[wasm_bindgen(js_name = "getDocument",js_namespace = ["window","_wasm_js_bridge"])]
     fn getDocument(path: &str, on_complete: &JsValue, on_error: &JsValue);
+    #[wasm_bindgen(js_name = "setDocument",js_namespace = ["window","_wasm_js_bridge"])]
+    fn setDocument(path: &str, data: &str, on_complete: &JsValue, on_error: &JsValue);
 }
 
 pub fn sync_collection_json(path: &str,callback:impl FnMut(String) + 'static , on_error: impl FnMut() + 'static) -> impl FnOnce() {
@@ -67,4 +69,10 @@ pub fn get_document_json(path: &str, on_complete: impl FnOnce(&str) + 'static, o
     });
     let on_error : JsValue = Closure::once_into_js(on_error);
     getDocument(path,&on_complete,&on_error)
+}
+
+pub fn set_document_json(path: &str, json: &str, on_complete: impl FnOnce() + 'static, on_error: impl FnOnce() + 'static)  {
+    let on_complete : JsValue = Closure::once_into_js(on_complete);
+    let on_error : JsValue = Closure::once_into_js(on_error);
+    setDocument(path,json,&on_complete,&on_error)
 }
