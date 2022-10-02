@@ -1,4 +1,4 @@
-use firestore::{MemberJSON, sync_members};
+use firestore::{MemberJSON, future::sync_collection};
 use presentational::{loading,SimpleCenteringSection,Heading2WithDescription, SimpleCenteringDiv,item_box, button,BoxListContainer};
 use yew::{Properties, function_component, html, UseStateHandle, use_state, use_effect_with_deps, Callback};
 use crate::{hook::{use_member, MemberState}};
@@ -30,8 +30,8 @@ pub fn lobby(props: &Props) -> Html {
         let room_id = props.room_id.clone();
         use_effect_with_deps(
             |room_id| {
-                sync_members(
-                    room_id.as_str(),
+                sync_collection::<MemberJSON>(
+                    room_id,
                     move |members| {
                         state.set(MembersState::Loaded(members))
                     },

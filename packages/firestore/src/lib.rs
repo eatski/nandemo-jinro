@@ -67,14 +67,6 @@ impl FireStoreResource for MemberJSON {
     type ParamForPath = String;
 }
 
-pub fn sync_members(room_id: &str,callback:impl FnMut(Vec<MemberJSON>)  + 'static , on_error: impl FnMut() + 'static) -> impl FnOnce() {
-    crate::future::sync_collection(
-        &room_id.to_string(),
-        callback,
-        on_error
-    )
-}
-
 pub fn get_members(room_id: &str,on_complete: impl FnOnce(Vec<MemberJSON>) + 'static, on_error: impl FnMut() + 'static) {
     get_collection(
         &format!("{}/rooms/{}/members",NAME_SPACE,room_id),

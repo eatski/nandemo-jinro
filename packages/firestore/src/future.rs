@@ -9,7 +9,7 @@ pub trait FireStoreResource where Self: DeserializeOwned {
     fn path(param: &Self::ParamForPath) -> String;
 }
 
-pub fn sync_collection<T,P>(param: &P,mut on_change: impl FnMut(Vec<T>) + 'static, on_error: impl FnMut() + 'static) -> impl FnOnce() where T: FireStoreResource<ParamForPath=P> {
+pub fn sync_collection<T>(param: &T::ParamForPath,mut on_change: impl FnMut(Vec<T>) + 'static, on_error: impl FnMut() + 'static) -> impl FnOnce() where T: FireStoreResource {
     let on_error = Rc::new(RefCell::new(Box::new(on_error) as Box<dyn FnMut()>));
     let on_parse_error = on_error.clone();
     let callback = move |json:String| {
