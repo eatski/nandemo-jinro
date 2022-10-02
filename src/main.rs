@@ -13,7 +13,7 @@ mod storage;
 mod entrance;
 mod rule_make;
 mod lobby;
-mod state_hooks;
+mod hook;
 mod roll;
 mod rolled;
 mod function;

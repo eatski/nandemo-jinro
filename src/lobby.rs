@@ -1,7 +1,7 @@
 use firestore::{MemberJSON, sync_members};
 use presentational::{loading,SimpleCenteringSection,Heading2WithDescription, SimpleCenteringDiv,item_box, button,BoxListContainer};
 use yew::{Properties, function_component, html, UseStateHandle, use_state, use_effect_with_deps, Callback};
-use crate::{state_hooks::{use_member, MemberState}};
+use crate::{hook::{use_member, MemberState}};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {

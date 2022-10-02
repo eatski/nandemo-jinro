@@ -2,7 +2,7 @@ use firestore::{add_roll, get_rolls};
 use presentational::loading;
 use yew::{function_component, html, Callback, Properties};
 
-use crate::{state_hooks::{use_room_sync, use_members, DataFetchState}, function::create_next_roll};
+use crate::{hook::{use_room_sync, use_members, DataFetchState}, function::create_next_roll};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {

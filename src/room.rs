@@ -2,7 +2,7 @@ use presentational::loading;
 use yew::{function_component, html, Properties, use_state_eq, Callback};
 use crate::entrance::{GuestEntrance};
 
-use crate::state_hooks::{use_member, use_room_sync, DataFetchState, use_rolls};
+use crate::hook::{use_member, use_room_sync, DataFetchState, use_rolls};
 use crate::{storage::{get_user_id}};
 use crate::lobby::Lobby;
 use crate::rule_make::RuleMake;
