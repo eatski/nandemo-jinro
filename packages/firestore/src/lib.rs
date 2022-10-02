@@ -1,7 +1,7 @@
 
 use std::{collections::HashMap};
 use future::{FireStoreResource};
-use json_bridge::{sync_document, get_document, set_document_field, add_document};
+use json_bridge::{get_document, set_document_field, add_document};
 use serde::{Serialize, Deserialize};
 
 mod js_bridge;
@@ -33,6 +33,13 @@ impl FireStoreResource for Roll {
 pub struct Room {
     pub rule: Option<Rule>,
     pub can_join: bool,
+}
+
+impl FireStoreResource for Room {
+    fn path(_: &()) -> String {
+        format!("{}/rooms",NAME_SPACE)
+    }
+    type ParamForPath = ();
 }
 
 #[derive(Serialize, Deserialize,Clone)]
@@ -88,14 +95,6 @@ pub fn set_rule(room_id: &str,rule: &Rule, on_complete: impl FnOnce() + 'static,
 pub fn set_can_join_false(room_id: &str,on_complete: impl FnOnce() + 'static, on_error: impl FnOnce() + 'static) {
     let path: &str = &format!("{}/rooms/{}",NAME_SPACE,room_id);
     set_document_field(path,"can_join",&false,on_complete,on_error);
-}
-
-pub fn sync_room(room_id: &str,callback: impl FnMut(Room) + 'static, on_error: impl FnMut() + 'static) -> impl FnOnce() {
-    sync_document(
-        &format!("{}/rooms/{}",NAME_SPACE,room_id),
-        callback,
-        on_error
-    )
 }
 
 pub fn add_roll(room_id: &str,roll: &Roll,on_complete: impl FnOnce() + 'static) -> String {

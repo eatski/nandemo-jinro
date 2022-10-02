@@ -42,27 +42,6 @@ pub fn use_member(room_id: &str,user_id: &str) -> MemberState {
     (*state_cloned).clone()
 }
 
-pub type RoomState = DataFetchState<firestore::Room>;
-
-pub fn use_room_sync(room_id: &str) -> RoomState {
-    let state = use_state(|| RoomState::Loading);
-    let state_cloned = state.clone();
-    let room_id = room_id.to_string();
-    use_effect_with_deps(
-        |room_id| {
-            firestore::sync_room(
-                room_id,
-                move |room| {
-                    state.set(RoomState::Loaded(room))
-                },
-                || {},
-            )
-        },
-        room_id,
-    );
-    (*state_cloned).clone()
-}
-
 pub fn use_collection<T>(param: &T::ParamForPath) -> DataFetchState<Vec<T>>  where T: 'static + FireStoreResource + Clone ,T::ParamForPath: Clone + PartialEq {
     let state = use_state(|| DataFetchState::Loading);
     let state_cloned = state.clone();
@@ -97,6 +76,27 @@ pub fn use_collection_sync<T>(param: &T::ParamForPath) -> DataFetchState<Vec<T>>
             )
         },
         param,
+    );
+    (*state_cloned).clone()
+}
+
+pub fn use_document_sync<T>(param: &T::ParamForPath,document_id: &str) -> DataFetchState<T> where T: 'static + FireStoreResource + Clone ,T::ParamForPath: Clone + PartialEq {
+    let state = use_state(|| DataFetchState::Loading);
+    let state_cloned = state.clone();
+    let param = param.clone();
+    let document_id = document_id.to_string();
+    use_effect_with_deps(
+        move |param| {
+            firestore::future::sync_document(
+                param,
+                document_id.as_str(),
+                move |document| {
+                    state.set(DataFetchState::Loaded(document))
+                },
+                || {},
+            )
+        },
+        param.clone(),
     );
     (*state_cloned).clone()
 }

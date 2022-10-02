@@ -1,8 +1,8 @@
-use firestore::{add_roll, future::get_collection, Roll, MemberJSON};
+use firestore::{add_roll, future::get_collection, Roll, MemberJSON, Room};
 use presentational::loading;
 use yew::{function_component, html, Callback, Properties};
 
-use crate::{hook::{use_room_sync, DataFetchState, use_collection}, function::create_next_roll};
+use crate::{hook::{DataFetchState, use_collection, use_document_sync}, function::create_next_roll};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
@@ -11,7 +11,7 @@ pub struct Props {
 
 #[function_component(RollButton)]
 pub fn roll(props: &Props) -> Html {
-    let room = use_room_sync(props.room_id.as_str());
+    let room = use_document_sync::<Room>(&(),props.room_id.as_str());
     let members = use_collection::<MemberJSON>(&props.room_id);
     let state = room.merge(members);
 
