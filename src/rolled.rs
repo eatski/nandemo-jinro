@@ -1,8 +1,8 @@
 use model::{Roll, Room, MemberJSON};
 use presentational::loading;
-use yew::{html, Properties, function_component};
+use yew::{html, Properties, function_component, Callback};
 
-use crate::{hooks::firestore::{use_collection_sync, use_document_sync, use_document}};
+use crate::{hooks::{firestore::{use_collection_sync, use_document_sync, use_document}, roll::use_roll}};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
@@ -16,6 +16,7 @@ pub fn rolled(props: &Props) -> Html {
     let room = use_document_sync::<Room>(&(),props.room_id.as_str());
     let member = use_document::<MemberJSON>(&props.room_id, props.user_id.as_str());
     let state = rolls.merge(room).merge(member);
+    let roll = use_roll(props.room_id.as_str());
     match state {
     crate::hooks::firestore::DataFetchState::Loading => loading(),
     crate::hooks::firestore::DataFetchState::Loaded(((mut rolls,room),member)) => {
@@ -32,10 +33,18 @@ pub fn rolled(props: &Props) -> Html {
                         <p>{role_name}</p>
                         {
                             member.is_host.then(|| {
-                                // TODO: Add a button to go to the next round
-                                html! {
-                                    <button>{"Next"}</button>
+                                match roll {
+                                    Some(roll) => {
+                                        let onclick = Callback::once(move |_| {
+                                            roll();
+                                        });
+                                        html! {
+                                            <button onclick={onclick}>{"Next"}</button>
+                                        }
+                                    },
+                                    None => loading(),
                                 }
+                                
                             }).unwrap_or_default()
                         }
                     </>
