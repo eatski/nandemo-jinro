@@ -2,7 +2,7 @@ use firestore::FireStoreResource;
 use model::{MemberJSON};
 use yew::{use_state, use_effect_with_deps};
 
-#[derive(Clone)]
+#[derive(Clone,PartialEq,Eq)]
 pub enum DataFetchState<R: Clone> {
     Loading,
     Loaded(R),

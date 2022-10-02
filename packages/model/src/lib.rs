@@ -19,7 +19,7 @@ impl FireStoreResource for MemberInput {
 
 pub type UserToRole = HashMap<String,String>;
 
-#[derive(Serialize, Deserialize,Clone)]
+#[derive(Serialize, Deserialize,Clone,PartialEq,Eq)]
 pub struct Roll {
     pub seq_num: usize,
     pub user_to_role: UserToRole,
@@ -32,7 +32,7 @@ impl FireStoreResource for Roll {
     type ParamForPath = String;
 }
 
-#[derive(Serialize, Deserialize,Clone)]
+#[derive(Serialize, Deserialize,Clone,PartialEq,Eq)]
 pub struct Room {
     pub rule: Option<Rule>,
     pub can_join: bool,
@@ -45,19 +45,19 @@ impl FireStoreResource for Room {
     type ParamForPath = ();
 }
 
-#[derive(Serialize, Deserialize,Clone)]
+#[derive(Serialize, Deserialize,Clone,PartialEq,Eq)]
 pub struct Role {
     pub id: String,
     pub name: String,
     pub number: usize
 }
-#[derive(Serialize, Deserialize,Clone)]
+#[derive(Serialize, Deserialize,Clone,PartialEq,Eq)]
 pub struct Rule {
     pub roles: Vec<Role>,
 }
 
 const NAME_SPACE: &str = "rollrole/v1";
-#[derive(Serialize, Deserialize,Clone)]
+#[derive(Serialize, Deserialize,Clone,PartialEq,Eq)]
 pub struct MemberJSON {
     pub name: String,
     pub id: String,
