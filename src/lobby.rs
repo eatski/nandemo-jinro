@@ -2,7 +2,7 @@ use firestore::sync_collection;
 use model::{MemberJSON,SetCanJoin};
 use presentational::{loading,SimpleCenteringSection,Heading2WithDescription, SimpleCenteringDiv,item_box, button,BoxListContainer};
 use yew::{Properties, function_component, html, UseStateHandle, use_state, use_effect_with_deps, Callback};
-use crate::{hook::{MemberState, use_document}};
+use crate::{hooks::firestore::{MemberState, use_document}};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {

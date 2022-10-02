@@ -13,10 +13,10 @@ mod storage;
 mod entrance;
 mod rule_make;
 mod lobby;
-mod hook;
 mod roll;
 mod rolled;
 mod function;
+mod hooks;
 
 #[function_component(Root)]
 fn root() -> Html {

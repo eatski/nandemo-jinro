@@ -3,7 +3,7 @@ use firestore::{get_collection, add_document};
 use presentational::loading;
 use yew::{function_component, html, Callback, Properties};
 
-use crate::{hook::{DataFetchState, use_collection, use_document_sync}, function::create_next_roll};
+use crate::{hooks::firestore::{DataFetchState, use_collection, use_document_sync}, function::create_next_roll};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
