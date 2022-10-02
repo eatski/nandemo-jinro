@@ -1,7 +1,7 @@
 use firestore::{MemberJSON, future::sync_collection};
 use presentational::{loading,SimpleCenteringSection,Heading2WithDescription, SimpleCenteringDiv,item_box, button,BoxListContainer};
 use yew::{Properties, function_component, html, UseStateHandle, use_state, use_effect_with_deps, Callback};
-use crate::{hook::{use_member, MemberState}};
+use crate::{hook::{MemberState, use_document}};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
@@ -41,7 +41,7 @@ pub fn lobby(props: &Props) -> Html {
             room_id,
         );
     }
-    let you_state = use_member(props.room_id.as_str(), props.user_id.as_str());
+    let you_state = use_document::<MemberJSON>(&props.room_id, props.user_id.as_str());
 
     let state = {
         let members_state = &*members_state;

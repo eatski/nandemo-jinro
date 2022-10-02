@@ -1,7 +1,7 @@
 
 use std::{collections::HashMap};
 use future::{FireStoreResource};
-use json_bridge::{get_document, set_document_field, add_document};
+use json_bridge::{set_document_field, add_document};
 use serde::{Serialize, Deserialize};
 
 mod js_bridge;
@@ -72,14 +72,6 @@ impl FireStoreResource for MemberJSON {
         format!("{}/rooms/{}/members",NAME_SPACE,room_id)
     }
     type ParamForPath = String;
-}
-
-pub fn get_member(room_id: &str,member_id: &str,on_complete: impl FnOnce(MemberJSON) + 'static, on_error: impl FnMut() + 'static) {
-    get_document(
-        &format!("{}/rooms/{}/members/{}",NAME_SPACE,room_id,member_id),
-        on_complete,
-        on_error
-    );
 }
 
 pub fn add_room(room: &Room,on_complete: impl FnOnce(&str) + 'static) -> String {

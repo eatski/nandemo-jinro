@@ -1,8 +1,8 @@
-use firestore::{Roll, Room};
+use firestore::{Roll, Room, MemberJSON};
 use presentational::loading;
 use yew::{html, Properties, function_component};
 
-use crate::{hook::{use_member, use_collection_sync, use_document_sync}};
+use crate::{hook::{use_collection_sync, use_document_sync, use_document}};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
@@ -14,7 +14,7 @@ pub struct Props {
 pub fn rolled(props: &Props) -> Html {
     let rolls = use_collection_sync::<Roll>(&props.room_id);
     let room = use_document_sync::<Room>(&(),props.room_id.as_str());
-    let member = use_member(props.room_id.as_str(), props.user_id.as_str());
+    let member = use_document::<MemberJSON>(&props.room_id, props.user_id.as_str());
     let state = rolls.merge(room).merge(member);
     match state {
     crate::hook::DataFetchState::Loading => loading(),

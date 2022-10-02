@@ -57,3 +57,19 @@ pub fn sync_document<T>(param: &T::ParamForPath, document_id: &str,mut on_change
     let on_error = move || on_error.borrow_mut()();
     crate::js_bridge::sync_document_json((T::path(param) + "/" + document_id).as_str(), callback, on_error)
 }
+
+pub fn get_document<T>(params: &T::ParamForPath,document_id: &str, on_complete: impl FnOnce(T) + 'static, on_error: impl FnMut() + 'static) where T: FireStoreResource  {
+    let on_error = Rc::new(RefCell::new(Box::new(on_error) as Box<dyn FnMut()>));
+    let on_parse_error = on_error.clone();
+    let callback = move |json:&str| {
+        match serde_json::from_str(json) {
+            Ok(t) => on_complete(t),
+            Err(e) => {
+                console::log_1(&e.to_string().into());
+                on_parse_error.borrow_mut()();
+            },
+        } 
+    };
+    let on_error = move || on_error.borrow_mut()();
+    crate::js_bridge::get_document_json((T::path(params) + "/" + document_id).as_str(), callback, on_error)
+}
