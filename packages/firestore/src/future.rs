@@ -1,10 +1,10 @@
 use std::{cell::RefCell, rc::Rc};
 
-use serde::de::DeserializeOwned;
+use serde::{de::DeserializeOwned, Serialize};
 use web_sys::console;
 
 use crate::js_bridge::sync_collection_json;
-pub trait FireStoreResource where Self: DeserializeOwned {
+pub trait FireStoreResource where Self: DeserializeOwned + Serialize {
     type ParamForPath;
     fn path(param: &Self::ParamForPath) -> String;
 }
@@ -72,4 +72,8 @@ pub fn get_document<T>(params: &T::ParamForPath,document_id: &str, on_complete: 
     };
     let on_error = move || on_error.borrow_mut()();
     crate::js_bridge::get_document_json((T::path(params) + "/" + document_id).as_str(), callback, on_error)
+}
+
+pub fn add_document<T>(params: &T::ParamForPath, document: &T,on_complete: impl FnOnce(&str) + 'static, on_error: impl FnMut() + 'static) -> String where T: FireStoreResource {
+    crate::js_bridge::add_document(T::path(params).as_str(), serde_json::to_string(document).unwrap().as_str(), on_complete, on_error)
 }

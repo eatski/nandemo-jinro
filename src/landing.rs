@@ -47,20 +47,21 @@ fn create_rule_view() -> Html {
     State::Input => html! {
         <InputAndButton label="作成" default="ホスト" placeholder="あなたの名前" onsubmit={Callback::once(move |name: String| {
             state.set(State::Loading);
-            firestore::add_room(
+            firestore::future::add_document(
+                &(),
                 &Room {
                     can_join: true,
                     rule: None,
                 },
                 move |room_id| {
                 let room_id_string = room_id.to_string();
-                let member_id = firestore::add_members(
-                    room_id, 
+                let member_id = firestore::future::add_document(
+                    &room_id.to_string(), 
                     &MemberInput {
                         name,
                         is_host: true
                     }, 
-                    move || {
+                    move |_| {
                         history.push(Route::Room { id: room_id_string});
                     },
                     move || {
@@ -68,6 +69,8 @@ fn create_rule_view() -> Html {
                     }
                 );
                 save_user_id(room_id,member_id.as_str());
+            },|| {
+
             });
         })}/>
     },

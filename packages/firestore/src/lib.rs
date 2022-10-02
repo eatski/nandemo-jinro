@@ -1,7 +1,7 @@
 
 use std::{collections::HashMap};
 use future::{FireStoreResource};
-use json_bridge::{set_document_field, add_document};
+use json_bridge::{set_document_field};
 use serde::{Serialize, Deserialize};
 
 mod js_bridge;
@@ -12,6 +12,14 @@ pub mod future;
 pub struct MemberInput {
     pub name: String,
     pub is_host: bool,
+}
+
+impl FireStoreResource for MemberInput {
+    type ParamForPath = String;
+
+    fn path(param: &Self::ParamForPath) -> String {
+        format!("{}/rooms/{}/members",NAME_SPACE,param)
+    }
 }
 
 pub type UserToRole = HashMap<String,String>;
@@ -54,12 +62,6 @@ pub struct Rule {
 }
 
 const NAME_SPACE: &str = "rollrole/v1";
-
-pub fn add_members(room_id: &str,member: &MemberInput, on_complete: impl FnOnce() + 'static, on_error: impl FnOnce() + 'static) -> String {
-    let path: &str = &format!("{}/rooms/{}/members",NAME_SPACE,room_id);
-    add_document(path,member,|_| on_complete(),on_error)
-}
-
 #[derive(Serialize, Deserialize,Clone)]
 pub struct MemberJSON {
     pub name: String,
@@ -74,11 +76,6 @@ impl FireStoreResource for MemberJSON {
     type ParamForPath = String;
 }
 
-pub fn add_room(room: &Room,on_complete: impl FnOnce(&str) + 'static) -> String {
-    let path: &str = &format!("{}/rooms",NAME_SPACE);
-    add_document(path,room,on_complete,|| {})
-}
-
 pub fn set_rule(room_id: &str,rule: &Rule, on_complete: impl FnOnce() + 'static, on_error: impl FnOnce() + 'static) {
     let path: &str = &format!("{}/rooms/{}",NAME_SPACE,room_id);
     set_document_field(path,"rule",rule,on_complete,on_error);
@@ -87,9 +84,4 @@ pub fn set_rule(room_id: &str,rule: &Rule, on_complete: impl FnOnce() + 'static,
 pub fn set_can_join_false(room_id: &str,on_complete: impl FnOnce() + 'static, on_error: impl FnOnce() + 'static) {
     let path: &str = &format!("{}/rooms/{}",NAME_SPACE,room_id);
     set_document_field(path,"can_join",&false,on_complete,on_error);
-}
-
-pub fn add_roll(room_id: &str,roll: &Roll,on_complete: impl FnOnce() + 'static) -> String {
-    let path: &str = &format!("{}/rooms/{}/rolls",NAME_SPACE,room_id);
-    add_document(path,roll,|_| on_complete(),|| {})
 }

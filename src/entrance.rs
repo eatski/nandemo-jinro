@@ -1,4 +1,4 @@
-use firestore::{add_members, MemberInput, MemberJSON, Room};
+use firestore::{MemberInput, MemberJSON, Room, future::add_document};
 use presentational::{loading, title,SimpleCenteringSection,Heading2,InputAndButton};
 use yew::{function_component, Properties, use_state, use_effect_with_deps, Callback, html};
 
@@ -50,13 +50,13 @@ pub fn guest_entrance(props: &GuestEntranceProps) -> Html {
     let on_join = props.on_join.clone();
     let add_member = Callback::from(move |name| {
         let room_id_cloned = room_id.clone();
-        let user_id = add_members(
-            room_id.as_str(),
+        let user_id = add_document(
+            &room_id,
             &MemberInput {
                 name,
                 is_host: false,
             },
-            move || {},
+            |_| {},
             || {}
         );
         crate::storage::save_user_id(room_id_cloned.as_str(),user_id.as_str());

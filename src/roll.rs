@@ -1,4 +1,4 @@
-use firestore::{add_roll, future::get_collection, Roll, MemberJSON, Room};
+use firestore::{future::{get_collection, add_document}, Roll, MemberJSON, Room};
 use presentational::loading;
 use yew::{function_component, html, Callback, Properties};
 
@@ -26,7 +26,7 @@ pub fn roll(props: &Props) -> Html {
             if let Some(rule) = room.rule {
                 get_collection::<Roll>(&room_id, move |rolls| {
                     let roll = create_next_roll(&rule, &members, &rolls);
-                    add_roll(room_id_cloned.as_str(), &roll, || {});
+                    add_document(&room_id_cloned, &roll, |_| {},|| {});
                 },|| {});
             }
         });
