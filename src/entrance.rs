@@ -1,4 +1,4 @@
-use firestore::{add_members, MemberInput};
+use firestore::{add_members, MemberInput, MemberJSON};
 use presentational::{loading, title,SimpleCenteringSection,Heading2,InputAndButton};
 use yew::{function_component, Properties, use_state, use_effect_with_deps, Callback, html};
 
@@ -25,8 +25,8 @@ pub fn guest_entrance(props: &GuestEntranceProps) -> Html {
         let room_id = props.room_id.clone();
         use_effect_with_deps(
             |room_id| {
-                firestore::get_members(
-                    room_id.as_str(),
+                firestore::future::get_collection::<MemberJSON>(
+                    &room_id,
                     move |members| {
                         let host_name = members
                             .iter()

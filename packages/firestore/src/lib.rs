@@ -1,7 +1,7 @@
 
 use std::{collections::HashMap};
 use future::{FireStoreResource};
-use json_bridge::{sync_document, get_collection, get_document, set_document_field, add_document};
+use json_bridge::{sync_document, get_document, set_document_field, add_document};
 use serde::{Serialize, Deserialize};
 
 mod js_bridge;
@@ -67,14 +67,6 @@ impl FireStoreResource for MemberJSON {
     type ParamForPath = String;
 }
 
-pub fn get_members(room_id: &str,on_complete: impl FnOnce(Vec<MemberJSON>) + 'static, on_error: impl FnMut() + 'static) {
-    get_collection(
-        &format!("{}/rooms/{}/members",NAME_SPACE,room_id),
-        on_complete,
-        on_error
-    )
-}
-
 pub fn get_member(room_id: &str,member_id: &str,on_complete: impl FnOnce(MemberJSON) + 'static, on_error: impl FnMut() + 'static) {
     get_document(
         &format!("{}/rooms/{}/members/{}",NAME_SPACE,room_id,member_id),
@@ -109,12 +101,4 @@ pub fn sync_room(room_id: &str,callback: impl FnMut(Room) + 'static, on_error: i
 pub fn add_roll(room_id: &str,roll: &Roll,on_complete: impl FnOnce() + 'static) -> String {
     let path: &str = &format!("{}/rooms/{}/rolls",NAME_SPACE,room_id);
     add_document(path,roll,|_| on_complete(),|| {})
-}
-
-pub fn get_rolls(room_id: &str,on_complete: impl FnOnce(Vec<Roll>) + 'static, on_error: impl FnMut() + 'static) {
-    get_collection(
-        &format!("{}/rooms/{}/rolls",NAME_SPACE,room_id),
-        on_complete,
-        on_error
-    )
 }
