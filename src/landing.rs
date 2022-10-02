@@ -3,7 +3,8 @@ use presentational::{title, CardListContainer,Card,Heading2WithDescription, Main
 use yew_router::prelude::{use_history, History};
 
 use crate::{router::Route,storage::{save_user_id}};
-use firestore::{self, MemberInput, Room};
+use model::{self, MemberInput, Room};
+
 
 #[function_component(Landing)]
 pub fn landing() -> Html {
@@ -47,7 +48,7 @@ fn create_rule_view() -> Html {
     State::Input => html! {
         <InputAndButton label="作成" default="ホスト" placeholder="あなたの名前" onsubmit={Callback::once(move |name: String| {
             state.set(State::Loading);
-            firestore::future::add_document(
+            firestore::add_document(
                 &(),
                 &Room {
                     can_join: true,
@@ -55,7 +56,7 @@ fn create_rule_view() -> Html {
                 },
                 move |room_id| {
                 let room_id_string = room_id.to_string();
-                let member_id = firestore::future::add_document(
+                let member_id = firestore::add_document(
                     &room_id.to_string(), 
                     &MemberInput {
                         name,

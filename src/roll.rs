@@ -1,4 +1,5 @@
-use firestore::{future::{get_collection, add_document}, Roll, MemberJSON, Room};
+use model::{Roll, MemberJSON, Room};
+use firestore::{get_collection, add_document};
 use presentational::loading;
 use yew::{function_component, html, Callback, Properties};
 

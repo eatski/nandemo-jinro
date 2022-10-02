@@ -255,6 +255,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "model"
+version = "0.1.0"
+dependencies = [
+ "firestore",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "once_cell"
 version = "1.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -359,6 +368,7 @@ dependencies = [
  "firestore",
  "getrandom",
  "js-sys",
+ "model",
  "presentational",
  "rand",
  "web-sys",

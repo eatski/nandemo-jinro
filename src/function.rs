@@ -1,6 +1,5 @@
 use std::iter::repeat;
-
-use firestore::{Roll, Rule, MemberJSON, UserToRole};
+use model::{Roll, Rule, MemberJSON, UserToRole};
 use rand::seq::SliceRandom;
 
 pub fn create_next_roll(rule: &Rule,members: &Vec<MemberJSON>,rolls: &Vec<Roll>) -> Roll {

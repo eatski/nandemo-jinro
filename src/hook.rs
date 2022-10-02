@@ -1,4 +1,5 @@
-use firestore::{MemberJSON, future::FireStoreResource};
+use firestore::FireStoreResource;
+use model::{MemberJSON};
 use yew::{use_state, use_effect_with_deps};
 
 #[derive(Clone)]
@@ -25,7 +26,7 @@ pub fn use_collection<T>(param: &T::ParamForPath) -> DataFetchState<Vec<T>>  whe
     let state_cloned = state.clone();
     use_effect_with_deps(
         |param| {
-            firestore::future::get_collection(
+            firestore::get_collection(
                 param,
                 move |members| {
                     state.set(DataFetchState::Loaded(members))
@@ -45,7 +46,7 @@ pub fn use_collection_sync<T>(param: &T::ParamForPath) -> DataFetchState<Vec<T>>
     let param = param.clone();
     use_effect_with_deps(
         |param| {
-            firestore::future::sync_collection(
+            firestore::sync_collection(
                 param,
                 move |collection| {
                     state.set(DataFetchState::Loaded(collection))
@@ -65,7 +66,7 @@ pub fn use_document_sync<T>(param: &T::ParamForPath,document_id: &str) -> DataFe
     let document_id = document_id.to_string();
     use_effect_with_deps(
         move |param| {
-            firestore::future::sync_document(
+            firestore::sync_document(
                 param,
                 document_id.as_str(),
                 move |document| {
@@ -86,7 +87,7 @@ pub fn use_document<T>(param: &T::ParamForPath,document_id: &str) -> DataFetchSt
     let document_id = document_id.to_string();
     use_effect_with_deps(
         move |param| {
-            firestore::future::get_document(
+            firestore::get_document(
                 param,
                 document_id.as_str(),
                 move |document| {

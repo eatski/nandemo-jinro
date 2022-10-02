@@ -1,4 +1,4 @@
-use firestore::{Roll, MemberJSON};
+use model::{Roll, MemberJSON};
 use presentational::loading;
 use yew::{function_component, html, Properties, use_state_eq, Callback};
 use crate::entrance::{GuestEntrance};
@@ -43,7 +43,7 @@ struct HasUserIdProps {
 #[function_component(HasUserId)]
 fn view_when_has_userid(props: &HasUserIdProps) -> Html {
     let member = use_document::<MemberJSON>(&props.room_id, props.user_id.as_str());
-    let room = use_document_sync::<firestore::Room>(&(),props.room_id.as_str());
+    let room = use_document_sync::<model::Room>(&(),props.room_id.as_str());
     let roles = use_collection_sync::<Roll>(&props.room_id);
     let merged = room.merge(member).merge(roles);
     match merged {

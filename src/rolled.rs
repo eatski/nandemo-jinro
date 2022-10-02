@@ -1,4 +1,4 @@
-use firestore::{Roll, Room, MemberJSON};
+use model::{Roll, Room, MemberJSON};
 use presentational::loading;
 use yew::{html, Properties, function_component};
 

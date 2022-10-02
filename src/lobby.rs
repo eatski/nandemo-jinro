@@ -1,4 +1,5 @@
-use firestore::{MemberJSON, future::sync_collection,SetCanJoin};
+use firestore::sync_collection;
+use model::{MemberJSON,SetCanJoin};
 use presentational::{loading,SimpleCenteringSection,Heading2WithDescription, SimpleCenteringDiv,item_box, button,BoxListContainer};
 use yew::{Properties, function_component, html, UseStateHandle, use_state, use_effect_with_deps, Callback};
 use crate::{hook::{MemberState, use_document}};
@@ -126,7 +127,7 @@ fn member_close(props: &MemberCloseProps) -> Html {
         State::Clickable => {
             button("締め切る", Callback::from(move |_| {
                 state.set(State::Loading);
-                firestore::future::set_document(
+                firestore::set_document(
                     &(),
                     room_id.as_str(), 
                     &SetCanJoin { can_join: false },

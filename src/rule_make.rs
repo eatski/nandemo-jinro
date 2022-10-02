@@ -1,4 +1,4 @@
-use firestore::{Rule, Role, SetRule};
+use model::{Rule, Role, SetRule};
 use yew::{function_component, html, Callback, use_state, Properties};
 use presentational::{InputText,InputSmallNumber,AddButton,ListItemRow,ListContainer,SimpleCenteringDiv,Heading2WithDescription,SimpleCenteringSection, button};
 
@@ -28,7 +28,7 @@ pub fn rule_make(props: &Props) -> Html {
     let captured_state = (*state).clone();
     let room_id = props.room_id.clone();
     let publish_rule = Callback::from(move |_| {
-        firestore::future::set_document(
+        firestore::set_document(
     &(),
     room_id.as_str(),
             &SetRule {

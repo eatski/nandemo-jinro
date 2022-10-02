@@ -1,4 +1,5 @@
-use firestore::{MemberInput, MemberJSON, Room, future::add_document};
+use model::{MemberInput, MemberJSON, Room};
+use firestore::add_document;
 use presentational::{loading, title,SimpleCenteringSection,Heading2,InputAndButton};
 use yew::{function_component, Properties, use_state, use_effect_with_deps, Callback, html};
 
@@ -25,7 +26,7 @@ pub fn guest_entrance(props: &GuestEntranceProps) -> Html {
         let room_id = props.room_id.clone();
         use_effect_with_deps(
             |room_id| {
-                firestore::future::get_collection::<MemberJSON>(
+                firestore::get_collection::<MemberJSON>(
                     &room_id,
                     move |members| {
                         let host_name = members
@@ -74,7 +75,7 @@ pub fn guest_entrance(props: &GuestEntranceProps) -> Html {
     let can_join_state_cloned = can_join_state.clone();
     use_effect_with_deps(move |room_id| {
         let state = can_join_state_cloned.clone();
-        firestore::future::sync_document::<Room>(&(),room_id, move |room| {
+        firestore::sync_document::<Room>(&(),room_id, move |room| {
             state.set(CanJoinState::Loaded{can_join: room.can_join})
         }, || {})
     },props.room_id.clone());
