@@ -1,5 +1,4 @@
 use firestore::FireStoreResource;
-use model::{MemberJSON};
 use yew::{use_state, use_effect_with_deps};
 
 #[derive(Clone,PartialEq,Eq)]
@@ -18,8 +17,6 @@ impl <T: Clone>DataFetchState<T> {
         }
     }
 }
-
-pub type MemberState = DataFetchState<MemberJSON>;
 
 pub fn use_collection<T>(param: &T::ParamForPath) -> DataFetchState<Vec<T>>  where T: 'static + FireStoreResource + Clone ,T::ParamForPath: Clone + PartialEq {
     let state = use_state(|| DataFetchState::Loading);

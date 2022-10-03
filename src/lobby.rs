@@ -1,8 +1,7 @@
-use firestore::sync_collection;
 use model::{MemberJSON,SetCanJoin};
 use presentational::{loading,SimpleCenteringSection,Heading2WithDescription, SimpleCenteringDiv,item_box, button,BoxListContainer};
-use yew::{Properties, function_component, html, UseStateHandle, use_state, use_effect_with_deps, Callback};
-use crate::{hooks::firestore::{MemberState, use_document}};
+use yew::{Properties, function_component, html, use_state, Callback};
+use crate::{hooks::firestore::{use_document, use_collection, DataFetchState}};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
@@ -10,53 +9,15 @@ pub struct Props {
     pub user_id: String,
 }
 
-enum MembersState {
-    Loading,
-    Loaded(Vec<MemberJSON>),
-}
-
-enum State {
-    Loading,
-    Loaded {
-        members: Vec<MemberJSON>,
-        you: MemberJSON,
-    },
-}
-
 #[function_component(Lobby)]
 pub fn lobby(props: &Props) -> Html {
-    let members_state: UseStateHandle<MembersState>  = use_state(|| (MembersState::Loading));
-    {
-        let state = members_state.clone();
-        let room_id = props.room_id.clone();
-        use_effect_with_deps(
-            |room_id| {
-                sync_collection::<MemberJSON>(
-                    room_id,
-                    move |members| {
-                        state.set(MembersState::Loaded(members))
-                    },
-                    || {},
-                )
-            },
-            room_id,
-        );
-    }
+    let members_state = use_collection::<MemberJSON>(&props.room_id);
     let you_state = use_document::<MemberJSON>(&props.room_id, props.user_id.as_str());
 
-    let state = {
-        let members_state = &*members_state;
-        let you_state = you_state;
-        match (members_state, you_state) {
-            (MembersState::Loading, MemberState::Loading) => State::Loading,
-            (MembersState::Loading, MemberState::Loaded(_)) => State::Loading,
-            (MembersState::Loaded(_), MemberState::Loading) => State::Loading,
-            (MembersState::Loaded(members), MemberState::Loaded(you)) => State::Loaded { members: members.clone(), you },
-        }
-    };
+    let state = members_state.merge::<>(you_state);
     
     match state {
-        State::Loaded{members,you} => {
+        DataFetchState::Loaded((members,you)) => {
             let is_host = you.is_host;
             let user_id = props.user_id.clone();
             html! {
@@ -99,7 +60,7 @@ pub fn lobby(props: &Props) -> Html {
                 </>
             }
         },
-        State::Loading => {
+        DataFetchState::Loading => {
             html! {
                 <SimpleCenteringSection>
                     {loading()}
