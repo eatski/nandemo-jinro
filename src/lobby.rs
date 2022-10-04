@@ -1,5 +1,5 @@
 use model::{MemberJSON,SetCanJoin};
-use presentational::{loading,SimpleCenteringSection,Heading2WithDescription, SimpleCenteringDiv,item_box, button,BoxListContainer};
+use presentational::{loading,SimpleCenteringSection, Heading2,HeadingDescription, SimpleCenteringDiv,item_box, button,BoxListContainer};
 use yew::{Properties, function_component, html, use_state, Callback};
 use crate::{hooks::firestore::{use_document, use_collection, DataFetchState}};
 
@@ -26,11 +26,17 @@ pub fn lobby(props: &Props) -> Html {
                         {
                             if is_host {
                                 html! {
-                                    <Heading2WithDescription title={"メンバーを集めましょう"} description={"このページのURLを一緒に遊ぶメンバーに共有しましょう"}/>
+                                    <>
+                                        <Heading2>{"メンバーを集めましょう"}</Heading2>
+                                        <HeadingDescription>{"このページのURLを一緒に遊ぶメンバーに共有しましょう"}</HeadingDescription>
+                                    </>
                                 }
                             } else {
                                 html! {
-                                    <Heading2WithDescription title={"部屋に参加しました"} description={"ホストがゲームを始めるのを待ちましょう"}/>
+                                    <>
+                                        <Heading2>{"部屋に参加しました"}</Heading2>
+                                        <HeadingDescription>{"ホストがゲームを始めるのを待ちましょう"}</HeadingDescription>
+                                    </>
                                 }
                             }
                         }

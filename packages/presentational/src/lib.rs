@@ -13,20 +13,12 @@ pub fn loading() -> Html {
     }
 }
 
-
-
 pub fn button_link(label: &str,href: &str) -> Html {
     html! {
         <a class="rounded-md border-line border-solid border text-black bg-white hover:text-black-light py-2 px-3" href={href.to_owned()}>
             {label}
         </a>
     }
-}
-
-#[derive(Properties, PartialEq)]
-pub struct Heading2WithDescriptionProps {
-    pub description: String,
-    pub title: String,
 }
 
 #[function_component(Heading2)]
@@ -36,60 +28,16 @@ pub fn heading2(props: &ChildrenOnlyProps) -> Html {
     }
 }
 
-#[function_component(Heading2WithDescription)]
-pub fn heading2_with_description(props: &Heading2WithDescriptionProps) -> Html {
+#[function_component(HeadingDescription)]
+pub fn heading_descriotion(props: &ChildrenOnlyProps) -> Html {
     html! {
-        <>
-            <h2 class="w-full text-center text-2xl text-black">{&props.title}</h2>
-            <p class="w-full text-center text-sm text-black-light mt-1">{&props.description}</p>
-        </>
-    }
-}
-
-#[derive(Properties, PartialEq)]
-pub struct CardProps {
-    pub children: Children,
-    pub bg_type: CardBgType,
-}
-
-#[derive(PartialEq)]
-pub enum CardBgType {
-    White,
-    Colored
-}
-
-impl CardBgType {
-    fn to_class(&self) -> &str {
-        match self {
-            CardBgType::White => "bg-white",
-            CardBgType::Colored => "bg-colored"
-        }
-    }
-}
-
-#[function_component(Card)]
-pub fn card(props:&CardProps) -> Html {
-    html! {
-        <section class="w-full max-w-xl">
-            <div class={format!("h-full rounded-md p-3 {}", props.bg_type.to_class())}>
-                {props.children.clone()}
-            </div>
-        </section>
+        <p class="w-full text-center text-sm text-black-light mt-1">{props.children.clone()}</p>
     }
 }
 
 #[derive(Properties, PartialEq)]
 pub struct ChildrenOnlyProps {
     pub children: Children, // the field name `children` is important!
-}
-
-#[function_component(CardListContainer)]
-pub fn card_list_container(props:&ChildrenOnlyProps) -> Html {
-    html! {
-        <div class="flex gap-7 flex-col md:flex-row justify-center">
-            {props.children.clone()}
-        </div>
-    }
 }
 
 #[derive(Properties, PartialEq)]
@@ -132,24 +80,6 @@ pub fn input_and_button(props: &InputAndButtonProps) -> Html {
         <div class="flex justify-center">
             <input onclick={on_input_click} value={value.clone()} {oninput} class="w-3/5 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black mr-3 outline-none" type="text" placeholder={props.placeholder}/>
             <button onclick={props.onsubmit.reform(move |_| value.clone())} {disabled} class={"bg-feature transition-colors hover:bg-feature-light disabled:bg-quiet text-white py-2 px-4 rounded-md"}>{&props.label}</button>
-        </div>
-    }
-}
-
-#[function_component(CardContent)]
-pub fn card_content(props:&ChildrenOnlyProps) -> Html {
-    html! {
-        <div class="py-2">
-            {props.children.clone()}
-        </div>
-    }
-}
-
-pub fn tag_list() -> Html {
-    html! {
-        <div class="flex flex-wrap justify-center gap-2">
-            {button_link("スプラトゥーン", "/tags/spatoon")}
-            {button_link("汎用 4人", "/tags/monster_hunter")}
         </div>
     }
 }

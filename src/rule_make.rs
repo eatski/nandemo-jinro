@@ -1,6 +1,6 @@
 use model::{Rule, Role, SetRule};
 use yew::{function_component, html, Callback, use_state, Properties};
-use presentational::{InputText,InputSmallNumber,AddButton,ListItemRow,ListContainer,SimpleCenteringDiv,Heading2WithDescription,SimpleCenteringSection, button};
+use presentational::{InputText,InputSmallNumber,AddButton,ListItemRow,ListContainer,SimpleCenteringDiv,Heading2,HeadingDescription,SimpleCenteringSection, button};
 
 #[derive(Clone)]
 struct Item {
@@ -46,7 +46,8 @@ pub fn rule_make(props: &Props) -> Html {
     let captured_state = (*state).clone();
     html! {
         <SimpleCenteringSection>
-            <Heading2WithDescription title={"ルールを決めましょう"} description={"役職とその人数を決めましょう"}/>
+            <Heading2>{"ルールを決めましょう"}</Heading2>
+            <HeadingDescription>{"役職とその人数を決めましょう"}</HeadingDescription>
             <ListContainer>
                 {for (*state).iter().enumerate().map(|(index,item)| {
                     let on_number_input = {

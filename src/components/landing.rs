@@ -1,5 +1,5 @@
-use yew::{function_component, html, Callback, use_state};
-use presentational::{CardListContainer,Card,Heading2WithDescription, CardBgType, CardContent,InputAndButton,tag_list, list, loading};
+use yew::{function_component, html, Callback, use_state, Properties, Children};
+use presentational::{Heading2,HeadingDescription,InputAndButton, list, loading, button_link};
 use yew_router::prelude::{use_history, History};
 
 use crate::{router::Route,storage::{save_user_id}};
@@ -7,26 +7,57 @@ use model::{self, MemberInput, Room};
 
 use super::title::title;
 
+#[derive(Properties, PartialEq)]
+pub struct ChildrenOnlyProps {
+    pub children: Children,
+}
+
+
+#[function_component(Card)]
+fn card(props:&ChildrenOnlyProps) -> Html {
+    html! {
+        <section class="w-full max-w-xl">
+            <div class="h-full rounded-md p-3 bg-colored">
+                {props.children.clone()}
+            </div>
+        </section>
+    }
+}
+
+#[function_component(CardContent)]
+pub fn card_content(props:&ChildrenOnlyProps) -> Html {
+    html! {
+        <div class="py-2">
+            {props.children.clone()}
+        </div>
+    }
+}
+
 
 #[function_component(Landing)]
 pub fn landing() -> Html {
     html! {
         <>
             {title()}
-            <CardListContainer>
-                <Card bg_type={CardBgType::Colored}>
-                    <Heading2WithDescription title="ルール作成から" description="オリジナルのルールで遊ぶ"/>
+            <div class="flex gap-7 flex-col md:flex-row justify-center">
+                <Card>
+                    <Heading2>{"ルール作成から"}</Heading2>
+                    <HeadingDescription>{"オリジナルのルールで遊ぶ"}</HeadingDescription>
                     <CardContent>
                         <CreateRule />
                     </CardContent>
                 </Card>
-                <Card bg_type={CardBgType::Colored}>
-                    <Heading2WithDescription title="テンプレから" description="誰かが作ったルールで遊ぶ"/>
+                <Card>
+                    <Heading2>{"テンプレから"}</Heading2>
+                    <HeadingDescription>{"誰かが作ったルールで遊ぶ"}</HeadingDescription>
                     <CardContent>
-                        {tag_list()}
+                         <div class="flex flex-wrap justify-center gap-2">
+                            {button_link("スプラトゥーン", "/tags/spatoon")}
+                            {button_link("汎用 4人", "/tags/monster_hunter")}
+                        </div>
                     </CardContent>
                 </Card>
-            </CardListContainer>
+            </div>
             {list("遊び方",vec![
                 "好きなルールを選ぶor作成",
                 "みんなに部屋のURLを共有",
