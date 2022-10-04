@@ -101,14 +101,6 @@ pub fn footer() -> Html {
     }
 }
 
-pub fn point(text: &str) -> Html {
-    html! {
-        <span role="img" aria-label={text.to_owned()} class="relative h-2 w-2">
-            <span class="animate-pulse absolute -translate-y-1/2 top-0 left-0 rounded-full bg-feature-light h-2 w-2" />
-        </span>
-    }
-}
-
 #[function_component(SimpleCenteringSection)]
 pub fn simple_centering_section(props:&ChildrenOnlyProps) -> Html {
     html! {
@@ -117,25 +109,6 @@ pub fn simple_centering_section(props:&ChildrenOnlyProps) -> Html {
                 {props.children.clone()}
             </div>
         </section>
-    }
-}
-
-pub fn item_box(label: &str,subtext: Option<&str>) -> Html {
-    html! {
-        <div class="flex justify-center">
-            <div class="relative bg-colored-light w-4/5 border-line border-solid border rounded-full py-0.5 text-center text-md text-black-light">
-                {label}<span class="absolute top-1/2 right-5">{subtext.map(point).unwrap_or(html!{})}</span>
-            </div>
-        </div>
-    }
-}
-
-#[function_component(BoxListContainer)]
-pub fn box_list_conatiner(props: &ChildrenOnlyProps) -> Html {
-    html! {
-        <ul class="flex flex-col gap-2">
-            {props.children.clone()}
-        </ul>
     }
 }
 
