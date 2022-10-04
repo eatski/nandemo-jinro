@@ -3,9 +3,8 @@ use yew::prelude::*;
 use components::landing::Landing;
 use components::layout::Layout;
 use yew_router::prelude::*;
-use room::Room;
+use components::room::Room;
 
-mod room;
 mod components;
 mod router;
 mod storage;
