@@ -8,7 +8,6 @@ use components::room::Room;
 mod components;
 mod router;
 mod storage;
-mod entrance;
 mod rule_make;
 mod roll;
 mod rolled;

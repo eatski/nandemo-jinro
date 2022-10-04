@@ -1,7 +1,7 @@
 use model::{Roll, MemberJSON};
 use presentational::loading;
 use yew::{function_component, html, Properties, use_state_eq, Callback};
-use crate::entrance::{GuestEntrance};
+use crate::components::entrance::{GuestEntrance};
 
 use crate::hooks::firestore::{DataFetchState, use_collection_sync, use_document_sync, use_document};
 use crate::{storage::{get_user_id}};

@@ -1,6 +1,6 @@
 use model::{MemberInput, MemberJSON, Room};
 use firestore::add_document;
-use presentational::{loading,SimpleCenteringSection,Heading2,InputAndButton};
+use presentational::{loading,Heading2,InputAndButton};
 use yew::{function_component, Properties, use_state, use_effect_with_deps, Callback, html};
 
 use crate::components::title::title;
@@ -93,19 +93,19 @@ pub fn guest_entrance(props: &GuestEntranceProps) -> Html {
                 html! {
                     <>
                         {title()}
-                        <SimpleCenteringSection>
-                            <Heading2>{ format!("「{}」の部屋",host_name)}</Heading2>
-                            <InputAndButton label="参加" placeholder="あなたの名前" onsubmit={add_member} />
-                        </SimpleCenteringSection>
+                        <section class="mx-auto w-full max-w-2xl">
+                            <Heading2>{ format!("「{}」の部屋に入る",host_name)}</Heading2>
+                            <InputAndButton label="参加" placeholder="あなたの名前" onsubmit={add_member} />  
+                        </section>
                     </>
                 }
             }  else {
                 html! {
                     <div>
                         {title()}
-                        <SimpleCenteringSection>
+                        <div class="mx-auto w-full max-w-2xl text-center text-black">
                             <p>{"この部屋は参加を締め切られました。"}</p>
-                        </SimpleCenteringSection>
+                        </div>
                     </div>
                 }
             }

@@ -3,3 +3,4 @@ pub mod layout;
 pub mod title;
 pub mod room;
 pub mod lobby;
+pub mod entrance;
