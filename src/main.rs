@@ -1,13 +1,12 @@
-
-use presentational::{header,footer};
 use router::Route;
 use yew::prelude::*;
-use landing::Landing;
+use components::landing::Landing;
+use components::layout::Layout;
 use yew_router::prelude::*;
 use room::Room;
 
 mod room;
-mod landing;
+mod components;
 mod router;
 mod storage;
 mod entrance;
@@ -20,13 +19,11 @@ mod hooks;
 #[function_component(Root)]
 fn root() -> Html {
     html! {
-        <div>
-            {header()}
+        <Layout>
             <BrowserRouter>
                 <Switch<Route> render={Switch::render(switch)} />
             </BrowserRouter>
-            {footer()}
-        </div>
+        </Layout>
     }
 }
 

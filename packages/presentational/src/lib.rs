@@ -13,36 +13,13 @@ pub fn loading() -> Html {
     }
 }
 
-pub fn header() -> Html {
-    html! {
-        <header class="w-full border-line border-solid border-b px-4 py-3 ">
-            <div class="flex items-center">
-                <a class="font-mono text-black hover:text-black-light text-md" href="/">
-                    {"なんでも人狼"}
-                </a>
-                <div class="ml-auto">
-                   {button_link("報告","/")}
-                </div>
-            </div>
-        </header>
-    }
-}
+
 
 pub fn button_link(label: &str,href: &str) -> Html {
     html! {
         <a class="rounded-md border-line border-solid border text-black bg-white hover:text-black-light py-2 px-3" href={href.to_owned()}>
             {label}
         </a>
-    }
-}
-
-
-pub fn title() -> Html {
-    html! {
-        <div class="text-center p-8">
-            <h1 class="text-2xl md:text-4xl text-black font-mono font-bold">{"なんでも人狼"}</h1>
-            <p class="text-black-light mt-2">{"なんでも人狼ゲームにして遊べちゃうブラウザアプリ"}</p>
-        </div>
     }
 }
 
@@ -279,6 +256,7 @@ pub fn input_text(props: &InputTextProps) -> Html {
         <input oninput={oninput} value={props.value.clone()} class="w-3/5 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="text" placeholder={props.placeholder}/>
     }
 }
+
 
 
 #[derive(Properties, PartialEq)]

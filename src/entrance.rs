@@ -1,7 +1,9 @@
 use model::{MemberInput, MemberJSON, Room};
 use firestore::add_document;
-use presentational::{loading, title,SimpleCenteringSection,Heading2,InputAndButton};
+use presentational::{loading,SimpleCenteringSection,Heading2,InputAndButton};
 use yew::{function_component, Properties, use_state, use_effect_with_deps, Callback, html};
+
+use crate::components::title::title;
 
 
 #[derive(Properties, PartialEq)]
@@ -89,13 +91,13 @@ pub fn guest_entrance(props: &GuestEntranceProps) -> Html {
             };
             if can_join {
                 html! {
-                    <div>
+                    <>
                         {title()}
                         <SimpleCenteringSection>
                             <Heading2>{ format!("「{}」の部屋",host_name)}</Heading2>
                             <InputAndButton label="参加" placeholder="あなたの名前" onsubmit={add_member} />
                         </SimpleCenteringSection>
-                    </div>
+                    </>
                 }
             }  else {
                 html! {

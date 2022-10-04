@@ -1,15 +1,17 @@
 use yew::{function_component, html, Callback, use_state};
-use presentational::{title, CardListContainer,Card,Heading2WithDescription, Main, CardBgType, CardContent,InputAndButton,tag_list, list, loading};
+use presentational::{CardListContainer,Card,Heading2WithDescription, CardBgType, CardContent,InputAndButton,tag_list, list, loading};
 use yew_router::prelude::{use_history, History};
 
 use crate::{router::Route,storage::{save_user_id}};
 use model::{self, MemberInput, Room};
 
+use super::title::title;
+
 
 #[function_component(Landing)]
 pub fn landing() -> Html {
     html! {
-        <Main>
+        <>
             {title()}
             <CardListContainer>
                 <Card bg_type={CardBgType::Colored}>
@@ -30,7 +32,7 @@ pub fn landing() -> Html {
                 "みんなに部屋のURLを共有",
                 "全員に配られる秘密の役職で自由に遊ぼう！",
             ])}
-        </Main>
+        </>
     }
 }
 
