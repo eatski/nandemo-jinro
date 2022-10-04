@@ -16,6 +16,12 @@ impl <T: Clone>DataFetchState<T> {
             (DataFetchState::Loaded(a),DataFetchState::Loaded(b)) => DataFetchState::Loaded((a,b)),
         }
     }
+    pub fn map<T2 : Clone>(self,func: impl Fn(T) -> T2) -> DataFetchState<T2> {
+        match self {
+            DataFetchState::Loading => DataFetchState::Loading,
+            DataFetchState::Loaded(a) => DataFetchState::Loaded(func(a)),
+        }
+    }
 }
 
 pub fn use_collection<T>(param: &T::ParamForPath) -> DataFetchState<Vec<T>>  where T: 'static + FireStoreResource + Clone ,T::ParamForPath: Clone + PartialEq {
