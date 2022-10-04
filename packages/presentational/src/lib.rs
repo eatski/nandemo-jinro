@@ -24,14 +24,14 @@ pub fn button_link(label: &str,href: &str) -> Html {
 #[function_component(Heading2)]
 pub fn heading2(props: &ChildrenOnlyProps) -> Html {
     html! {
-        <h2 class="w-full text-center text-2xl text-black">{props.children.clone()}</h2>
+        <h2 class="w-full text-center text-2xl text-black mb-1">{props.children.clone()}</h2>
     }
 }
 
 #[function_component(HeadingDescription)]
 pub fn heading_descriotion(props: &ChildrenOnlyProps) -> Html {
     html! {
-        <p class="w-full text-center text-sm text-black-light mt-1">{props.children.clone()}</p>
+        <p class="w-full text-center text-sm text-black-light">{props.children.clone()}</p>
     }
 }
 
@@ -98,20 +98,6 @@ pub fn footer() -> Html {
         <footer class="w-full border-line border-solid border-t px-4 py-3">
             
         </footer>
-    }
-}
-
-pub fn list(title: &'static str,items: Vec<&'static str>) -> Html {
-    html! {
-        <>
-            <h2 class="w-full text-center text-2xl text-black mb-2">{title}</h2>
-            <div  class="w-full flex justify-center">
-                <ol class="text-black-light text-sm list-decimal space-y-1">
-                    {for items.iter().map(|item| html! {<li class="">{item}</li>})}
-                </ol>
-            </div>
-            
-        </>
     }
 }
 

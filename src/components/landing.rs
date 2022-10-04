@@ -1,5 +1,5 @@
 use yew::{function_component, html, Callback, use_state, Properties, Children};
-use presentational::{Heading2,HeadingDescription,InputAndButton, list, loading, button_link};
+use presentational::{Heading2,HeadingDescription,InputAndButton,loading, button_link};
 use yew_router::prelude::{use_history, History};
 
 use crate::{router::Route,storage::{save_user_id}};
@@ -39,30 +39,37 @@ pub fn landing() -> Html {
     html! {
         <>
             {title()}
-            <div class="flex gap-7 flex-col md:flex-row justify-center">
-                <Card>
-                    <Heading2>{"ルール作成から"}</Heading2>
-                    <HeadingDescription>{"オリジナルのルールで遊ぶ"}</HeadingDescription>
-                    <CardContent>
-                        <CreateRule />
-                    </CardContent>
-                </Card>
-                <Card>
-                    <Heading2>{"テンプレから"}</Heading2>
-                    <HeadingDescription>{"誰かが作ったルールで遊ぶ"}</HeadingDescription>
-                    <CardContent>
-                         <div class="flex flex-wrap justify-center gap-2">
-                            {button_link("スプラトゥーン", "/tags/spatoon")}
-                            {button_link("汎用 4人", "/tags/monster_hunter")}
-                        </div>
-                    </CardContent>
-                </Card>
+            <div class="flex gap-8 flex-col">
+                <div class="flex gap-7 flex-col md:flex-row justify-center">
+                    <Card>
+                        <Heading2>{"ルール作成から"}</Heading2>
+                        <HeadingDescription>{"オリジナルのルールで遊ぶ"}</HeadingDescription>
+                        <CardContent>
+                            <CreateRule />
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <Heading2>{"テンプレから"}</Heading2>
+                        <HeadingDescription>{"誰かが作ったルールで遊ぶ"}</HeadingDescription>
+                        <CardContent>
+                            <div class="flex flex-wrap justify-center gap-2">
+                                {button_link("スプラトゥーン", "/tags/spatoon")}
+                                {button_link("汎用 4人", "/tags/monster_hunter")}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+                <section>
+                    <Heading2>{"遊び方"}</Heading2>
+                    <div  class="w-full flex justify-center">
+                        <ol class="text-black-light text-sm list-decimal space-y-1">
+                            <li>{"好きなルールを選ぶor作成"}</li>
+                            <li>{"みんなに部屋のURLを共有"}</li>
+                            <li>{"全員に配られる秘密の役職で自由に遊ぼう！"}</li>
+                        </ol>
+                    </div>
+                </section>
             </div>
-            {list("遊び方",vec![
-                "好きなルールを選ぶor作成",
-                "みんなに部屋のURLを共有",
-                "全員に配られる秘密の役職で自由に遊ぼう！",
-            ])}
         </>
     }
 }
