@@ -10,7 +10,6 @@ mod router;
 mod storage;
 mod entrance;
 mod rule_make;
-mod lobby;
 mod roll;
 mod rolled;
 mod hooks;
