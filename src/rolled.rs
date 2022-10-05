@@ -2,7 +2,8 @@ use model::{Roll, Room, MemberJSON};
 use presentational::loading;
 use yew::{html, Properties, function_component, Callback};
 
-use crate::{hooks::{firestore::{use_collection_sync, use_document_sync, use_document}, roll::use_roll}};
+use firestore_hooks::{use_collection_sync, use_document_sync, use_document};
+use crate::{hooks::{roll::use_roll}};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
@@ -18,8 +19,8 @@ pub fn rolled(props: &Props) -> Html {
     let state = rolls.merge(room).merge(member);
     let roll = use_roll(props.room_id.as_str());
     match state {
-    crate::hooks::firestore::DataFetchState::Loading => loading(),
-    crate::hooks::firestore::DataFetchState::Loaded(((mut rolls,room),member)) => {
+    firestore_hooks::DataFetchState::Loading => loading(),
+    firestore_hooks::DataFetchState::Loaded(((mut rolls,room),member)) => {
         rolls.sort_by_key(|roll| roll.seq_num);
         let last_rolled = rolls
             .last();

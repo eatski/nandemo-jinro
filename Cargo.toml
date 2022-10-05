@@ -10,6 +10,7 @@ members = [
     "packages/presentational",
     "packages/firestore",
     "packages/model",
+    "packages/firestore_hooks",
 ]
 
 [dependencies]
@@ -22,3 +23,4 @@ model = {path = "./packages/model"}
 yew-router = "0.16"
 rand = { version = "0.8" }
 getrandom = { version = "0.2", features = ["js"] }
+firestore_hooks = {path = "./packages/firestore_hooks"}

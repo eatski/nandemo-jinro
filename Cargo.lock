@@ -48,6 +48,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "firestore_hooks"
+version = "0.1.0"
+dependencies = [
+ "firestore",
+ "yew",
+]
+
+[[package]]
 name = "fnv"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -366,6 +374,7 @@ name = "roleroll"
 version = "0.1.0"
 dependencies = [
  "firestore",
+ "firestore_hooks",
  "getrandom",
  "js-sys",
  "model",

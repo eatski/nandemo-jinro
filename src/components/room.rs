@@ -3,7 +3,7 @@ use presentational::loading;
 use yew::{function_component, html, Properties, use_state_eq, Callback};
 use crate::components::entrance::{GuestEntrance};
 
-use crate::hooks::firestore::{DataFetchState, use_collection_sync, use_document_sync, use_document};
+use firestore_hooks::{DataFetchState, use_collection_sync, use_document_sync, use_document};
 use crate::{storage::{get_user_id}};
 use crate::components::lobby::Lobby;
 use super::rule_make::RuleMake;

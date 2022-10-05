@@ -1,7 +1,7 @@
 use model::{MemberJSON,SetCanJoin};
 use presentational::{loading,SimpleCenteringSection, Heading2,HeadingDescription};
 use yew::{Properties, function_component, html, use_state, Callback};
-use crate::{hooks::firestore::{use_document, DataFetchState, use_collection_sync}};
+use firestore_hooks::{use_document, DataFetchState, use_collection_sync};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {

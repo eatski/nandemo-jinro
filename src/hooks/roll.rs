@@ -3,7 +3,7 @@ use model::{Roll, Rule, MemberJSON, UserToRole,Room};
 use rand::seq::SliceRandom;
 use yew::{use_effect_with_deps, use_state};
 
-use super::firestore::{DataFetchState, use_collection, use_document, use_collection_sync};
+use firestore_hooks::{DataFetchState, use_collection, use_document, use_collection_sync};
 
 fn create_next_roll(rule: &Rule,members: &Vec<MemberJSON>,rolls: &Vec<Roll>) -> Roll {
     let mut roles: Vec<_> = rule.roles.iter().cloned()

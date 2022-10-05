@@ -3,7 +3,8 @@ use firestore::add_document;
 use presentational::{loading,Heading2,InputAndButton};
 use yew::{function_component, Properties,Callback, html};
 
-use crate::{components::title::title, hooks::firestore::{use_document_sync, use_collection, DataFetchState}};
+use firestore_hooks::{use_document_sync, use_collection, DataFetchState};
+use crate::{components::title::title};
 
 
 #[derive(Properties, PartialEq)]
