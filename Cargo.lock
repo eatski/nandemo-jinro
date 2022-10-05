@@ -242,6 +242,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "landing"
+version = "0.1.0"
+dependencies = [
+ "firestore",
+ "firestore_hooks",
+ "model",
+ "presentational",
+ "router",
+ "user_id_storage",
+ "yew",
+ "yew-router",
+]
+
+[[package]]
 name = "lazy_static"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -252,6 +266,18 @@ name = "libc"
 version = "0.2.133"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c0f80d65747a3e43d1596c7c5492d95d5edddaabd45a7fcdb02b95f644164966"
+
+[[package]]
+name = "lobby"
+version = "0.1.0"
+dependencies = [
+ "firestore",
+ "firestore_hooks",
+ "model",
+ "presentational",
+ "user_id_storage",
+ "yew",
+]
 
 [[package]]
 name = "log"
@@ -375,14 +401,30 @@ version = "0.1.0"
 dependencies = [
  "firestore",
  "firestore_hooks",
+ "landing",
+ "lobby",
+ "model",
+ "presentational",
+ "roll",
+ "router",
+ "rule_make",
+ "user_id_storage",
+ "yew",
+ "yew-router",
+]
+
+[[package]]
+name = "roll"
+version = "0.1.0"
+dependencies = [
+ "firestore",
+ "firestore_hooks",
  "getrandom",
- "js-sys",
  "model",
  "presentational",
  "rand",
- "web-sys",
+ "user_id_storage",
  "yew",
- "yew-router",
 ]
 
 [[package]]
@@ -390,6 +432,25 @@ name = "route-recognizer"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "afab94fb28594581f62d981211a9a4d53cc8130bbcbbb89a0440d9b8e81a7746"
+
+[[package]]
+name = "router"
+version = "0.1.0"
+dependencies = [
+ "yew-router",
+]
+
+[[package]]
+name = "rule_make"
+version = "0.1.0"
+dependencies = [
+ "firestore",
+ "firestore_hooks",
+ "model",
+ "presentational",
+ "user_id_storage",
+ "yew",
+]
 
 [[package]]
 name = "ryu"
@@ -503,6 +564,13 @@ name = "unicode-ident"
 version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dcc811dc4066ac62f84f11307873c4850cb653bfa9b1719cee2bd2204a4bc5dd"
+
+[[package]]
+name = "user_id_storage"
+version = "0.1.0"
+dependencies = [
+ "web-sys",
+]
 
 [[package]]
 name = "version_check"

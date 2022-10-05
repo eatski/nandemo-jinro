@@ -1,16 +1,11 @@
 use router::Route;
 use yew::prelude::*;
-use components::landing::Landing;
+use landing::landing::Landing;
 use components::layout::Layout;
 use yew_router::prelude::*;
 use components::room::Room;
 
 mod components;
-mod router;
-mod storage;
-mod roll;
-mod rolled;
-mod hooks;
 
 #[function_component(Root)]
 fn root() -> Html {

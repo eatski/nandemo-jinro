@@ -1,11 +1,12 @@
+use user_id_storage::save_user_id;
 use yew::{function_component, html, Callback, use_state, Properties, Children};
 use presentational::{Heading2,HeadingDescription,InputAndButton,loading, button_link};
 use yew_router::prelude::{use_history, History};
 
-use crate::{router::Route,storage::{save_user_id}};
+use router::Route;
 use model::{self, MemberInput, Room};
 
-use super::title::title;
+use crate::title::title;
 
 #[derive(Properties, PartialEq)]
 pub struct ChildrenOnlyProps {

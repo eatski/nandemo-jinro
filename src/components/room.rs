@@ -1,14 +1,16 @@
 use model::{Roll, MemberJSON};
 use presentational::loading;
 use yew::{function_component, html, Properties, use_state_eq, Callback};
-use crate::components::entrance::{GuestEntrance};
+
+use landing::entrance::GuestEntrance;
 
 use firestore_hooks::{DataFetchState, use_collection_sync, use_document_sync, use_document};
-use crate::{storage::{get_user_id}};
-use crate::components::lobby::Lobby;
-use super::rule_make::RuleMake;
-use crate::roll::RollButton;
-use crate::rolled::Rolled;
+use user_id_storage::{get_user_id};
+use lobby::Lobby;
+use rule_make::RuleMake;
+
+use roll::roll::RollButton;
+use roll::rolled::Rolled;
 
 #[derive(Properties, PartialEq)]
 pub struct RoomProps {

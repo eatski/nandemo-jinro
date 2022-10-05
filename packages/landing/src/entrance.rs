@@ -3,9 +3,10 @@ use firestore::add_document;
 use presentational::{loading,Heading2,InputAndButton};
 use yew::{function_component, Properties,Callback, html};
 
+use user_id_storage::{save_user_id};
 use firestore_hooks::{use_document_sync, use_collection, DataFetchState};
-use crate::{components::title::title};
 
+use crate::title::title;
 
 #[derive(Properties, PartialEq)]
 pub struct GuestEntranceProps {
@@ -29,7 +30,7 @@ pub fn guest_entrance(props: &GuestEntranceProps) -> Html {
             |_| {},
             || {}
         );
-        crate::storage::save_user_id(room_id_cloned.as_str(),user_id.as_str());
+        save_user_id(room_id_cloned.as_str(),user_id.as_str());
         on_join.emit(user_id);
     });
     let host = use_collection::<MemberJSON>(&props.room_id)

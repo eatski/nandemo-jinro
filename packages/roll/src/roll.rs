@@ -1,7 +1,7 @@
 use presentational::loading;
 use yew::{function_component, html, Callback, Properties};
 
-use crate::{hooks::{roll::use_roll}};
+use crate::use_roll::use_roll;
 
 #[derive(Properties, PartialEq)]
 pub struct Props {

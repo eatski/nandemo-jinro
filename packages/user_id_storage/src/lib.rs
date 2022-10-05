@@ -23,3 +23,4 @@ fn save_user_id_to_localstorage(room_id: &str,user_id: &str) {
 pub fn save_user_id(room_id: &str,user_id: &str) {
     save_user_id_to_localstorage(room_id,user_id);
 }
+

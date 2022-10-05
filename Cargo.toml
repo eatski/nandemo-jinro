@@ -11,16 +11,24 @@ members = [
     "packages/firestore",
     "packages/model",
     "packages/firestore_hooks",
+    "packages/landing",
+    "packages/router",
+    "packages/user_id_storage",
+    "packages/lobby",
+    "packages/rule_make",
+    "packages/roll"
 ]
 
 [dependencies]
 yew = "0.19"
-js-sys = "0.3"
-web-sys = "0.3"
 presentational = {path = "./packages/presentational"}
 firestore = {path = "./packages/firestore"}
 model = {path = "./packages/model"}
 yew-router = "0.16"
-rand = { version = "0.8" }
-getrandom = { version = "0.2", features = ["js"] }
 firestore_hooks = {path = "./packages/firestore_hooks"}
+router = {path = "./packages/router"}
+landing = {path = "./packages/landing"}
+user_id_storage = {path = "./packages/user_id_storage"}
+lobby = {path = "./packages/lobby"}
+rule_make = {path = "./packages/rule_make"}
+roll = {path = "./packages/roll"}

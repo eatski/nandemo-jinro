@@ -3,7 +3,8 @@ use presentational::loading;
 use yew::{html, Properties, function_component, Callback};
 
 use firestore_hooks::{use_collection_sync, use_document_sync, use_document};
-use crate::{hooks::{roll::use_roll}};
+
+use crate::use_roll::use_roll;
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
