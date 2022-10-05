@@ -256,6 +256,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "layouting"
+version = "0.1.0"
+dependencies = [
+ "yew",
+]
+
+[[package]]
 name = "lazy_static"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -273,6 +280,7 @@ version = "0.1.0"
 dependencies = [
  "firestore",
  "firestore_hooks",
+ "layouting",
  "model",
  "presentational",
  "user_id_storage",
@@ -446,6 +454,7 @@ version = "0.1.0"
 dependencies = [
  "firestore",
  "firestore_hooks",
+ "layouting",
  "model",
  "presentational",
  "user_id_storage",

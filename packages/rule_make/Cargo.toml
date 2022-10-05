@@ -12,3 +12,4 @@ firestore = { path = "../firestore" }
 user_id_storage = { path = "../user_id_storage" }
 model = { path = "../model" }
 firestore_hooks = { path = "../firestore_hooks" }
+layouting = { path = "../layouting" }

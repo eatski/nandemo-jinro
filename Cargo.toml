@@ -16,7 +16,8 @@ members = [
     "packages/user_id_storage",
     "packages/lobby",
     "packages/rule_make",
-    "packages/roll"
+    "packages/roll",
+    "packages/layouting"
 ]
 
 [dependencies]

@@ -1,7 +1,8 @@
 use model::{MemberJSON,SetCanJoin};
-use presentational::{loading,SimpleCenteringSection, Heading2,HeadingDescription};
+use presentational::{loading, Heading2,HeadingDescription,ButtonLarge};
 use yew::{Properties, function_component, html, use_state, Callback};
 use firestore_hooks::{use_document, DataFetchState, use_collection_sync};
+use layouting::FixToBottom;
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
@@ -64,11 +65,9 @@ pub fn lobby(props: &Props) -> Html {
                         let room_id = props.room_id.clone();
                         is_host.then(|| {
                             html! {
-                                <div class="absolute bottom-10 left-1/2 -translate-x-1/2">
-                                    <div class="mx-auto flex justify-center w-full max-w-2xl py-2">
-                                        <MemberClose room_id={room_id}/>
-                                    </div>
-                                </div>
+                                <FixToBottom>
+                                    <MemberClose room_id={room_id}/>
+                                </FixToBottom>
                             }
                         }).unwrap_or_default()
                     }}
@@ -76,13 +75,7 @@ pub fn lobby(props: &Props) -> Html {
                 
             }
         },
-        DataFetchState::Loading => {
-            html! {
-                <SimpleCenteringSection>
-                    {loading()}
-                </SimpleCenteringSection>
-            }
-        }
+        DataFetchState::Loading => loading()
     }
 }
 #[derive(Properties, PartialEq)]
@@ -115,12 +108,11 @@ fn member_close(props: &MemberCloseProps) -> Html {
         State::Loading => loading(),
         State::Clickable => {
             html! {
-                <button 
+                <ButtonLarge 
                     {onclick}
-                    class={"bg-feature hover:bg-feature-light text-white py-4 px-9 text-lg rounded-full"}
                 >
                     {"締め切る"}
-                </button>
+                </ButtonLarge>
             }
         }
     }

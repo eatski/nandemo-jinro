@@ -1,9 +1,22 @@
 use yew::{Callback, html, Html, MouseEvent, Properties, Children, function_component, use_state,TargetCast};
 use web_sys::{HtmlInputElement, InputEvent};
 
+#[derive(Properties, PartialEq)]
+pub struct ButtonProps {
+    pub onclick: Callback<MouseEvent>,
+    pub children: Children,
+}
+
 pub fn button(label: &str,onclick: Callback<MouseEvent>) -> Html {
     html! {
         <button onclick={onclick} class={"bg-feature hover:bg-feature-light text-white py-1 px-4 rounded-md"}>{label}</button>
+    }
+}
+
+#[function_component[ButtonLarge]]
+pub fn button_large(props: &ButtonProps) -> Html {
+    html! {
+        <button onclick={props.onclick.clone()} class={"bg-feature hover:bg-feature-light text-white py-4 px-9 text-lg rounded-full"}>{props.children.clone()}</button>
     }
 }
 
@@ -142,7 +155,7 @@ pub fn input_text(props: &InputTextProps) -> Html {
         })
     };
     html! {
-        <input oninput={oninput} value={props.value.clone()} class="w-3/5 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="text" placeholder={props.placeholder}/>
+        <input oninput={oninput} value={props.value.clone()} class="w-64 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="text" placeholder={props.placeholder}/>
     }
 }
 
@@ -168,47 +181,5 @@ pub fn input_small_number(props: &InputNumberProps) -> Html {
     };
     html! {
         <input {oninput} min="0" value={props.value.to_string()} class="w-14 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="number" />
-    }
-}
-
-#[derive(Properties, PartialEq)]
-pub struct AddProps {
-    pub onclick: Callback<()>
-}
-
-#[function_component(AddButton)]
-pub fn add_button(props: &AddProps) -> Html {
-    html! {
-        <div class="h-6 w-6 relative">
-            <button onclick={props.onclick.reform(|_| ())} class="
-                absolute -translate-y-1/2 -translate-x-1/2 top-1/2 left-1/2
-                w-5 h-5 rounded-full
-                bg-feature transition-colors hover:bg-feature-light
-            " 
-            >
-                <span role="img" aria-label="追加" style="top:45%;" class="absolute -translate-y-1/2 -translate-x-1/2 left-1/2 text-white">{"+"}</span>
-            </button>
-        </div>
-        
-    }
-}
-
-
-
-#[function_component(ListItemRow)]
-pub fn list_item_row(props: &ChildrenOnlyProps) -> Html {
-    html! {
-        <li class="flex justify-center gap-2 w-full">
-            {props.children.clone()}
-        </li>
-    }
-}
-
-#[function_component(ListContainer)]
-pub fn lsit_container(props: &ChildrenOnlyProps) -> Html {
-    html! {
-        <ul class="flex flex-col gap-2">
-            {props.children.clone()}
-        </ul>
     }
 }

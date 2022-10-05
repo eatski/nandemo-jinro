@@ -1,6 +1,7 @@
 use model::{Rule, Role, SetRule};
 use yew::{function_component, html, Callback, use_state, Properties};
-use presentational::{InputText,InputSmallNumber,AddButton,ListItemRow,ListContainer,SimpleCenteringDiv,Heading2,HeadingDescription,SimpleCenteringSection, button};
+use presentational::{InputText,InputSmallNumber,Heading2,HeadingDescription,ButtonLarge};
+use layouting::{FixToBottom};
 
 #[derive(Clone)]
 struct Item {
@@ -45,10 +46,10 @@ pub fn rule_make(props: &Props) -> Html {
     });
     let captured_state = (*state).clone();
     html! {
-        <SimpleCenteringSection>
+        <section class="mx-auto w-full max-w-2xl py-2">
             <Heading2>{"ルールを決めましょう"}</Heading2>
             <HeadingDescription>{"役職とその人数を決めましょう"}</HeadingDescription>
-            <ListContainer>
+            <ul class="flex flex-col gap-2 mt-8">
                 {for (*state).iter().enumerate().map(|(index,item)| {
                     let on_number_input = {
                         let mut captured_state = captured_state.clone();
@@ -67,7 +68,7 @@ pub fn rule_make(props: &Props) -> Html {
                         })
                     };
                     html! {
-                        <ListItemRow>
+                        <li class="flex justify-center gap-3 w-full">
                             <InputText
                                 value={item.name.clone()}
                                 placeholder="役職"
@@ -77,24 +78,35 @@ pub fn rule_make(props: &Props) -> Html {
                                 value={item.count}
                                 oninput={on_number_input}
                             />
-                        </ListItemRow>
+                        </li>
                     }
                 }
             )}
-            </ListContainer>
-            <SimpleCenteringDiv>
-                <AddButton onclick={Callback::from(move |_| {
-                    let mut captured_state = captured_state.clone();
-                    captured_state.push(Item {
-                        name: "".to_string(),
-                        count: 1,
-                    });
-                    state.set(captured_state)
-                })}  />
-            </SimpleCenteringDiv>
-            <SimpleCenteringDiv>
-                {button("ルールを確定",publish_rule)}
-            </SimpleCenteringDiv>
-        </SimpleCenteringSection>
+            </ul>
+            <div class="flex justify-center mt-4">
+                <div class="h-6 w-6 relative">
+                    <button onclick={Callback::from(move |_| {
+                        let mut captured_state = captured_state.clone();
+                        captured_state.push(Item {
+                            name: "".to_string(),
+                            count: 1,
+                        });
+                        state.set(captured_state)
+                    })} class="
+                        absolute -translate-y-1/2 -translate-x-1/2 top-1/2 left-1/2
+                        w-5 h-5 rounded-full
+                        bg-feature transition-colors hover:bg-feature-light
+                    " 
+                    >
+                        <span role="img" aria-label="追加" style="top:44%;left: 52%;" class="absolute -translate-y-1/2 -translate-x-1/2 left-1/2 text-white">{"+"}</span>
+                    </button>
+                </div>
+            </div>
+            <FixToBottom>
+                <ButtonLarge onclick={publish_rule}>
+                    {"ルールを確定"}
+                </ButtonLarge>
+            </FixToBottom>
+        </section>
     }
 }
