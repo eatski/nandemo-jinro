@@ -21,7 +21,7 @@ pub struct JoinFormProps {
 
 #[function_component(JoinForm)]
 pub fn join_form(props: &JoinFormProps) -> Html {
-    let state = use_state(|| "".to_string());
+    let state = use_state(|| props.default.clone());
     let oninput = {
         let state = state.clone();
         Callback::from(move |e: String| {
@@ -32,10 +32,12 @@ pub fn join_form(props: &JoinFormProps) -> Html {
         let state = state.clone();
         props.onsubmit.reform(move |_| (*state).clone())
     };
+    let value = (*state).clone();
+    let disabled = value.is_empty();
     html! {
-        <form class="flex justify-center">
-            <InputText value={(*state).clone()} placeholder="あなたの名前" oninput={oninput} />
-            <Button onclick={onsubmit}>{props.label}</Button>
+        <form class="flex justify-center gap-2">
+            <InputText value={value} placeholder="あなたの名前" oninput={oninput} />
+            <Button disabled={disabled} onclick={onsubmit}>{props.label}</Button>
         </form>
     }
 }

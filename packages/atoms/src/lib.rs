@@ -5,12 +5,13 @@ use web_sys::{HtmlInputElement, InputEvent};
 pub struct ButtonProps {
     pub onclick: Callback<MouseEvent>,
     pub children: Children,
+    pub disabled: Option<bool>,
 }
 
 #[function_component[Button]]
 pub fn button(props: &ButtonProps) -> Html {
     html! {
-        <button onclick={props.onclick.clone()} class={"bg-feature transition-colors hover:bg-feature-light disabled:bg-quiet text-white py-2 px-4 rounded-md"}>{props.children.clone()}</button>
+        <button onclick={props.onclick.clone()} disabled={props.disabled.unwrap_or_else(|| false)} class={"bg-feature transition-colors hover:bg-feature-light disabled:bg-quiet text-white py-2 px-4 rounded-md"}>{props.children.clone()}</button>
     }
 }
 
