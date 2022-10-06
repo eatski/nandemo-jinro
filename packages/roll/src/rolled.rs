@@ -1,5 +1,5 @@
 use model::{Roll, Room, MemberJSON};
-use presentational::loading;
+use atoms::loading;
 use yew::{html, Properties, function_component, Callback};
 
 use firestore_hooks::{use_collection_sync, use_document_sync, use_document};

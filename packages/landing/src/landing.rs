@@ -1,6 +1,6 @@
 use user_id_storage::save_user_id;
 use yew::{function_component, html, Callback, use_state, Properties, Children};
-use presentational::{Heading2,HeadingDescription,loading, button_link};
+use atoms::{Heading2,HeadingDescription,loading, button_link};
 use yew_router::prelude::{use_history, History};
 
 use router::Route;

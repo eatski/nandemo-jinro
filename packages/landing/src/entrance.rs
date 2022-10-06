@@ -1,6 +1,6 @@
 use model::{MemberInput, MemberJSON, Room};
 use firestore::add_document;
-use presentational::{loading,Heading2};
+use atoms::{loading,Heading2};
 use yew::{function_component, Properties,Callback, html};
 
 use user_id_storage::{save_user_id};

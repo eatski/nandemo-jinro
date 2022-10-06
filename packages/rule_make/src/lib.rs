@@ -1,6 +1,6 @@
 use model::{Rule, Role, SetRule};
 use yew::{function_component, html, Callback, use_state, Properties};
-use presentational::{InputText,InputSmallNumber,Heading2,HeadingDescription,ButtonLarge};
+use atoms::{InputText,InputSmallNumber,Heading2,HeadingDescription,ButtonLarge};
 use layouting::{FixToBottom};
 
 #[derive(Clone)]

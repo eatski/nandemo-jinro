@@ -1,4 +1,4 @@
-use presentational::loading;
+use atoms::loading;
 use yew::{function_component, html, Callback, Properties};
 
 use crate::use_roll::use_roll;

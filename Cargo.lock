@@ -3,6 +3,14 @@
 version = 3
 
 [[package]]
+name = "atoms"
+version = "0.1.0"
+dependencies = [
+ "web-sys",
+ "yew",
+]
+
+[[package]]
 name = "autocfg"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -245,10 +253,10 @@ dependencies = [
 name = "landing"
 version = "0.1.0"
 dependencies = [
+ "atoms",
  "firestore",
  "firestore_hooks",
  "model",
- "presentational",
  "router",
  "user_id_storage",
  "yew",
@@ -278,11 +286,11 @@ checksum = "c0f80d65747a3e43d1596c7c5492d95d5edddaabd45a7fcdb02b95f644164966"
 name = "lobby"
 version = "0.1.0"
 dependencies = [
+ "atoms",
  "firestore",
  "firestore_hooks",
  "layouting",
  "model",
- "presentational",
  "yew",
 ]
 
@@ -321,14 +329,6 @@ name = "ppv-lite86"
 version = "0.2.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "eb9f9e6e233e5c4a35559a617bf40a4ec447db2e84c20b55a6f83167b7e57872"
-
-[[package]]
-name = "presentational"
-version = "0.1.0"
-dependencies = [
- "web-sys",
- "yew",
-]
 
 [[package]]
 name = "proc-macro-error"
@@ -406,12 +406,12 @@ dependencies = [
 name = "roleroll"
 version = "0.1.0"
 dependencies = [
+ "atoms",
  "firestore",
  "firestore_hooks",
  "landing",
  "lobby",
  "model",
- "presentational",
  "roll",
  "router",
  "rule_make",
@@ -424,11 +424,11 @@ dependencies = [
 name = "roll"
 version = "0.1.0"
 dependencies = [
+ "atoms",
  "firestore",
  "firestore_hooks",
  "getrandom",
  "model",
- "presentational",
  "rand",
  "yew",
 ]
@@ -450,11 +450,11 @@ dependencies = [
 name = "rule_make"
 version = "0.1.0"
 dependencies = [
+ "atoms",
  "firestore",
  "firestore_hooks",
  "layouting",
  "model",
- "presentational",
  "yew",
 ]
 

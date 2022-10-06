@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 yew = "0.19"
-presentational = {path = "../presentational"}
+atoms = {path = "../atoms"}
 firestore = { path = "../firestore" }
 model = { path = "../model" }
 firestore_hooks = { path = "../firestore_hooks" }

@@ -7,7 +7,7 @@ edition = "2021"
 
 [workspace]
 members = [
-    "packages/presentational",
+    "packages/atoms",
     "packages/firestore",
     "packages/model",
     "packages/firestore_hooks",
@@ -22,7 +22,7 @@ members = [
 
 [dependencies]
 yew = "0.19"
-presentational = {path = "./packages/presentational"}
+atoms = {path = "./packages/atoms"}
 firestore = {path = "./packages/firestore"}
 model = {path = "./packages/model"}
 yew-router = "0.16"

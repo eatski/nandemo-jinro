@@ -1,5 +1,5 @@
 use model::{Roll, MemberJSON};
-use presentational::loading;
+use atoms::loading;
 use yew::{function_component, html, Properties, use_state_eq, Callback};
 
 use landing::entrance::GuestEntrance;

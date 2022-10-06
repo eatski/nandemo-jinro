@@ -1,4 +1,4 @@
-use presentational::button_link;
+use atoms::button_link;
 use yew::{Properties, Children, html, function_component};
 
 
