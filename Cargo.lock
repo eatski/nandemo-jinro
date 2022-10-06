@@ -283,7 +283,6 @@ dependencies = [
  "layouting",
  "model",
  "presentational",
- "user_id_storage",
  "yew",
 ]
 
@@ -431,7 +430,6 @@ dependencies = [
  "model",
  "presentational",
  "rand",
- "user_id_storage",
  "yew",
 ]
 
@@ -457,7 +455,6 @@ dependencies = [
  "layouting",
  "model",
  "presentational",
- "user_id_storage",
  "yew",
 ]
 

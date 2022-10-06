@@ -1,12 +1,12 @@
 use user_id_storage::save_user_id;
 use yew::{function_component, html, Callback, use_state, Properties, Children};
-use presentational::{Heading2,HeadingDescription,InputAndButton,loading, button_link};
+use presentational::{Heading2,HeadingDescription,loading, button_link};
 use yew_router::prelude::{use_history, History};
 
 use router::Route;
 use model::{self, MemberInput, Room};
 
-use crate::title::title;
+use crate::common::{title,JoinForm};
 
 #[derive(Properties, PartialEq)]
 pub struct ChildrenOnlyProps {
@@ -86,35 +86,37 @@ fn create_rule_view() -> Html {
     let history = use_history().unwrap();
     let state = use_state(|| State::Input);
     match &*state {
-    State::Input => html! {
-        <InputAndButton label="作成" default="ホスト" placeholder="あなたの名前" onsubmit={Callback::once(move |name: String| {
-            state.set(State::Loading);
-            firestore::add_document(
-                &(),
-                &Room {
-                    can_join: true,
-                    rule: None,
-                },
-                move |room_id| {
-                let room_id_string = room_id.to_string();
-                let member_id = firestore::add_document(
-                    &room_id.to_string(), 
-                    &MemberInput {
-                        name,
-                        is_host: true
-                    }, 
-                    move |_| {
-                        history.push(Route::Room { id: room_id_string});
+    State::Input => {
+        html! {
+            <JoinForm label="作成" default="ホスト" placeholder="あなたの名前" onsubmit={Callback::once(move |name: String| {
+                state.set(State::Loading);
+                firestore::add_document(
+                    &(),
+                    &Room {
+                        can_join: true,
+                        rule: None,
                     },
-                    move || {
-                        state.set(State::Error);
-                    }
-                );
-                save_user_id(room_id,member_id.as_str());
-            },|| {
+                    move |room_id| {
+                    let room_id_string = room_id.to_string();
+                    let member_id = firestore::add_document(
+                        &room_id.to_string(), 
+                        &MemberInput {
+                            name,
+                            is_host: true
+                        }, 
+                        move |_| {
+                            history.push(Route::Room { id: room_id_string});
+                        },
+                        move || {
+                            state.set(State::Error);
+                        }
+                    );
+                    save_user_id(room_id,member_id.as_str());
+                },|| {
 
-            });
-        })}/>
+                });
+            })}/>
+        }
     },
     State::Loading => html! {
         {loading()}

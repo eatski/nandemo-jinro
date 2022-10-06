@@ -1,12 +1,12 @@
 use model::{MemberInput, MemberJSON, Room};
 use firestore::add_document;
-use presentational::{loading,Heading2,InputAndButton};
+use presentational::{loading,Heading2};
 use yew::{function_component, Properties,Callback, html};
 
 use user_id_storage::{save_user_id};
 use firestore_hooks::{use_document_sync, use_collection, DataFetchState};
 
-use crate::title::title;
+use crate::common::{title,JoinForm};
 
 #[derive(Properties, PartialEq)]
 pub struct GuestEntranceProps {
@@ -50,7 +50,7 @@ pub fn guest_entrance(props: &GuestEntranceProps) -> Html {
                         {title()}
                         <section class="mx-auto w-full max-w-2xl">
                             <Heading2>{ format!("「{}」の部屋に入る",host.name)}</Heading2>
-                            <InputAndButton label="参加" placeholder="あなたの名前" onsubmit={add_member} />  
+                            <JoinForm label="参加" default="" placeholder="あなたの名前" onsubmit={add_member} />  
                         </section>
                     </>
                 }

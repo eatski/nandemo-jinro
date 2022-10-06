@@ -7,11 +7,13 @@ pub struct ButtonProps {
     pub children: Children,
 }
 
-pub fn button(label: &str,onclick: Callback<MouseEvent>) -> Html {
+#[function_component[Button]]
+pub fn button(props: &ButtonProps) -> Html {
     html! {
-        <button onclick={onclick} class={"bg-feature hover:bg-feature-light text-white py-1 px-4 rounded-md"}>{label}</button>
+        <button onclick={props.onclick.clone()} class={"bg-feature transition-colors hover:bg-feature-light disabled:bg-quiet text-white py-2 px-4 rounded-md"}>{props.children.clone()}</button>
     }
 }
+
 
 #[function_component[ButtonLarge]]
 pub fn button_large(props: &ButtonProps) -> Html {
@@ -61,81 +63,6 @@ pub struct InputAndButtonProps {
     pub default: Option<&'static str>
 }
 
-#[function_component(InputAndButton)]
-pub fn input_and_button(props: &InputAndButtonProps) -> Html {
-    let state = use_state(|| "".to_string());
-    let oninput = {
-        let state = state.clone();
-         Callback::from(move |e: InputEvent| {
-            let input = e.target_dyn_into::<HtmlInputElement>();
-            if let Some(input) = input {
-                state.set(input.value());
-            }
-        })
-    };
-    let input_clicked = use_state(|| false);
-    let on_input_click = {
-        let input_clicked = input_clicked.clone();
-        Callback::from(move |_| {
-            input_clicked.set(true);
-        })
-    };
-    let value = {
-        let state = state.clone();
-        let value = match (props.default, &*input_clicked) {
-            (Some(default), false) => default,
-            _ => &*state
-        };
-        value.to_string()
-    };
-    let disabled = value.is_empty();
-    html! {
-        <div class="flex justify-center">
-            <input onclick={on_input_click} value={value.clone()} {oninput} class="w-48 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black mr-3 outline-none" type="text" placeholder={props.placeholder}/>
-            <button onclick={props.onsubmit.reform(move |_| value.clone())} {disabled} class={"bg-feature transition-colors hover:bg-feature-light disabled:bg-quiet text-white py-2 px-4 rounded-md"}>{&props.label}</button>
-        </div>
-    }
-}
-
-#[function_component(Main)]
-pub fn main(props: &ChildrenOnlyProps) -> Html {
-    html! {
-        <main class="px-7 py-8">
-            {props.children.clone()}
-        </main>
-    }
-}
-
-pub fn footer() -> Html {
-    html! {
-        <footer class="w-full border-line border-solid border-t px-4 py-3">
-            
-        </footer>
-    }
-}
-
-#[function_component(SimpleCenteringSection)]
-pub fn simple_centering_section(props:&ChildrenOnlyProps) -> Html {
-    html! {
-        <section class="mx-auto flex justify-center w-full max-w-2xl py-2">
-            <div>
-                {props.children.clone()}
-            </div>
-        </section>
-    }
-}
-
-#[function_component(SimpleCenteringDiv)]
-pub fn simple_centering_div(props: &ChildrenOnlyProps) -> Html {
-    html! {
-        <div class="mx-auto flex justify-center w-full max-w-2xl py-2">
-            <div>
-                {props.children.clone()}
-            </div>
-        </div>
-    }
-}
-
 #[derive(Properties, PartialEq)]
 pub struct InputTextProps {
     pub placeholder: &'static str,
@@ -145,6 +72,15 @@ pub struct InputTextProps {
 
 #[function_component(InputText)]
 pub fn input_text(props: &InputTextProps) -> Html {
+    let input_clicked = use_state(|| false);
+    let on_input_click = (!*input_clicked).then(|| {
+        let on_input = props.oninput.clone();
+        let input_clicked = input_clicked.clone();
+        Callback::from(move |_| {
+            on_input.emit("".to_string());
+            input_clicked.set(true);
+        })
+    });
     let oninput = {
         let oninput = props.oninput.clone();
         Callback::from(move |e: InputEvent| {
@@ -155,7 +91,12 @@ pub fn input_text(props: &InputTextProps) -> Html {
         })
     };
     html! {
-        <input oninput={oninput} value={props.value.clone()} class="w-64 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="text" placeholder={props.placeholder}/>
+        <input 
+            oninput={oninput} 
+            value={props.value.clone()}
+            onclick={on_input_click}
+            class="w-56 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="text" placeholder={props.placeholder}
+        />
     }
 }
 
