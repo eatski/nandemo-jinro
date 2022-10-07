@@ -428,6 +428,7 @@ dependencies = [
  "firestore",
  "firestore_hooks",
  "getrandom",
+ "layouting",
  "model",
  "rand",
  "yew",

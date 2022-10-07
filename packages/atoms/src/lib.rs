@@ -15,7 +15,6 @@ pub fn button(props: &ButtonProps) -> Html {
     }
 }
 
-
 #[function_component[ButtonLarge]]
 pub fn button_large(props: &ButtonProps) -> Html {
     html! {
