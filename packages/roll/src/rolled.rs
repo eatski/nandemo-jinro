@@ -1,10 +1,12 @@
 use model::{Roll, Room, MemberJSON};
-use atoms::loading;
+use atoms::{loading,Heading2,};
 use yew::{html, Properties, function_component, Callback};
+use layouting::FixToBottom;
 
 use firestore_hooks::{use_collection_sync, use_document_sync, use_document};
 
 use crate::use_roll::use_roll;
+use crate::common::{RollButton};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
@@ -30,18 +32,20 @@ pub fn rolled(props: &Props) -> Html {
                 let role = last_rolled.user_to_role.get(props.user_id.as_str()).unwrap();
                 let role_name = room.rule.as_ref().unwrap().roles.iter().find(|role_input| role_input.id == *role).unwrap().name.clone();
                 html! {
-                    <>
-                        <h2>{"Rolled"}</h2>
-                        <p>{role_name}</p>
+                    <section>
+                        <Heading2>{"あなたの役職は"}<b>{role_name}</b>{"です"}</Heading2>
                         {
                             member.is_host.then(|| {
                                 match roll {
                                     Some(roll) => {
-                                        let onclick = Callback::once(move |_| {
-                                            roll();
-                                        });
                                         html! {
-                                            <button onclick={onclick}>{"Next"}</button>
+                                            <FixToBottom>
+                                                <RollButton onclick={Callback::once(move |_| roll())}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-full h-full">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                                    </svg>
+                                                </RollButton>
+                                            </FixToBottom>
                                         }
                                     },
                                     None => loading(),
@@ -49,7 +53,7 @@ pub fn rolled(props: &Props) -> Html {
                                 
                             }).unwrap_or_default()
                         }
-                    </>
+                    </section>
                 }
             }
             

@@ -9,7 +9,7 @@ use user_id_storage::{get_user_id};
 use lobby::Lobby;
 use rule_make::RuleMake;
 
-use roll::roll::RollButton;
+use roll::roll::RollContainer;
 use roll::rolled::Rolled;
 
 #[derive(Properties, PartialEq)]
@@ -68,7 +68,7 @@ fn view_when_has_userid(props: &HasUserIdProps) -> Html {
                         }
                      } else {
                         html! {
-                            <RollButton room_id={props.room_id.clone()} />
+                            <RollContainer room_id={props.room_id.clone()} />
                         }
                     }
                 }

@@ -7,6 +7,7 @@ use yew::{function_component, html, Callback, Properties, Html};
 use layouting::{FixToBottom};
 
 use crate::use_roll::use_roll;
+use crate::common::{RollButton};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
@@ -21,16 +22,7 @@ fn icon() -> Html {
     }
 }
 
-
-fn check_icon() -> Html {
-    html! {
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-9 h-9">
-            <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clip-rule="evenodd" />
-        </svg>
-    }
-}
-
-#[function_component(RollButton)]
+#[function_component(RollContainer)]
 pub fn roll(props: &Props) -> Html {
     let room = use_document::<Room>(&(), props.room_id.as_str());
     let members = use_collection::<MemberJSON>(&props.room_id);
@@ -61,17 +53,16 @@ pub fn roll(props: &Props) -> Html {
                                 })
                             }
                         </ul>
-                        
                         {
                             match roll {
                                 Some(roll) => {
                                     html! {
                                         <FixToBottom>
-                                            <div class="m-auto flex justify-center">
-                                                <button class={"animate-bounce bg-feature hover:bg-feature-light text-white py-3 px-3 text-lg rounded-full"} onclick={Callback::from(move |_| roll())}>
-                                                    {check_icon()}
-                                                </button>
-                                            </div>
+                                           <RollButton onclick={Callback::once(move |_| roll())}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-full h-full">
+                                                    <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clip-rule="evenodd" />
+                                                </svg>
+                                           </RollButton>
                                         </FixToBottom>
                                     }
                                 },
