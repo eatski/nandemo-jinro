@@ -1,8 +1,8 @@
 use std::iter::repeat;
 
 use atoms::{loading,Heading2,HeadingDescription};
-use firestore_hooks::use_document;
-use model::Room;
+use firestore_hooks::{use_document, use_collection};
+use model::{Room, MemberJSON};
 use yew::{function_component, html, Callback, Properties, Html};
 use layouting::{FixToBottom};
 
@@ -33,16 +33,17 @@ fn check_icon() -> Html {
 #[function_component(RollButton)]
 pub fn roll(props: &Props) -> Html {
     let room = use_document::<Room>(&(), props.room_id.as_str());
+    let members = use_collection::<MemberJSON>(&props.room_id);
     let roll = use_roll(props.room_id.as_str());
-    match room {
+    let state = members.merge(room);
+    match state {
         firestore_hooks::DataFetchState::Loading => loading(),
-        firestore_hooks::DataFetchState::Loaded(room) => {
+        firestore_hooks::DataFetchState::Loaded((members,room)) => {
             let rule = room.rule.unwrap();
-            
             html! {
                 <section>
                     <Heading2>{"役職一覧"}</Heading2>
-                    <HeadingDescription>{"参加者:5 / 役職:10"}</HeadingDescription>
+                    <HeadingDescription>{format!("参加者:{} / 役職:{}",members.len(),rule.roles.iter().map(|role| role.number).sum::<usize>())}</HeadingDescription>
                     <div class="w-80 h-96 mx-auto mt-12">
                         <ul class="flex flex-col gap-5 mt-4">
                             {
