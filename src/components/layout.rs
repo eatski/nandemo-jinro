@@ -13,7 +13,7 @@ pub fn layout(props: &ChildrenOnlyProps) -> Html {
         <>
             <header class="w-full border-line border-solid border-b px-4 py-3 ">
                 <div class="flex items-center">
-                    <a class="font-mono text-black hover:text-black-light text-md" href="/">
+                    <a class="font-mono text-black text-lg" href="/">
                         {"なんでも人狼"}
                     </a>
                     <div class="ml-auto">
