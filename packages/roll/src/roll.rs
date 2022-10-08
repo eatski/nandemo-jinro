@@ -35,7 +35,7 @@ pub fn roll(props: &Props) -> Html {
             html! {
                 <section>
                     <BodyItems>
-                        <Heading2>{"役職一覧"}</Heading2>
+                        <Heading2>{"役職を配布します"}</Heading2>
                         <HeadingDescription>{format!("参加者:{} / 役職:{}",members.len(),rule.roles.iter().map(|role| role.number).sum::<usize>())}</HeadingDescription>
                         <div class="w-80 mx-auto mt-12">
                             <ul class="flex flex-col gap-5 mt-4">
@@ -43,11 +43,28 @@ pub fn roll(props: &Props) -> Html {
                                     for rule.roles.iter().map(|roll| {
                                         html! {
                                             <li class="flex text-black pb-1 border-solid border-b border-line">
-                                                <span class="text-xl mr-3">
+                                                <span class="text-lg mr-3 grow">
                                                     {roll.name.as_str()}
                                                 </span>
                                                 <span class="text-black-light flex">
-                                                    {for repeat(icon()).take(roll.number)}
+                                                    {
+                                                        if roll.number > 5 {
+                                                            html! {
+                                                                <>
+                                                                    {icon()}
+                                                                    <span class="ml-1 text-lg">
+                                                                        {"×"}
+                                                                        {roll.number}
+                                                                    </span>
+                                                
+                                                                </>
+                                                                
+                                                            }
+                                                        } else {
+                                                            html!{for repeat(icon()).take(roll.number)}
+                                                        }
+                                                    }
+                                                   
                                                 </span>
                                             </li>
                                         }

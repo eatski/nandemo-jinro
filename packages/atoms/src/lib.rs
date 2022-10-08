@@ -67,7 +67,8 @@ pub struct InputAndButtonProps {
 pub struct InputTextProps {
     pub placeholder: &'static str,
     pub oninput: Callback<String>,
-    pub value: String
+    pub value: String,
+    pub maxlength: usize,
 }
 
 #[function_component(InputText)]
@@ -95,6 +96,7 @@ pub fn input_text(props: &InputTextProps) -> Html {
             oninput={oninput} 
             value={props.value.clone()}
             onclick={on_input_click}
+            maxlength={props.maxlength.to_string()}
             class="w-52 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="text" placeholder={props.placeholder}
         />
     }

@@ -82,6 +82,7 @@ pub fn rule_make(props: &Props) -> Html {
                                                         value={item.name.clone()}
                                                         placeholder="役職"
                                                         oninput={on_text_input}
+                                                        maxlength={12}
                                                     />
                                                     <InputSmallNumber
                                                         value={item.count}

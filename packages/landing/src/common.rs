@@ -36,7 +36,7 @@ pub fn join_form(props: &JoinFormProps) -> Html {
     let disabled = value.is_empty();
     html! {
         <form class="flex justify-center gap-2">
-            <InputText value={value} placeholder="あなたの名前" oninput={oninput} />
+            <InputText value={value} placeholder="あなたの名前" oninput={oninput} maxlength={12} />
             <Button disabled={disabled} onclick={onsubmit}>{props.label}</Button>
         </form>
     }
