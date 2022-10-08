@@ -17,7 +17,7 @@ pub fn body_items(props: &ChildrenOnlyProps) -> Html {
 #[function_component[BottomOperaton]]
 pub fn bottom_operation(props: &ChildrenOnlyProps) -> Html {
     html! {
-        <div class="flex justify-center mt-8">
+        <div class="flex justify-center mt-5">
             {props.children.clone()}
         </div>
     }

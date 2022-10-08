@@ -38,7 +38,7 @@ pub fn roll(props: &Props) -> Html {
                         <Heading2>{"役職を配布します"}</Heading2>
                         <HeadingDescription>{format!("参加者:{} / 役職:{}",members.len(),rule.roles.iter().map(|role| role.number).sum::<usize>())}</HeadingDescription>
                         <div class="w-80 mx-auto mt-12">
-                            <ul class="flex flex-col gap-5 mt-4">
+                            <ul class="flex flex-col gap-3 mt-4">
                                 {
                                     for rule.roles.iter().map(|roll| {
                                         html! {
@@ -89,6 +89,9 @@ pub fn roll(props: &Props) -> Html {
                             None => loading(),
                         }
                     }
+                    <div class="flex justify-center mt-4">
+                        <button class="text-black hover:text-black-light">{"戻る"}</button>
+                    </div>
                 </section>
             }
 
