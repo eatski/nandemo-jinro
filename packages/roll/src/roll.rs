@@ -4,7 +4,7 @@ use atoms::{loading,Heading2,HeadingDescription};
 use firestore_hooks::{use_document, use_collection};
 use model::{Room, MemberJSON};
 use yew::{function_component, html, Callback, Properties, Html};
-use layouting::{FixToBottom};
+use layouting::{BodyItems,BottomOperaton};
 
 use crate::use_roll::use_roll;
 use crate::common::{RollButton};
@@ -34,42 +34,44 @@ pub fn roll(props: &Props) -> Html {
             let rule = room.rule.unwrap();
             html! {
                 <section>
-                    <Heading2>{"役職一覧"}</Heading2>
-                    <HeadingDescription>{format!("参加者:{} / 役職:{}",members.len(),rule.roles.iter().map(|role| role.number).sum::<usize>())}</HeadingDescription>
-                    <div class="w-80 h-96 mx-auto mt-12">
-                        <ul class="flex flex-col gap-5 mt-4">
-                            {
-                                for rule.roles.iter().map(|roll| {
-                                    html! {
-                                        <li class="flex text-black pb-1 border-solid border-b border-line">
-                                            <span class="text-xl mr-3">
-                                                {roll.name.as_str()}
-                                            </span>
-                                            <span class="text-black-light flex">
-                                                {for repeat(icon()).take(roll.number)}
-                                            </span>
-                                        </li>
-                                    }
-                                })
-                            }
-                        </ul>
-                        {
-                            match roll {
-                                Some(roll) => {
-                                    html! {
-                                        <FixToBottom>
-                                           <RollButton onclick={Callback::once(move |_| roll())}>
+                    <BodyItems>
+                        <Heading2>{"役職一覧"}</Heading2>
+                        <HeadingDescription>{format!("参加者:{} / 役職:{}",members.len(),rule.roles.iter().map(|role| role.number).sum::<usize>())}</HeadingDescription>
+                        <div class="w-80 h-96 mx-auto mt-12">
+                            <ul class="flex flex-col gap-5 mt-4">
+                                {
+                                    for rule.roles.iter().map(|roll| {
+                                        html! {
+                                            <li class="flex text-black pb-1 border-solid border-b border-line">
+                                                <span class="text-xl mr-3">
+                                                    {roll.name.as_str()}
+                                                </span>
+                                                <span class="text-black-light flex">
+                                                    {for repeat(icon()).take(roll.number)}
+                                                </span>
+                                            </li>
+                                        }
+                                    })
+                                }
+                            </ul>
+                        </div>
+                    </BodyItems>
+                    {
+                        match roll {
+                            Some(roll) => {
+                                html! {
+                                    <BottomOperaton>
+                                        <RollButton onclick={Callback::once(move |_| roll())}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-full h-full">
                                                     <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clip-rule="evenodd" />
                                                 </svg>
-                                           </RollButton>
-                                        </FixToBottom>
-                                    }
-                                },
-                                None => loading(),
-                            }
+                                        </RollButton>
+                                    </BottomOperaton>
+                                }
+                            },
+                            None => loading(),
                         }
-                    </div>
+                    }
                 </section>
             }
 

@@ -95,7 +95,7 @@ pub fn input_text(props: &InputTextProps) -> Html {
             oninput={oninput} 
             value={props.value.clone()}
             onclick={on_input_click}
-            class="w-56 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="text" placeholder={props.placeholder}
+            class="w-52 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="text" placeholder={props.placeholder}
         />
     }
 }

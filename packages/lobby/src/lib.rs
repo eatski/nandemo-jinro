@@ -2,7 +2,7 @@ use model::{MemberJSON,SetCanJoin};
 use atoms::{loading, Heading2,HeadingDescription,ButtonLarge};
 use yew::{Properties, function_component, html, use_state, Callback};
 use firestore_hooks::{use_document, DataFetchState, use_collection_sync};
-use layouting::FixToBottom;
+use layouting::{BodyItems,BottomOperaton};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
@@ -23,51 +23,53 @@ pub fn lobby(props: &Props) -> Html {
             let user_id = props.user_id.clone();
             html! {
                 <section class="mx-auto w-full max-w-2xl py-2">
-                    {
-                        if is_host {
-                            html! {
-                                <>
-                                    <Heading2>{"メンバーを集めましょう"}</Heading2>
-                                    <HeadingDescription>{"このページのURLを一緒に遊ぶメンバーに共有しましょう"}</HeadingDescription>
-                                </>
-                            }
-                        } else {
-                            html! {
-                                <>
-                                    <Heading2>{"部屋に参加しました"}</Heading2>
-                                    <HeadingDescription>{"ホストがゲームを始めるのを待ちましょう"}</HeadingDescription>
-                                </>
-                            }
-                        }
-                    }
-                    <ul class="flex flex-col gap-2 py-8">
+                    <BodyItems>
                         {
-                            for members.iter().map(|member| {
-                                let is_you = member.id == *user_id;
+                            if is_host {
                                 html! {
-                                    <li class="flex justify-center">
-                                        <div class="relative bg-colored-light w-60 border-line border-solid border rounded-full py-0.5 text-center text-md text-black-light">
-                                            {member.name.as_str()}
-                                            <span class="absolute top-1/2 right-5">
-                                                {is_you.then(|| html! {
-                                                    <span role="img" aria-label={"あなた"} class="relative h-2 w-2">
-                                                        <span class="animate-pulse absolute -translate-y-1/2 top-0 left-0 rounded-full bg-feature-light h-2 w-2" />
-                                                    </span>
-                                                }).unwrap_or_default()}
-                                            </span>
-                                        </div>
-                                    </li>
+                                    <>
+                                        <Heading2>{"メンバーを集めましょう"}</Heading2>
+                                        <HeadingDescription>{"このページのURLを一緒に遊ぶメンバーに共有しましょう"}</HeadingDescription>
+                                    </>
                                 }
-                            })
+                            } else {
+                                html! {
+                                    <>
+                                        <Heading2>{"部屋に参加しました"}</Heading2>
+                                        <HeadingDescription>{"ホストがゲームを始めるのを待ちましょう"}</HeadingDescription>
+                                    </>
+                                }
+                            }
                         }
-                    </ul>
+                        <ul class="flex flex-col gap-2 py-8">
+                            {
+                                for members.iter().map(|member| {
+                                    let is_you = member.id == *user_id;
+                                    html! {
+                                        <li class="flex justify-center">
+                                            <div class="relative bg-colored-light w-60 border-line border-solid border rounded-full py-0.5 text-center text-md text-black-light">
+                                                {member.name.as_str()}
+                                                <span class="absolute top-1/2 right-5">
+                                                    {is_you.then(|| html! {
+                                                        <span role="img" aria-label={"あなた"} class="relative h-2 w-2">
+                                                            <span class="animate-pulse absolute -translate-y-1/2 top-0 left-0 rounded-full bg-feature-light h-2 w-2" />
+                                                        </span>
+                                                    }).unwrap_or_default()}
+                                                </span>
+                                            </div>
+                                        </li>
+                                    }
+                                })
+                            }
+                        </ul>
+                    </BodyItems>
                     {{   
                         let room_id = props.room_id.clone();
                         is_host.then(|| {
                             html! {
-                                <FixToBottom>
+                                <BottomOperaton>
                                     <MemberClose room_id={room_id}/>
-                                </FixToBottom>
+                                </BottomOperaton>
                             }
                         }).unwrap_or_default()
                     }}
