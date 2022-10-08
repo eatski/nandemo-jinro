@@ -37,7 +37,7 @@ pub fn roll(props: &Props) -> Html {
                     <BodyItems>
                         <Heading2>{"役職一覧"}</Heading2>
                         <HeadingDescription>{format!("参加者:{} / 役職:{}",members.len(),rule.roles.iter().map(|role| role.number).sum::<usize>())}</HeadingDescription>
-                        <div class="w-80 h-96 mx-auto mt-12">
+                        <div class="w-80 mx-auto mt-12">
                             <ul class="flex flex-col gap-5 mt-4">
                                 {
                                     for rule.roles.iter().map(|roll| {

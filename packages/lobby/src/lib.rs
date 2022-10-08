@@ -47,7 +47,7 @@ pub fn lobby(props: &Props) -> Html {
                                     let is_you = member.id == *user_id;
                                     html! {
                                         <li class="flex justify-center">
-                                            <div class="relative bg-colored-light w-60 border-line border-solid border rounded-full py-0.5 text-center text-md text-black-light">
+                                            <div class="relative bg-colored-light w-60 border-line border-solid border rounded-full py-1 text-center text-md text-black-light">
                                                 {member.name.as_str()}
                                                 <span class="absolute top-1/2 right-5">
                                                     {is_you.then(|| html! {

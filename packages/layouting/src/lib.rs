@@ -8,7 +8,7 @@ pub struct ChildrenOnlyProps {
 #[function_component[BodyItems]]
 pub fn body_items(props: &ChildrenOnlyProps) -> Html {
     html! {
-        <div class="h-96 overflow-y-auto">
+        <div class="min-h-[24rem]">
             {props.children.clone()}
         </div>
     }

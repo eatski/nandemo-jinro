@@ -92,24 +92,22 @@ pub fn rule_make(props: &Props) -> Html {
                                         }
                                     )}
                                     </ul>
-                                    <div class="flex justify-center mt-4">
-                                        <div class="h-6 w-6 relative">
-                                            <button onclick={Callback::from(move |_| {
+                                    <div class="flex justify-center mt-5">
+                                        <button 
+                                            onclick={Callback::from(move |_| {
                                                 let mut captured_state = captured_state.clone();
                                                 captured_state.push(Item {
                                                     name: "".to_string(),
                                                     count: 1,
                                                 });
                                                 state.set(captured_state)
-                                            })} class="
-                                                absolute -translate-y-1/2 -translate-x-1/2 top-1/2 left-1/2
-                                                w-5 h-5 rounded-full
-                                                bg-feature transition-colors hover:bg-feature-light
-                                            " 
-                                            >
-                                                <span role="img" aria-label="追加" style="top:44%;left: 52%;" class="absolute -translate-y-1/2 -translate-x-1/2 left-1/2 text-white">{"+"}</span>
-                                            </button>
-                                        </div>
+                                            })} 
+                                            class="text-black hover:text-black-light " 
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                            </svg>
+                                        </button>
                                     </div>    
                                 </BodyItems>
                                 <BottomOperaton>
