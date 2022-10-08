@@ -90,7 +90,7 @@ pub fn roll(props: &Props) -> Html {
                         }
                     }
                     <div class="flex justify-center mt-4">
-                        <button class="text-black hover:text-black-light">{"戻る"}</button>
+                        <button class="text-black hover:text-black-light text-md">{"戻る"}</button>
                     </div>
                 </section>
             }
