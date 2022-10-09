@@ -1,4 +1,5 @@
 use yew::{html, function_component, Callback, Properties, Children};
+use atoms::{ButtonRounded};
 
 #[derive(Properties, PartialEq)]
 pub struct RollButtonProps {
@@ -9,10 +10,11 @@ pub struct RollButtonProps {
 #[function_component(RollButton)]
 pub fn roll_button(props: &RollButtonProps) -> Html {
     html! {
-        <div class="m-auto flex justify-center">
-            <button class={"animate-bounce bg-feature hover:bg-feature-light text-white py-3 px-3 text-lg rounded-full h-16 h-16"} onclick={props.onclick.reform(|_| ())}>
+        <div class="animate-bounce">
+            <ButtonRounded onclick={props.onclick.reform(|_| ())}>
                 {props.children.clone()}
-            </button>
+            </ButtonRounded>
         </div>
+        
     }
 }

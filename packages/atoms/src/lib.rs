@@ -8,17 +8,29 @@ pub struct ButtonProps {
     pub disabled: Option<bool>,
 }
 
+
+const BUTTON_FEATURE_COLOR: &str = "transition-colors bg-feature hover:bg-feature-light text-white";
+
 #[function_component[Button]]
 pub fn button(props: &ButtonProps) -> Html {
     html! {
-        <button onclick={props.onclick.clone()} disabled={props.disabled.unwrap_or_else(|| false)} class={"bg-feature transition-colors hover:bg-feature-light disabled:bg-quiet text-white py-2 px-4 rounded-md"}>{props.children.clone()}</button>
+        <button onclick={props.onclick.clone()} disabled={props.disabled.unwrap_or_else(|| false)} class={format!("{} py-2 px-4 rounded-md",BUTTON_FEATURE_COLOR)}>{props.children.clone()}</button>
     }
 }
 
 #[function_component[ButtonLarge]]
 pub fn button_large(props: &ButtonProps) -> Html {
     html! {
-        <button onclick={props.onclick.clone()} class={"bg-feature hover:bg-feature-light text-white py-4 px-9 text-lg rounded-full"}>{props.children.clone()}</button>
+        <button onclick={props.onclick.clone()} class={format!("{} py-4 px-9 text-lg rounded-full",BUTTON_FEATURE_COLOR)}>{props.children.clone()}</button>
+    }
+}
+
+#[function_component(ButtonRounded)]
+pub fn button_rounded(props: &ButtonProps) -> Html {
+    html! {
+        <button class={format!("{} py-3 px-3 text-lg rounded-full h-16 h-16",BUTTON_FEATURE_COLOR)} onclick={props.onclick.clone()}>
+            {props.children.clone()}
+        </button>
     }
 }
 
