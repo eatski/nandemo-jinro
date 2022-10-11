@@ -17,11 +17,9 @@ pub struct ChildrenOnlyProps {
 #[function_component(Card)]
 fn card(props:&ChildrenOnlyProps) -> Html {
     html! {
-        <section class="w-full max-w-xl">
-            <div class="h-full rounded-md p-3 bg-colored">
-                {props.children.clone()}
-            </div>
-        </section>
+        <div class="h-full rounded-md p-3 bg-colored">
+            {props.children.clone()}
+        </div>
     }
 }
 
@@ -42,23 +40,28 @@ pub fn landing() -> Html {
             {title()}
             <div class="flex gap-8 flex-col">
                 <div class="flex gap-7 flex-col md:flex-row justify-center">
-                    <Card>
-                        <Heading2>{"ルール作成から"}</Heading2>
-                        <HeadingDescription>{"オリジナルのルールで遊ぶ"}</HeadingDescription>
-                        <CardContent>
-                            <CreateRule />
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <Heading2>{"テンプレから"}</Heading2>
-                        <HeadingDescription>{"誰かが作ったルールで遊ぶ"}</HeadingDescription>
-                        <CardContent>
-                            <div class="flex flex-wrap justify-center gap-2">
-                                {button_link("スプラトゥーン", "/tags/spatoon")}
-                                {button_link("汎用 4人", "/tags/monster_hunter")}
-                            </div>
-                        </CardContent>
-                    </Card>
+                    <section class="w-full max-w-xl" aria-label="ルール作成から">
+                        <Card>
+                            <Heading2>{"ルール作成から"}</Heading2>
+                            <HeadingDescription>{"オリジナルのルールで遊ぶ"}</HeadingDescription>
+                            <CardContent>
+                                <CreateRule />
+                            </CardContent>
+                        </Card>
+                    </section>
+                    <section class="w-full max-w-xl" aria-label="テンプレから">
+                        <Card>
+                            <Heading2>{"テンプレから"}</Heading2>
+                            <HeadingDescription>{"誰かが作ったルールで遊ぶ"}</HeadingDescription>
+                            <CardContent>
+                                <div class="flex flex-wrap justify-center gap-2">
+                                    {button_link("スプラトゥーン", "/tags/spatoon")}
+                                    {button_link("汎用 4人", "/tags/monster_hunter")}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </section>
+                    
                 </div>
                 <section>
                     <Heading2>{"遊び方"}</Heading2>
