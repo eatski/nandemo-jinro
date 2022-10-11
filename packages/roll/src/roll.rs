@@ -64,7 +64,6 @@ pub fn roll(props: &Props) -> Html {
                                                             html!{for repeat(icon()).take(roll.number)}
                                                         }
                                                     }
-                                                   
                                                 </span>
                                             </li>
                                         }

@@ -5,6 +5,7 @@ use web_sys::{HtmlInputElement, InputEvent};
 pub struct ButtonProps {
     pub onclick: Callback<MouseEvent>,
     pub children: Children,
+    pub aria_label: Option<&'static str>,
     pub disabled: Option<bool>,
 }
 
@@ -14,21 +15,25 @@ const BUTTON_FEATURE_COLOR: &str = "transition-colors bg-feature hover:bg-featur
 #[function_component[Button]]
 pub fn button(props: &ButtonProps) -> Html {
     html! {
-        <button onclick={props.onclick.clone()} disabled={props.disabled.unwrap_or_else(|| false)} class={format!("{} py-2 px-4 rounded-md",BUTTON_FEATURE_COLOR)}>{props.children.clone()}</button>
+        <button aria-label={props.aria_label} onclick={props.onclick.clone()} disabled={props.disabled.unwrap_or_else(|| false)} class={format!("{} py-2 px-4 rounded-md",BUTTON_FEATURE_COLOR)}>
+            {props.children.clone()}
+        </button>
     }
 }
 
 #[function_component[ButtonLarge]]
 pub fn button_large(props: &ButtonProps) -> Html {
     html! {
-        <button onclick={props.onclick.clone()} class={format!("{} py-4 px-9 text-lg rounded-full",BUTTON_FEATURE_COLOR)}>{props.children.clone()}</button>
+        <button aria-label={props.aria_label} onclick={props.onclick.clone()} class={format!("{} py-4 px-9 text-lg rounded-full",BUTTON_FEATURE_COLOR)}>
+            {props.children.clone()}
+        </button>
     }
 }
 
 #[function_component(ButtonRounded)]
 pub fn button_rounded(props: &ButtonProps) -> Html {
     html! {
-        <button class={format!("{} py-3 px-3 text-lg rounded-full h-16 h-16",BUTTON_FEATURE_COLOR)} onclick={props.onclick.clone()}>
+        <button aria-label={props.aria_label} class={format!("{} py-3 px-3 text-lg rounded-full h-16 h-16",BUTTON_FEATURE_COLOR)} onclick={props.onclick.clone()}>
             {props.children.clone()}
         </button>
     }
