@@ -1,6 +1,5 @@
 use atoms::button_link;
-use yew::{Properties, Children, html, function_component};
-
+use yew::{function_component, html, Children, Properties};
 
 #[derive(Properties, PartialEq)]
 pub struct ChildrenOnlyProps {

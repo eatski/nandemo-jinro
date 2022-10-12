@@ -1,5 +1,8 @@
-use yew::{Callback, html, Html, MouseEvent, Properties, Children, function_component, use_state,TargetCast};
 use web_sys::{HtmlInputElement, InputEvent};
+use yew::{
+    function_component, html, use_state, Callback, Children, Html, MouseEvent, Properties,
+    TargetCast,
+};
 
 #[derive(Properties, PartialEq)]
 pub struct ButtonProps {
@@ -9,8 +12,8 @@ pub struct ButtonProps {
     pub disabled: Option<bool>,
 }
 
-
-const BUTTON_FEATURE_COLOR: &str = "transition-colors bg-feature hover:bg-feature-light disabled:bg-quiet text-white";
+const BUTTON_FEATURE_COLOR: &str =
+    "transition-colors bg-feature hover:bg-feature-light disabled:bg-quiet text-white";
 
 #[function_component[Button]]
 pub fn button(props: &ButtonProps) -> Html {
@@ -40,12 +43,12 @@ pub fn button_rounded(props: &ButtonProps) -> Html {
 }
 
 pub fn loading() -> Html {
-    html!  {
+    html! {
         <div role="img" aria-label="ローディング" class="animate-spin h-10 w-10 border-4 border-quiet-500 rounded-full border-t-transparent"></div>
     }
 }
 
-pub fn button_link(label: &str,href: &str) -> Html {
+pub fn button_link(label: &str, href: &str) -> Html {
     html! {
         <a class="rounded-md border-line border-solid border text-black bg-white hover:text-black-light py-2 px-3" href={href.to_owned()}>
             {label}
@@ -74,10 +77,10 @@ pub struct ChildrenOnlyProps {
 
 #[derive(Properties, PartialEq)]
 pub struct InputAndButtonProps {
-    pub label:  &'static str,
+    pub label: &'static str,
     pub placeholder: &'static str,
     pub onsubmit: Callback<String>,
-    pub default: Option<&'static str>
+    pub default: Option<&'static str>,
 }
 
 #[derive(Properties, PartialEq)]
@@ -110,8 +113,8 @@ pub fn input_text(props: &InputTextProps) -> Html {
         })
     };
     html! {
-        <input 
-            oninput={oninput} 
+        <input
+            oninput={oninput}
             value={props.value.clone()}
             onclick={on_input_click}
             maxlength={props.maxlength.to_string()}
@@ -120,8 +123,6 @@ pub fn input_text(props: &InputTextProps) -> Html {
         />
     }
 }
-
-
 
 #[derive(Properties, PartialEq)]
 pub struct InputNumberProps {

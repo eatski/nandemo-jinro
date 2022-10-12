@@ -1,8 +1,8 @@
+use atoms::{ButtonLarge, Heading2, HeadingDescription, InputSmallNumber, InputText};
 use firestore_hooks::use_collection_sync;
-use model::{Rule, Role, SetRule, MemberJSON};
-use yew::{function_component, html, Callback, use_state, Properties};
-use atoms::{InputText,InputSmallNumber,Heading2,HeadingDescription,ButtonLarge};
-use layouting::{BodyItems,BottomOperaton};
+use layouting::{BodyItems, BottomOperaton};
+use model::{MemberJSON, Role, Rule, SetRule};
+use yew::{function_component, html, use_state, Callback, Properties};
 
 #[derive(Clone)]
 struct Item {
@@ -10,35 +10,42 @@ struct Item {
     count: usize,
 }
 
-#[derive(Properties,PartialEq)]
+#[derive(Properties, PartialEq)]
 pub struct Props {
     pub room_id: String,
 }
 
 #[function_component(RuleMake)]
 pub fn rule_make(props: &Props) -> Html {
-    let state = use_state(|| vec![
-        Item {
-            name: "市民".to_string(),
-            count: 3,
-        },
-        Item {
-            name: "人狼".to_string(),
-            count: 1,
-        },
-    ]);
+    let state = use_state(|| {
+        vec![
+            Item {
+                name: "市民".to_string(),
+                count: 3,
+            },
+            Item {
+                name: "人狼".to_string(),
+                count: 1,
+            },
+        ]
+    });
     let captured_state = (*state).clone();
     let room_id = props.room_id.clone();
     let publish_rule = Callback::from(move |_| {
         firestore::set_document(
-    &(),
-    room_id.as_str(),
+            &(),
+            room_id.as_str(),
             &SetRule {
-                rule:  Rule {
+                rule: Rule {
                     roles: captured_state
                         .iter()
                         .enumerate()
-                        .map(|(index,item)| Role {name: item.name.clone(),number: item.count, id: index.to_string()}).collect()
+                        .map(|(index, item)| Role {
+                            name: item.name.clone(),
+                            number: item.count,
+                            id: index.to_string(),
+                        })
+                        .collect(),
                 },
             },
             || {},
@@ -62,7 +69,7 @@ pub fn rule_make(props: &Props) -> Html {
                                         {for (*state).iter().enumerate().map(|(index,item)| {
                                             let on_number_input = {
                                                 let mut captured_state = captured_state.clone();
-                                                let state = state.clone();  
+                                                let state = state.clone();
                                                 Callback::once(move |count| {
                                                     captured_state[index].count = count;
                                                     state.set(captured_state)
@@ -70,7 +77,7 @@ pub fn rule_make(props: &Props) -> Html {
                                             };
                                             let on_text_input = {
                                                 let mut captured_state = captured_state.clone();
-                                                let state = state.clone();  
+                                                let state = state.clone();
                                                 Callback::once(move |name| {
                                                     captured_state[index].name = name;
                                                     state.set(captured_state)
@@ -94,7 +101,7 @@ pub fn rule_make(props: &Props) -> Html {
                                     )}
                                     </ul>
                                     <div class="flex justify-center mt-5">
-                                        <button 
+                                        <button
                                             onclick={Callback::from(move |_| {
                                                 let mut captured_state = captured_state.clone();
                                                 captured_state.push(Item {
@@ -102,15 +109,15 @@ pub fn rule_make(props: &Props) -> Html {
                                                     count: 1,
                                                 });
                                                 state.set(captured_state)
-                                            })} 
+                                            })}
                                             class="text-black hover:text-black-light"
-                                            aria-label="役職を追加" 
+                                            aria-label="役職を追加"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                                             </svg>
                                         </button>
-                                    </div>    
+                                    </div>
                                 </BodyItems>
                                 <BottomOperaton>
                                         <ButtonLarge onclick={publish_rule}>

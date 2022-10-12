@@ -1,7 +1,6 @@
-
-use std::{collections::HashMap};
-use firestore::{FireStoreResource};
-use serde::{Serialize, Deserialize};
+use firestore::FireStoreResource;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize)]
 pub struct MemberInput {
@@ -13,13 +12,13 @@ impl FireStoreResource for MemberInput {
     type ParamForPath = String;
 
     fn path(param: &Self::ParamForPath) -> String {
-        format!("{}/rooms/{}/members",NAME_SPACE,param)
+        format!("{}/rooms/{}/members", NAME_SPACE, param)
     }
 }
 
-pub type UserToRole = HashMap<String,String>;
+pub type UserToRole = HashMap<String, String>;
 
-#[derive(Serialize, Deserialize,Clone,PartialEq,Eq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub struct Roll {
     pub seq_num: usize,
     pub user_to_role: UserToRole,
@@ -27,12 +26,12 @@ pub struct Roll {
 
 impl FireStoreResource for Roll {
     fn path(room_id: &String) -> String {
-        format!("{}/rooms/{}/rolls",NAME_SPACE,room_id)
+        format!("{}/rooms/{}/rolls", NAME_SPACE, room_id)
     }
     type ParamForPath = String;
 }
 
-#[derive(Serialize, Deserialize,Clone,PartialEq,Eq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub struct Room {
     pub rule: Option<Rule>,
     pub can_join: bool,
@@ -40,24 +39,24 @@ pub struct Room {
 
 impl FireStoreResource for Room {
     fn path(_: &()) -> String {
-        format!("{}/rooms",NAME_SPACE)
+        format!("{}/rooms", NAME_SPACE)
     }
     type ParamForPath = ();
 }
 
-#[derive(Serialize, Deserialize,Clone,PartialEq,Eq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub struct Role {
     pub id: String,
     pub name: String,
-    pub number: usize
+    pub number: usize,
 }
-#[derive(Serialize, Deserialize,Clone,PartialEq,Eq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub struct Rule {
     pub roles: Vec<Role>,
 }
 
 const NAME_SPACE: &str = "rollrole/v1";
-#[derive(Serialize, Deserialize,Clone,PartialEq,Eq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub struct MemberJSON {
     pub name: String,
     pub id: String,
@@ -66,31 +65,31 @@ pub struct MemberJSON {
 
 impl FireStoreResource for MemberJSON {
     fn path(room_id: &String) -> String {
-        format!("{}/rooms/{}/members",NAME_SPACE,room_id)
+        format!("{}/rooms/{}/members", NAME_SPACE, room_id)
     }
     type ParamForPath = String;
 }
 
-#[derive(Serialize, Deserialize,Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct SetRule {
     pub rule: Rule,
 }
 
 impl FireStoreResource for SetRule {
     fn path(_: &()) -> String {
-        format!("{}/rooms",NAME_SPACE)
+        format!("{}/rooms", NAME_SPACE)
     }
     type ParamForPath = ();
 }
 
-#[derive(Serialize, Deserialize,Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct SetCanJoin {
     pub can_join: bool,
 }
 
 impl FireStoreResource for SetCanJoin {
     fn path(_: &()) -> String {
-        format!("{}/rooms",NAME_SPACE)
+        format!("{}/rooms", NAME_SPACE)
     }
     type ParamForPath = ();
 }

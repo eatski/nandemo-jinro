@@ -1,10 +1,10 @@
-use yew::{html, function_component, Callback, Properties, Children};
-use atoms::{ButtonRounded};
+use atoms::ButtonRounded;
+use yew::{function_component, html, Callback, Children, Properties};
 
 #[derive(Properties, PartialEq)]
 pub struct RollButtonProps {
     pub onclick: Callback<()>,
-    pub children: Children
+    pub children: Children,
 }
 
 #[function_component(RollButton)]
@@ -15,6 +15,6 @@ pub fn roll_button(props: &RollButtonProps) -> Html {
                 {props.children.clone()}
             </ButtonRounded>
         </div>
-        
+
     }
 }

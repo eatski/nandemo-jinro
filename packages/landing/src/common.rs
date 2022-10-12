@@ -1,5 +1,5 @@
-use yew::{Html, html, Callback, function_component, Properties, use_state};
-use atoms::{InputText,Button};
+use atoms::{Button, InputText};
+use yew::{function_component, html, use_state, Callback, Html, Properties};
 
 pub fn title() -> Html {
     html! {

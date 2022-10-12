@@ -1,3 +1,3 @@
-pub mod landing;
-pub mod entrance;
 mod common;
+pub mod entrance;
+pub mod landing;

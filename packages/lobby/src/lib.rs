@@ -1,8 +1,8 @@
-use model::{MemberJSON,SetCanJoin};
-use atoms::{loading, Heading2,HeadingDescription,ButtonLarge};
-use yew::{Properties, function_component, html, use_state, Callback};
-use firestore_hooks::{use_document, DataFetchState, use_collection_sync};
-use layouting::{BodyItems,BottomOperaton};
+use atoms::{loading, ButtonLarge, Heading2, HeadingDescription};
+use firestore_hooks::{use_collection_sync, use_document, DataFetchState};
+use layouting::{BodyItems, BottomOperaton};
+use model::{MemberJSON, SetCanJoin};
+use yew::{function_component, html, use_state, Callback, Properties};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
@@ -15,10 +15,10 @@ pub fn lobby(props: &Props) -> Html {
     let members_state = use_collection_sync::<MemberJSON>(&props.room_id);
     let you_state = use_document::<MemberJSON>(&props.room_id, props.user_id.as_str());
 
-    let state = members_state.merge::<>(you_state);
-    
+    let state = members_state.merge(you_state);
+
     match state {
-        DataFetchState::Loaded((members,you)) => {
+        DataFetchState::Loaded((members, you)) => {
             let is_host = you.is_host;
             let user_id = props.user_id.clone();
             html! {
@@ -63,7 +63,7 @@ pub fn lobby(props: &Props) -> Html {
                             }
                         </ul>
                     </BodyItems>
-                    {{   
+                    {{
                         let room_id = props.room_id.clone();
                         is_host.then(|| {
                             html! {
@@ -74,10 +74,10 @@ pub fn lobby(props: &Props) -> Html {
                         }).unwrap_or_default()
                     }}
                 </section>
-                
+
             }
-        },
-        DataFetchState::Loading => loading()
+        }
+        DataFetchState::Loading => loading(),
     }
 }
 #[derive(Properties, PartialEq)]
@@ -89,7 +89,7 @@ struct MemberCloseProps {
 fn member_close(props: &MemberCloseProps) -> Html {
     enum State {
         Loading,
-        Clickable
+        Clickable,
     }
     let state = use_state(|| State::Clickable);
     let room_id = props.room_id.clone();
@@ -99,10 +99,10 @@ fn member_close(props: &MemberCloseProps) -> Html {
             state.set(State::Loading);
             firestore::set_document(
                 &(),
-                room_id.as_str(), 
+                room_id.as_str(),
                 &SetCanJoin { can_join: false },
-                || {}, 
-                || {}
+                || {},
+                || {},
             );
         })
     };
@@ -110,7 +110,7 @@ fn member_close(props: &MemberCloseProps) -> Html {
         State::Loading => loading(),
         State::Clickable => {
             html! {
-                <ButtonLarge 
+                <ButtonLarge
                     {onclick}
                 >
                     {"締め切る"}

@@ -1,13 +1,13 @@
 use std::iter::repeat;
 
-use atoms::{loading,Heading2,HeadingDescription};
-use firestore_hooks::{use_document, use_collection};
-use model::{Room, MemberJSON};
-use yew::{function_component, html, Callback, Properties, Html};
-use layouting::{BodyItems,BottomOperaton};
+use atoms::{loading, Heading2, HeadingDescription};
+use firestore_hooks::{use_collection, use_document};
+use layouting::{BodyItems, BottomOperaton};
+use model::{MemberJSON, Room};
+use yew::{function_component, html, Callback, Html, Properties};
 
+use crate::common::RollButton;
 use crate::use_roll::use_roll;
-use crate::common::{RollButton};
 
 #[derive(Properties, PartialEq)]
 pub struct Props {
@@ -30,7 +30,7 @@ pub fn roll(props: &Props) -> Html {
     let state = members.merge(room);
     match state {
         firestore_hooks::DataFetchState::Loading => loading(),
-        firestore_hooks::DataFetchState::Loaded((members,room)) => {
+        firestore_hooks::DataFetchState::Loaded((members, room)) => {
             let rule = room.rule.unwrap();
             html! {
                 <section>
@@ -56,9 +56,9 @@ pub fn roll(props: &Props) -> Html {
                                                                         {"×"}
                                                                         {roll.number}
                                                                     </span>
-                                                
+
                                                                 </>
-                                                                
+
                                                             }
                                                         } else {
                                                             html!{for repeat(icon()).take(roll.number)}
@@ -93,10 +93,6 @@ pub fn roll(props: &Props) -> Html {
                     </div>
                 </section>
             }
-
-            
-        },
+        }
     }
-
-    
 }

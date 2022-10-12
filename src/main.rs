@@ -1,9 +1,9 @@
+use components::layout::Layout;
+use components::room::Room;
+use landing::landing::Landing;
 use router::Route;
 use yew::prelude::*;
-use landing::landing::Landing;
-use components::layout::Layout;
 use yew_router::prelude::*;
-use components::room::Room;
 
 mod components;
 
