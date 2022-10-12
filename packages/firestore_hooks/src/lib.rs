@@ -36,19 +36,22 @@ where
     T::ParamForPath: Clone + PartialEq,
 {
     let state = use_state(|| DataFetchState::Loading);
-    let state_cloned = state.clone();
+    let state_on_complete = state.clone();
+    let state_on_error = state.clone();
     use_effect_with_deps(
         |param| {
             firestore::get_collection(
                 param,
-                move |members| state.set(DataFetchState::Loaded(members)),
-                || {},
+                move |members| state_on_complete.set(DataFetchState::Loaded(members)),
+                move || {
+                    state_on_error.set(DataFetchState::Error);
+                },
             );
             || {}
         },
         param.clone(),
     );
-    (*state_cloned).clone()
+    (*state).clone()
 }
 
 pub fn use_collection_sync<T>(param: &T::ParamForPath) -> DataFetchState<Vec<T>>
