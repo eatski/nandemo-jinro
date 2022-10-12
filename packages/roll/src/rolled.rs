@@ -1,9 +1,9 @@
-use atoms::{loading, Heading2};
+use atoms::{loading, Heading2, unexpected_error};
 use layouting::{BodyItems, BottomOperaton};
 use model::{MemberJSON, Roll, Room};
 use yew::{function_component, html, Callback, Properties};
 
-use firestore_hooks::{use_collection_sync, use_document, use_document_sync};
+use firestore_hooks::{use_collection_sync, use_document, use_document_sync, DataFetchState};
 
 use crate::common::RollButton;
 use crate::use_roll::use_roll;
@@ -22,8 +22,8 @@ pub fn rolled(props: &Props) -> Html {
     let state = rolls.merge(room).merge(member);
     let roll = use_roll(props.room_id.as_str());
     match state {
-        firestore_hooks::DataFetchState::Loading => loading(),
-        firestore_hooks::DataFetchState::Loaded(((mut rolls, room), member)) => {
+        DataFetchState::Loading => loading(),
+        DataFetchState::Loaded(((mut rolls, room), member)) => {
             rolls.sort_by_key(|roll| roll.seq_num);
             let last_rolled = rolls.last();
             match last_rolled {
@@ -66,16 +66,13 @@ pub fn rolled(props: &Props) -> Html {
 
                                 }).unwrap_or_default()
                             }
-
-
-
-
                         </section>
                     }
                 }
 
                 None => html! {},
             }
-        }
+        },
+        DataFetchState::Error => unexpected_error()
     }
 }

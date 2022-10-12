@@ -5,6 +5,7 @@ use yew::{use_effect_with_deps, use_state};
 pub enum DataFetchState<R: Clone> {
     Loading,
     Loaded(R),
+    Error
 }
 
 impl<T: Clone> DataFetchState<T> {
@@ -16,12 +17,15 @@ impl<T: Clone> DataFetchState<T> {
             (DataFetchState::Loaded(a), DataFetchState::Loaded(b)) => {
                 DataFetchState::Loaded((a, b))
             }
+            (_,DataFetchState::Error) => DataFetchState::Error,
+            (DataFetchState::Error, _) => DataFetchState::Error,
         }
     }
     pub fn map<T2: Clone>(self, func: impl Fn(T) -> T2) -> DataFetchState<T2> {
         match self {
-            DataFetchState::Loading => DataFetchState::Loading,
             DataFetchState::Loaded(a) => DataFetchState::Loaded(func(a)),
+            DataFetchState::Loading=> DataFetchState::Loading,
+            DataFetchState::Error => DataFetchState::Error,
         }
     }
 }

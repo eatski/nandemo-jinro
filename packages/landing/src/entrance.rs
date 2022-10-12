@@ -1,4 +1,4 @@
-use atoms::{loading, Heading2};
+use atoms::{loading, Heading2, unexpected_error};
 use firestore::add_document;
 use model::{MemberInput, MemberJSON, Room};
 use yew::{function_component, html, Callback, Properties};
@@ -64,6 +64,9 @@ pub fn guest_entrance(props: &GuestEntranceProps) -> Html {
                     </div>
                 }
             }
+        },
+        DataFetchState::Error => {
+            unexpected_error()
         }
     }
 }

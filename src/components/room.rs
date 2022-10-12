@@ -1,4 +1,4 @@
-use atoms::loading;
+use atoms::{loading, unexpected_error};
 use model::{MemberJSON, Roll};
 use yew::{function_component, html, use_state_eq, Callback, Properties};
 
@@ -83,6 +83,7 @@ fn view_when_has_userid(props: &HasUserIdProps) -> Html {
                     }
                 }
             }
-        }
+        },
+        DataFetchState::Error => unexpected_error()
     }
 }

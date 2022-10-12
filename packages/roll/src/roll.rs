@@ -1,7 +1,7 @@
 use std::iter::repeat;
 
-use atoms::{loading, Heading2, HeadingDescription};
-use firestore_hooks::{use_collection, use_document};
+use atoms::{loading, Heading2, HeadingDescription, unexpected_error};
+use firestore_hooks::{use_collection, use_document, DataFetchState};
 use layouting::{BodyItems, BottomOperaton};
 use model::{MemberJSON, Room};
 use yew::{function_component, html, Callback, Html, Properties};
@@ -29,8 +29,8 @@ pub fn roll(props: &Props) -> Html {
     let roll = use_roll(props.room_id.as_str());
     let state = members.merge(room);
     match state {
-        firestore_hooks::DataFetchState::Loading => loading(),
-        firestore_hooks::DataFetchState::Loaded((members, room)) => {
+        DataFetchState::Loading => loading(),
+        DataFetchState::Loaded((members, room)) => {
             let rule = room.rule.unwrap();
             html! {
                 <section>
@@ -93,6 +93,9 @@ pub fn roll(props: &Props) -> Html {
                     </div>
                 </section>
             }
+        },
+        DataFetchState::Error => {
+            unexpected_error()
         }
     }
 }

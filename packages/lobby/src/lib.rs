@@ -1,4 +1,4 @@
-use atoms::{loading, ButtonLarge, Heading2, HeadingDescription};
+use atoms::{loading, ButtonLarge, Heading2, HeadingDescription, unexpected_error};
 use firestore_hooks::{use_collection_sync, use_document, DataFetchState};
 use layouting::{BodyItems, BottomOperaton};
 use model::{MemberJSON, SetCanJoin};
@@ -78,6 +78,7 @@ pub fn lobby(props: &Props) -> Html {
             }
         }
         DataFetchState::Loading => loading(),
+        DataFetchState::Error => unexpected_error()
     }
 }
 #[derive(Properties, PartialEq)]

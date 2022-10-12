@@ -1,5 +1,5 @@
-use atoms::{ButtonLarge, Heading2, HeadingDescription, InputSmallNumber, InputText};
-use firestore_hooks::use_collection_sync;
+use atoms::{ButtonLarge, Heading2, HeadingDescription, InputSmallNumber, InputText, unexpected_error};
+use firestore_hooks::{use_collection_sync, DataFetchState};
 use layouting::{BodyItems, BottomOperaton};
 use model::{MemberJSON, Role, Rule, SetRule};
 use yew::{function_component, html, use_state, Callback, Properties};
@@ -126,6 +126,7 @@ pub fn rule_make(props: &Props) -> Html {
                                 </BottomOperaton>
                             </>
                         },
+                        DataFetchState::Error => unexpected_error()
                     }
                 }
         </section>
