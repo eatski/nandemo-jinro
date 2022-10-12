@@ -51,7 +51,7 @@ pub fn guest_entrance(props: &GuestEntranceProps) -> Html {
                         <section class="mx-auto w-full max-w-2xl">
                             <Heading2>{ format!("「{}」の部屋に入る",host.name)}</Heading2>
                             <div class="mt-3">   
-                                <JoinForm label="参加" default="" placeholder="あなたの名前" onsubmit={add_member} />  
+                                <JoinForm label="参加" default="" form_label="名前を入力して参加する" placeholder="あなたの名前" onsubmit={add_member} />  
                             </div>
                             
                         </section>

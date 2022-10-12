@@ -24,7 +24,7 @@ fn switch(route: &Route) -> Html {
         Route::Room { id } => html! {
             <Room room_id={id.to_string()}/>
         },
-        Route::NotFound => todo!(),
+        Route::NotFound => html! { <p>{"ページが見つかりませんでした"}</p> },
     }
 }
 

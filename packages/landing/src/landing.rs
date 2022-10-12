@@ -91,7 +91,7 @@ fn create_rule_view() -> Html {
     match &*state {
     State::Input => {
         html! {
-            <JoinForm label="作成" default="ホスト" placeholder="あなたの名前" onsubmit={Callback::once(move |name: String| {
+            <JoinForm form_label="名前を入力してルームを作成する" label="作成" default="ホスト" placeholder="あなたの名前" onsubmit={Callback::once(move |name: String| {
                 state.set(State::Loading);
                 firestore::add_document(
                     &(),

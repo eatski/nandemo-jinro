@@ -10,7 +10,7 @@ pub struct ButtonProps {
 }
 
 
-const BUTTON_FEATURE_COLOR: &str = "transition-colors bg-feature hover:bg-feature-light text-white";
+const BUTTON_FEATURE_COLOR: &str = "transition-colors bg-feature hover:bg-feature-light disabled:bg-quiet text-white";
 
 #[function_component[Button]]
 pub fn button(props: &ButtonProps) -> Html {
@@ -24,7 +24,7 @@ pub fn button(props: &ButtonProps) -> Html {
 #[function_component[ButtonLarge]]
 pub fn button_large(props: &ButtonProps) -> Html {
     html! {
-        <button aria-label={props.aria_label} onclick={props.onclick.clone()} class={format!("{} py-4 px-9 text-lg rounded-full",BUTTON_FEATURE_COLOR)}>
+        <button aria-label={props.aria_label} onclick={props.onclick.clone()} disabled={props.disabled.unwrap_or_else(|| false)} class={format!("{} py-4 px-9 text-lg rounded-full",BUTTON_FEATURE_COLOR)}>
             {props.children.clone()}
         </button>
     }
@@ -33,7 +33,7 @@ pub fn button_large(props: &ButtonProps) -> Html {
 #[function_component(ButtonRounded)]
 pub fn button_rounded(props: &ButtonProps) -> Html {
     html! {
-        <button aria-label={props.aria_label} class={format!("{} py-3 px-3 text-lg rounded-full h-16 h-16",BUTTON_FEATURE_COLOR)} onclick={props.onclick.clone()}>
+        <button aria-label={props.aria_label} class={format!("{} py-3 px-3 text-lg rounded-full h-16 h-16",BUTTON_FEATURE_COLOR)}  disabled={props.disabled.unwrap_or_else(|| false)} onclick={props.onclick.clone()}>
             {props.children.clone()}
         </button>
     }
@@ -41,7 +41,7 @@ pub fn button_rounded(props: &ButtonProps) -> Html {
 
 pub fn loading() -> Html {
     html!  {
-        <div class="animate-spin h-10 w-10 border-4 border-quiet-500 rounded-full border-t-transparent"></div>
+        <div role="img" aria-label="ローディング" class="animate-spin h-10 w-10 border-4 border-quiet-500 rounded-full border-t-transparent"></div>
     }
 }
 
@@ -86,6 +86,7 @@ pub struct InputTextProps {
     pub oninput: Callback<String>,
     pub value: String,
     pub maxlength: usize,
+    pub aria_label: Option<&'static str>,
 }
 
 #[function_component(InputText)]
@@ -114,6 +115,7 @@ pub fn input_text(props: &InputTextProps) -> Html {
             value={props.value.clone()}
             onclick={on_input_click}
             maxlength={props.maxlength.to_string()}
+            aria-label={props.aria_label}
             class="w-52 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="text" placeholder={props.placeholder}
         />
     }

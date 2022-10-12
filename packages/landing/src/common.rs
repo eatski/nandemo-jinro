@@ -15,6 +15,7 @@ pub fn title() -> Html {
 pub struct JoinFormProps {
     pub onsubmit: Callback<String>,
     pub label: &'static str,
+    pub form_label: &'static str,
     pub default: String,
     pub placeholder: &'static str,
 }
@@ -35,8 +36,8 @@ pub fn join_form(props: &JoinFormProps) -> Html {
     let value = (*state).clone();
     let disabled = value.is_empty();
     html! {
-        <form class="flex justify-center gap-2">
-            <InputText value={value} placeholder="あなたの名前" oninput={oninput} maxlength={12} />
+        <form aria-label={props.form_label} class="flex justify-center gap-2">
+            <InputText value={value} aria_label="あなたの名前" placeholder="あなたの名前" oninput={oninput} maxlength={12} />
             <Button disabled={disabled} onclick={onsubmit}>{props.label}</Button>
         </form>
     }
