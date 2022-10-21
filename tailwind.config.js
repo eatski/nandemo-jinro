@@ -10,6 +10,7 @@ module.exports = {
         line: "#cbd5e1",
         black: "#334155",
         "black-light": "#64748b",
+        "black-quiet": "#a0aec0",
         colored: "#f5f5f4",
         "colored-light": "#fafaf9",
         marked: "#fb923c",

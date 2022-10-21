@@ -122,19 +122,23 @@ pub fn rule_make(props: &Props) -> Html {
                                             </svg>
                                         </button>
                                         {
-                                            if (*state).len() > 1 {
+                                            {
+                                                let disabled = (*state).len() <= 1;
                                                 html! {
                                                     <button
                                                         onclick={
                                                             let state = state.clone();
                                                             let captured_state = captured_state.clone();
-                                                            Callback::from(move |_| {
-                                                                let mut captured_state = captured_state.clone();
-                                                                captured_state.pop();
-                                                                state.set(captured_state)
-                                                            })
+                                                            (!disabled).then(|| {
+                                                                Callback::from(move |_| {
+                                                                    let mut captured_state = captured_state.clone();
+                                                                    captured_state.pop();
+                                                                    state.set(captured_state)
+                                                                })
+                                                            }) 
                                                         }
-                                                        class="text-black hover:text-black-light"
+                                                        disabled={disabled}
+                                                        class="text-black hover:text-black-light disabled:text-black-quiet"
                                                         aria-label="役職を削除"
                                                     >
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -142,11 +146,9 @@ pub fn rule_make(props: &Props) -> Html {
                                                         </svg>
                                                     </button>
                                                 }
-                                            } else {
-                                                Default::default()
                                             }
+                                            
                                         }
-                                        
                                     </div>
                                 </BodyItems>
                                 <BottomOperaton>
