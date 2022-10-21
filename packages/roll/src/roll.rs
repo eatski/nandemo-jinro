@@ -88,9 +88,9 @@ pub fn roll(props: &Props) -> Html {
                             None => loading(),
                         }
                     }
-                    <div class="flex justify-center mt-4">
-                        <button class="text-black hover:text-black-light text-md">{"戻る"}</button>
-                    </div>
+                    // <div class="flex justify-center mt-4">
+                    //     <button class="text-black hover:text-black-light text-md">{"戻る"}</button>
+                    // </div>
                 </section>
             }
         },
