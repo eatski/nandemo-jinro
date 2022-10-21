@@ -100,16 +100,20 @@ pub fn rule_make(props: &Props) -> Html {
                                         }
                                     )}
                                     </ul>
-                                    <div class="flex justify-center mt-5">
+                                    <div class="flex justify-center mt-5 gap-5">
                                         <button
-                                            onclick={Callback::from(move |_| {
-                                                let mut captured_state = captured_state.clone();
-                                                captured_state.push(Item {
-                                                    name: "".to_string(),
-                                                    count: 1,
-                                                });
-                                                state.set(captured_state)
-                                            })}
+                                            onclick={
+                                                let state = state.clone();
+                                                let captured_state = captured_state.clone();
+                                                Callback::from(move |_| {
+                                                    let mut captured_state = captured_state.clone();
+                                                    captured_state.push(Item {
+                                                        name: "".to_string(),
+                                                        count: 1,
+                                                    });
+                                                    state.set(captured_state)
+                                                })
+                                            }
                                             class="text-black hover:text-black-light"
                                             aria-label="役職を追加"
                                         >
@@ -117,6 +121,32 @@ pub fn rule_make(props: &Props) -> Html {
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                                             </svg>
                                         </button>
+                                        {
+                                            if (*state).len() > 1 {
+                                                html! {
+                                                    <button
+                                                        onclick={
+                                                            let state = state.clone();
+                                                            let captured_state = captured_state.clone();
+                                                            Callback::from(move |_| {
+                                                                let mut captured_state = captured_state.clone();
+                                                                captured_state.pop();
+                                                                state.set(captured_state)
+                                                            })
+                                                        }
+                                                        class="text-black hover:text-black-light"
+                                                        aria-label="役職を削除"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5.5 12.5h13" />
+                                                        </svg>
+                                                    </button>
+                                                }
+                                            } else {
+                                                Default::default()
+                                            }
+                                        }
+                                        
                                     </div>
                                 </BodyItems>
                                 <BottomOperaton>
