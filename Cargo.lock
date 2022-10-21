@@ -428,9 +428,12 @@ dependencies = [
  "firestore",
  "firestore_hooks",
  "getrandom",
+ "js-sys",
  "layouting",
  "model",
  "rand",
+ "wasm-bindgen",
+ "web-sys",
  "yew",
 ]
 

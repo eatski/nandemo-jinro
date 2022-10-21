@@ -1,7 +1,8 @@
 use atoms::{loading, Heading2, unexpected_error};
 use layouting::{BodyItems, BottomOperaton};
 use model::{MemberJSON, Roll, Room};
-use yew::{function_component, html, Callback, Properties};
+use wasm_bindgen::prelude::Closure;
+use yew::{function_component, html, Callback, Properties, use_effect, use_state};
 
 use firestore_hooks::{use_collection_sync, use_document, use_document_sync, DataFetchState};
 
@@ -14,6 +15,35 @@ pub struct Props {
     pub user_id: String,
 }
 
+#[derive(Debug, Clone, PartialEq,Properties)]
+struct TimerLoadingProps {
+    on_timeout: Callback<()>,
+}
+
+#[function_component(TimerLoading)]
+fn timer_loading(props: &TimerLoadingProps) -> Html {
+    let props = props.clone();
+    use_effect(move || {
+        let id = web_sys::window().unwrap().set_timeout_with_callback_and_timeout_and_arguments_0(
+            &Closure::once_into_js(move || {
+                props.on_timeout.emit(());
+            }).into(),
+            1000,
+        ).unwrap();
+        move || {
+            web_sys::window().unwrap().clear_timeout_with_handle(id);
+        }
+    });
+    html! {
+        <div class="animate-bounce">
+            <div class="flex flex-col items-center">
+                <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+                <div class="text-2xl font-bold text-gray-900">{"ローディング中"}</div>
+            </div>
+        </div>
+    }
+}
+
 #[function_component(Rolled)]
 pub fn rolled(props: &Props) -> Html {
     let rolls = use_collection_sync::<Roll>(&props.room_id);
@@ -21,6 +51,7 @@ pub fn rolled(props: &Props) -> Html {
     let member = use_document::<MemberJSON>(&props.room_id, props.user_id.as_str());
     let state = rolls.merge(room).merge(member);
     let roll = use_roll(props.room_id.as_str());
+    let counter = use_state(|| 0);
     match state {
         DataFetchState::Loading => loading(),
         DataFetchState::Loaded(((mut rolls, room), member)) => {
@@ -28,6 +59,13 @@ pub fn rolled(props: &Props) -> Html {
             let last_rolled = rolls.last();
             match last_rolled {
                 Some(last_rolled) => {
+                    if last_rolled.seq_num == *counter {
+                        return html! {
+                            <TimerLoading on_timeout={Callback::once(move |_| {
+                                counter.set(*counter + 1);
+                            })} />
+                        }
+                    }
                     let role = last_rolled
                         .user_to_role
                         .get(props.user_id.as_str())

@@ -14,3 +14,6 @@ firestore_hooks = { path = "../firestore_hooks" }
 rand = { version = "0.8" }
 getrandom = { version = "0.2", features = ["js"] }
 layouting = { path = "../layouting" }
+js-sys = "0.3"
+web-sys = "0.3"
+wasm-bindgen = "0.2"
