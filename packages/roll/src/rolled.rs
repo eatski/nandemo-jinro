@@ -28,19 +28,22 @@ fn timer_loading(props: &TimerLoadingProps) -> Html {
             &Closure::once_into_js(move || {
                 props.on_timeout.emit(());
             }).into(),
-            1000,
+            800,
         ).unwrap();
         move || {
             web_sys::window().unwrap().clear_timeout_with_handle(id);
         }
     });
     html! {
-        <div class="animate-bounce">
-            <div class="flex flex-col items-center">
-                <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
-                <div class="text-2xl font-bold text-gray-900">{"ローディング中"}</div>
+        <div class=" flex flex-col h-80 items-center justify-center">
+            <div class="text-3xl text-black">{"役職を割り振り中..."}</div>
+            <div class="flex justify-center gap-10 mt-6">
+                <div class="animate-ping h-4 w-4 bg-feature rounded-full"></div>
+                <div class="animate-ping h-4 w-4 bg-feature rounded-full"></div>
+                <div class="animate-ping h-4 w-4 bg-feature rounded-full"></div>
             </div>
         </div>
+        
     }
 }
 
@@ -59,10 +62,11 @@ pub fn rolled(props: &Props) -> Html {
             let last_rolled = rolls.last();
             match last_rolled {
                 Some(last_rolled) => {
-                    if last_rolled.seq_num == *counter {
+                    let seq_num = last_rolled.seq_num;
+                    if seq_num >= *counter {
                         return html! {
                             <TimerLoading on_timeout={Callback::once(move |_| {
-                                counter.set(*counter + 1);
+                                counter.set(seq_num + 1);
                             })} />
                         }
                     }
