@@ -144,7 +144,7 @@ pub fn input_small_number(props: &InputNumberProps) -> Html {
     };
 
     html! {
-        <input {oninput} min="0" value={props.value.to_string()} class="w-14 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="number" />
+        <input {oninput} min="1" value={props.value.to_string()} class="w-14 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="number" />
     }
 }
 

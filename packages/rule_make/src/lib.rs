@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use atoms::{ButtonLarge, Heading2, HeadingDescription, InputSmallNumber, InputText, unexpected_error};
 use firestore_hooks::{use_collection_sync, DataFetchState};
 use layouting::{BodyItems, BottomOperaton};
@@ -151,11 +153,21 @@ pub fn rule_make(props: &Props) -> Html {
                                         }
                                     </div>
                                 </BodyItems>
-                                <BottomOperaton>
-                                        <ButtonLarge onclick={publish_rule}>
-                                            {"ルールを確定"}
-                                        </ButtonLarge>
-                                </BottomOperaton>
+                                {{
+                                    let empty = (*state).iter().any(|item| item.name.is_empty());
+                                    let duplicated_name = {
+                                        let mut names = HashSet::new();
+                                        (*state).iter().any(|item| !names.insert(item.name.clone()))
+                                    };
+                                    let not_enough_roles = (*state).iter().map(|e| e.count).sum::<usize>() < members.len();
+                                    html! {
+                                        <BottomOperaton>
+                                            <ButtonLarge disabled={empty || duplicated_name || not_enough_roles} onclick={publish_rule}>
+                                                {"ルールを確定"}
+                                            </ButtonLarge>
+                                        </BottomOperaton>
+                                    }
+                                }}
                             </>
                         },
                         DataFetchState::Error => unexpected_error()
