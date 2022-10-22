@@ -25,15 +25,16 @@ struct TimerLoadingProps {
 #[function_component(TimerLoading)]
 fn timer_loading(props: &TimerLoadingProps) -> Html {
     let props = props.clone();
+    let window = web_sys::window().unwrap();
     use_effect(move || {
-        let id = web_sys::window().unwrap().set_timeout_with_callback_and_timeout_and_arguments_0(
+        let id = window.set_timeout_with_callback_and_timeout_and_arguments_0(
             &Closure::once_into_js(move || {
                 props.on_timeout.emit(());
             }).into(),
             800,
         ).unwrap();
         move || {
-            web_sys::window().unwrap().clear_timeout_with_handle(id);
+            window.clear_timeout_with_handle(id);
         }
     });
     html! {
