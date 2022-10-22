@@ -1,7 +1,10 @@
 trait Histrical : Default{
     type Item: HistricalItem;
     fn reduce(self,current: &Self::Item) -> Self;
-    fn calculate(mut items: Vec<Self::Item>) -> Self {
+    fn calculate(items: Vec<Self::Item>,current: usize) -> Self {
+        Self::calculate_latest(items.into_iter().filter(|item| item.index() <= current).collect())
+    }
+    fn calculate_latest(mut items: Vec<Self::Item>) -> Self {
         items.sort_by_key(|item| (item.index(),-(item.branch() as i32)));
         items.into_iter().fold((0 as usize,Self::default()), |(branch,acc),current| {
             if branch > current.branch() {
@@ -77,10 +80,20 @@ mod test {
                 branch: 1,
                 text: "z".to_owned(),
             },
+            TestHistricalItem {
+                index: 3,
+                branch: 1,
+                text: "y".to_owned(),
+            },
         ];
-        let result = TestHistrical::calculate(items);
-        assert_eq!(result,TestHistrical {
+        assert_eq!(TestHistrical::calculate(items.clone(),2),TestHistrical {
             text: "abz".to_owned(),
+        });
+        assert_eq!(TestHistrical::calculate(items.clone(),3),TestHistrical {
+            text: "abzy".to_owned(),
+        });
+        assert_eq!(TestHistrical::calculate_latest(items.clone()),TestHistrical {
+            text: "abzy".to_owned(),
         });
     }
 }
