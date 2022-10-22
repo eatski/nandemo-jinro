@@ -58,7 +58,7 @@ pub fn rolled(props: &Props) -> Html {
     let member = use_document::<MemberJSON>(&props.room_id, props.user_id.as_str());
     let state = rolls.merge(room).merge(member);
     let roll = use_roll(props.room_id.as_str());
-    let counter = use_state(|| 0);
+    let counter = use_state(|| None);
     match state {
         DataFetchState::Loading => loading(),
         DataFetchState::Loaded(((mut rolls, room), member)) => {
@@ -67,10 +67,10 @@ pub fn rolled(props: &Props) -> Html {
             match last_rolled {
                 Some(last_rolled) => {
                     let seq_num = last_rolled.seq_num;
-                    if seq_num >= *counter {
+                    if Some(seq_num) != *counter {
                         return html! {
                             <TimerLoading on_timeout={Callback::once(move |_| {
-                                counter.set(seq_num + 1);
+                                counter.set(Some(seq_num));
                             })} />
                         }
                     }
