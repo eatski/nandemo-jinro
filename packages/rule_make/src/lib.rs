@@ -2,35 +2,30 @@ use std::collections::HashSet;
 
 use atoms::{ButtonLarge, Heading2, HeadingDescription, InputSmallNumber, InputText, unexpected_error};
 use firestore_hooks::{use_collection_sync, DataFetchState};
+use input_storage::{Item, use_input};
 use layouting::{BodyItems, BottomOperaton};
 use model::{MemberJSON, Role, Rule, SetRule};
-use yew::{function_component, html, use_state, Callback, Properties};
+use yew::{function_component, html, Callback, Properties};
 
-#[derive(Clone)]
-struct Item {
-    name: String,
-    count: usize,
-}
-
+mod input_storage;
 #[derive(Properties, PartialEq)]
 pub struct Props {
     pub room_id: String,
 }
 
+
 #[function_component(RuleMake)]
 pub fn rule_make(props: &Props) -> Html {
-    let state = use_state(|| {
-        vec![
-            Item {
-                name: "市民".to_string(),
-                count: 3,
-            },
-            Item {
-                name: "人狼".to_string(),
-                count: 1,
-            },
-        ]
-    });
+    let state = use_input(props.room_id.as_str(),vec![
+        Item {
+            name: "市民".to_string(),
+            count: 3,
+        },
+        Item {
+            name: "人狼".to_string(),
+            count: 1,
+        },
+    ]);
     let captured_state = (*state).clone();
     let room_id = props.room_id.clone();
     let publish_rule = Callback::from(move |_| {

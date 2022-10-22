@@ -459,6 +459,9 @@ dependencies = [
  "firestore_hooks",
  "layouting",
  "model",
+ "serde",
+ "serde_json",
+ "web-sys",
  "yew",
 ]
 
