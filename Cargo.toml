@@ -17,7 +17,8 @@ members = [
     "packages/lobby",
     "packages/rule_make",
     "packages/roll",
-    "packages/layouting"
+    "packages/layouting",
+    "packages/historical"
 ]
 
 [dependencies]
