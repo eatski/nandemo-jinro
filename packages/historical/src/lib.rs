@@ -216,6 +216,23 @@ mod test {
         assert_eq!(TestHistrical::calculate_latest(history.clone()),TestHistrical {
             text: "ad".to_owned(),
         });
-
+        let historical = TestHistrical::next_signature(&history,1.into());
+        history.push(TestHistricalItem {
+            index: historical.index,
+            branch: historical.branch,
+            text: "e".to_owned(),
+        });
+        assert_eq!(TestHistrical::calculate_latest(history.clone()),TestHistrical {
+            text: "ade".to_owned(),
+        });
+        let historical = TestHistrical::next_signature(&history,1.into());
+        history.push(TestHistricalItem {
+            index: historical.index,
+            branch: historical.branch,
+            text: "f".to_owned(),
+        });
+        assert_eq!(TestHistrical::calculate_latest(history.clone()),TestHistrical {
+            text: "adf".to_owned(),
+        });
     }
 }
