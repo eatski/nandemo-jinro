@@ -1,4 +1,4 @@
-trait Histrical : Default{
+pub trait Histrical : Default{
     type Item: HistricalItem;
     fn reduce(self,current: &Self::Item) -> Self;
     fn calculate(items: Vec<Self::Item>,current: usize) -> Self {
@@ -41,7 +41,7 @@ pub struct HistoricalSignature {
     pub branch: usize,
 }
 
-trait HistricalItem {
+pub trait HistricalItem {
     fn signature(&self) -> HistoricalSignature;
 }
 
