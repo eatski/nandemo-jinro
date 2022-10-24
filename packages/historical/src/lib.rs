@@ -1,8 +1,8 @@
-pub trait Histrical : Default{
+pub trait HistricalModel : Default{
     type Item: HistricalItem;
     fn reduce(self,current: &Self::Item) -> Self;
-    fn calculate(items: Vec<Self::Item>,current: usize) -> Self {
-        Self::calculate_latest(items.into_iter().filter(|item| item.signature().index <= current).collect())
+    fn calculate(items: Vec<Self::Item>,current: Option<usize>) -> Self {
+        current.map(|current| Self::calculate_latest(items.into_iter().filter(|item| item.signature().index <= current).collect())).unwrap_or_default()
     }
     fn calculate_latest(mut items: Vec<Self::Item>) -> Self {
         items.sort_by_key(|item| (item.signature().index,-(item.signature().branch as i32)));
@@ -66,7 +66,7 @@ mod test {
             }
         }
     }
-    impl Histrical for TestHistrical {
+    impl HistricalModel for TestHistrical {
         type Item = TestHistricalItem;
         fn reduce(self,current: &Self::Item) -> Self {
             Self {
@@ -109,10 +109,10 @@ mod test {
                 text: "y".to_owned(),
             },
         ];
-        assert_eq!(TestHistrical::calculate(items.clone(),2),TestHistrical {
+        assert_eq!(TestHistrical::calculate(items.clone(),2.into()),TestHistrical {
             text: "abz".to_owned(),
         });
-        assert_eq!(TestHistrical::calculate(items.clone(),3),TestHistrical {
+        assert_eq!(TestHistrical::calculate(items.clone(),3.into()),TestHistrical {
             text: "abzy".to_owned(),
         });
         assert_eq!(TestHistrical::calculate_latest(items.clone()),TestHistrical {
@@ -195,7 +195,7 @@ mod test {
         assert_eq!(TestHistrical::calculate_latest(history.clone()),TestHistrical {
             text: "ab".to_owned(),
         });
-        assert_eq!(TestHistrical::calculate(history.clone(),0),TestHistrical {
+        assert_eq!(TestHistrical::calculate(history.clone(),0.into()),TestHistrical {
             text: "a".to_owned(),
         });
         let historical = TestHistrical::next_signature(&history,1.into());
