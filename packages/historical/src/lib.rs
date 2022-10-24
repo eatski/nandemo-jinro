@@ -1,4 +1,4 @@
-#[derive(Debug,Clone,PartialEq,Eq,Default)]
+#[derive(Debug,Clone,PartialEq,Eq,Default,serde::Serialize,serde::Deserialize)]
 pub struct HistoricalSignature {
     pub index: usize,
     pub branch: usize,

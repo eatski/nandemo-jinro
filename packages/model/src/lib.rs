@@ -1,4 +1,5 @@
 use firestore::FireStoreResource;
+use historical::{HistoricalSignature, HistricalItem};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -37,11 +38,55 @@ pub struct Room {
     pub can_join: bool,
 }
 
+impl Default for Room {
+    fn default() -> Self {
+        Self {
+            rule: None,
+            can_join: true,
+        }
+    }
+}
+
 impl FireStoreResource for Room {
     fn path(_: &()) -> String {
         format!("{}/rooms", NAME_SPACE)
     }
     type ParamForPath = ();
+}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
+
+pub struct RoomEditAction {
+    pub signature: HistoricalSignature,
+    pub body: RoomEditBody,
+}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
+pub enum RoomEditBody {
+    SetCanJoin(bool),
+    SetRule(Rule),
+}
+
+impl HistricalItem for RoomEditAction {
+    type Collected = Room;
+
+    fn signature(&self) -> HistoricalSignature {
+        self.signature.clone()
+    }
+
+    fn apply(self,acc: &mut Self::Collected) {
+        match self.body {
+            RoomEditBody::SetCanJoin(can_join) => acc.can_join = can_join,
+            RoomEditBody::SetRule(rule) => acc.rule = Some(rule),
+        }
+    }
+}
+
+impl FireStoreResource for RoomEditAction {
+    fn path(room_id: &String) -> String {
+        format!("{}/rooms/{}/room_edit_actions", NAME_SPACE, room_id)
+    }
+    type ParamForPath = String;
 }
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
