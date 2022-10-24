@@ -84,7 +84,7 @@ impl HistricalItem for RoomEditAction {
 
 impl FireStoreResource for RoomEditAction {
     fn path(room_id: &String) -> String {
-        format!("{}/rooms/{}/room_edit_actions", NAME_SPACE, room_id)
+        format!("{}/rooms/{}/edit", NAME_SPACE, room_id)
     }
     type ParamForPath = String;
 }
