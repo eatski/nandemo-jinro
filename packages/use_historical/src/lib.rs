@@ -1,5 +1,5 @@
-use firestore_hooks::use_collection_sync;
-use historical::{HistoricalSignature, next_signature, calculate};
+use firestore_hooks::{use_collection_sync, DataFetchState};
+use historical::{HistoricalSignature, next_signature, calculate, calculate_latest};
 
 mod use_history_state;
 
@@ -37,9 +37,13 @@ pub fn use_historical<T: historical::HistricalItem + firestore::FireStoreResourc
             MaybeOutOfSync::Error
         },
     }
-
-    
 }
+
+pub fn use_historical_read<T: historical::HistricalItem + firestore::FireStoreResource + Clone + 'static>(param: T::ParamForPath) -> DataFetchState<T::Collected> where T::ParamForPath: Clone + PartialEq,T::Collected: Clone {
+    let collection = use_collection_sync::<T>(&param);
+    collection.map(|items| calculate_latest(items))
+}
+
 
 pub struct YewHistorical<T : historical::HistricalItem, F: Fn()> {
     pub current: T::Collected,
