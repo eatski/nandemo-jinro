@@ -586,6 +586,7 @@ checksum = "dcc811dc4066ac62f84f11307873c4850cb653bfa9b1719cee2bd2204a4bc5dd"
 name = "use_historical"
 version = "0.1.0"
 dependencies = [
+ "firestore_hooks",
  "historical",
  "serde",
  "serde_json",
