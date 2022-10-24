@@ -4,7 +4,8 @@ use atoms::{ButtonLarge, Heading2, HeadingDescription, InputSmallNumber, InputTe
 use firestore_hooks::{use_collection_sync, DataFetchState};
 use input_storage::{Item, use_input};
 use layouting::{BodyItems, BottomOperaton};
-use model::{MemberJSON, Role, Rule, SetRule};
+use model::{MemberJSON, Role, Rule, RoomEditAction, RoomEditBody};
+use use_historical::YewHistorical;
 use yew::{function_component, html, Callback, Properties};
 
 mod input_storage;
@@ -26,15 +27,14 @@ pub fn rule_make(props: &Props) -> Html {
             count: 1,
         },
     ]);
-    let captured_state = (*state).clone();
     let room_id = props.room_id.clone();
-    let publish_rule = Callback::from(move |_| {
-        firestore::set_document(
-            &(),
-            room_id.as_str(),
-            &SetRule {
-                rule: Rule {
-                    roles: captured_state
+    let room = {
+        let state = state.clone();
+        use_historical::use_historical::<RoomEditAction>(
+            room_id.clone(), 
+            move |signature| {
+                let rule = Rule {
+                    roles: state
                         .iter()
                         .enumerate()
                         .map(|(index, item)| Role {
@@ -43,20 +43,19 @@ pub fn rule_make(props: &Props) -> Html {
                             id: index.to_string(),
                         })
                         .collect(),
-                },
-            },
-            || {},
-            || {},
-        );
-    });
+                };
+                RoomEditAction { signature, body: RoomEditBody::SetRule(rule) }
+            }
+        )
+    };
     let captured_state = (*state).clone();
     let members = use_collection_sync::<MemberJSON>(&props.room_id);
     html! {
         <section class="mx-auto w-full max-w-2xl py-2">
                 {
-                    match members {
+                    match members.merge(room) {
                         firestore_hooks::DataFetchState::Loading => Default::default(),
-                        firestore_hooks::DataFetchState::Loaded(members) => html! {
+                        firestore_hooks::DataFetchState::Loaded((members,YewHistorical {current:_,push})) => html! {
                             <>
                                 <BodyItems>
                                     <Heading2>{"ルールを決めましょう"}</Heading2>
@@ -157,7 +156,7 @@ pub fn rule_make(props: &Props) -> Html {
                                     let not_enough_roles = (*state).iter().map(|e| e.count).sum::<usize>() < members.len();
                                     html! {
                                         <BottomOperaton>
-                                            <ButtonLarge disabled={empty || duplicated_name || not_enough_roles} onclick={publish_rule}>
+                                            <ButtonLarge disabled={empty || duplicated_name || not_enough_roles} onclick={Callback::from(move |_| push())}>
                                                 {"ルールを確定"}
                                             </ButtonLarge>
                                         </BottomOperaton>

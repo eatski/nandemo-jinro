@@ -32,7 +32,7 @@ impl FireStoreResource for Roll {
     type ParamForPath = String;
 }
 
-#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq)]
 pub struct Room {
     pub rule: Option<Rule>,
     pub can_join: bool,
@@ -46,14 +46,6 @@ impl Default for Room {
         }
     }
 }
-
-impl FireStoreResource for Room {
-    fn path(_: &()) -> String {
-        format!("{}/rooms", NAME_SPACE)
-    }
-    type ParamForPath = ();
-}
-
 #[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
 
 pub struct RoomEditAction {
@@ -113,28 +105,4 @@ impl FireStoreResource for MemberJSON {
         format!("{}/rooms/{}/members", NAME_SPACE, room_id)
     }
     type ParamForPath = String;
-}
-
-#[derive(Serialize, Deserialize, Clone)]
-pub struct SetRule {
-    pub rule: Rule,
-}
-
-impl FireStoreResource for SetRule {
-    fn path(_: &()) -> String {
-        format!("{}/rooms", NAME_SPACE)
-    }
-    type ParamForPath = ();
-}
-
-#[derive(Serialize, Deserialize, Clone)]
-pub struct SetCanJoin {
-    pub can_join: bool,
-}
-
-impl FireStoreResource for SetCanJoin {
-    fn path(_: &()) -> String {
-        format!("{}/rooms", NAME_SPACE)
-    }
-    type ParamForPath = ();
 }

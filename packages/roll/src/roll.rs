@@ -1,10 +1,11 @@
 use std::iter::repeat;
 
 use atoms::{loading, Heading2, HeadingDescription, unexpected_error};
-use firestore_hooks::{use_collection, use_document, DataFetchState};
+use firestore_hooks::{use_collection, DataFetchState};
 use layouting::{BodyItems, BottomOperaton};
-use model::{MemberJSON, Room};
+use model::{MemberJSON, RoomEditAction};
 use yew::{function_component, html, Callback, Html, Properties};
+use use_historical::use_historical_read;
 
 use crate::common::RollButton;
 use crate::use_roll::use_roll;
@@ -24,7 +25,7 @@ fn icon() -> Html {
 
 #[function_component(RollContainer)]
 pub fn roll(props: &Props) -> Html {
-    let room = use_document::<Room>(&(), props.room_id.as_str());
+    let room = use_historical_read::<RoomEditAction>(props.room_id.clone());
     let members = use_collection::<MemberJSON>(&props.room_id);
     let roll = use_roll(props.room_id.as_str());
     let state = members.merge(room);

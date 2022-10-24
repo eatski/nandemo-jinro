@@ -265,6 +265,7 @@ dependencies = [
  "firestore_hooks",
  "model",
  "router",
+ "use_historical",
  "user_id_storage",
  "yew",
  "yew-router",
@@ -298,6 +299,7 @@ dependencies = [
  "firestore_hooks",
  "layouting",
  "model",
+ "use_historical",
  "yew",
 ]
 
@@ -423,6 +425,7 @@ dependencies = [
  "roll",
  "router",
  "rule_make",
+ "use_historical",
  "user_id_storage",
  "yew",
  "yew-router",
@@ -440,6 +443,7 @@ dependencies = [
  "layouting",
  "model",
  "rand",
+ "use_historical",
  "wasm-bindgen",
  "web-sys",
  "yew",
@@ -469,6 +473,7 @@ dependencies = [
  "model",
  "serde",
  "serde_json",
+ "use_historical",
  "web-sys",
  "yew",
 ]

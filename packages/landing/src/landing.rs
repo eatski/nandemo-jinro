@@ -3,7 +3,7 @@ use user_id_storage::save_user_id;
 use yew::{function_component, html, use_state, Callback, Children, Properties};
 use yew_router::prelude::{use_history, History};
 
-use model::{self, MemberInput, Room};
+use model::{self, MemberInput};
 use router::Route;
 
 use crate::common::{title, JoinForm};
@@ -90,31 +90,22 @@ fn create_rule_view() -> Html {
             html! {
                 <JoinForm form_label="名前を入力してルームを作成する" label="作成" default="ホスト" placeholder="あなたの名前" onsubmit={Callback::once(move |name: String| {
                     state.set(State::Loading);
-                    firestore::add_document(
-                        &(),
-                        &Room {
-                            can_join: true,
-                            rule: None,
+                    let room_id: String = "todo".to_owned();
+                    let room_id_cloned = room_id.clone();
+                    let member_id = firestore::add_document(
+                        &room_id,
+                        &MemberInput {
+                            name,
+                            is_host: true
                         },
-                        move |room_id| {
-                        let room_id_string = room_id.to_string();
-                        let member_id = firestore::add_document(
-                            &room_id.to_string(),
-                            &MemberInput {
-                                name,
-                                is_host: true
-                            },
-                            move |_| {
-                                history.push(Route::Room { id: room_id_string});
-                            },
-                            move || {
-                                state.set(State::Error);
-                            }
-                        );
-                        save_user_id(room_id,member_id.as_str());
-                    },|| {
-
-                    });
+                        move |_| {
+                            history.push(Route::Room { id: room_id_cloned});
+                        },
+                        move || {
+                            state.set(State::Error);
+                        }
+                    );
+                    save_user_id(room_id.as_str(),member_id.as_str());
                 })}/>
             }
         }
