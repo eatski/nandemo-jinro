@@ -1,14 +1,14 @@
-use historical::{HistoricalSignature,HistricalItem};
+use historical::{HistoricalSignature, next_signature, calculate};
 
 mod use_history_state;
 
 use crate::use_history_state::use_history_state;
 
-pub fn use_historical<T: historical::HistricalModel>(items: Vec<T::Item>,on_push: impl Fn(HistoricalSignature)) -> MaybeOutOfSync<YewHistorical<T,impl Fn()>> {
+pub fn use_historical<T: historical::HistricalItem>(items: Vec<T>,on_push: impl Fn(HistoricalSignature)) -> MaybeOutOfSync<YewHistorical<T,impl Fn()>> {
     let (signature_state, set_signature) = use_history_state::<SerdeHistoricalSignature>();
     let current_signature = signature_state.clone();
     let current_index = current_signature.as_ref().map(|s| s.index);
-    let next_signature = T::next_signature(&items, current_index);
+    let next_signature = next_signature(&items, current_index);
     let is_out_of_sync = current_signature
         .map(|current_signature| items.iter().all(|item| item.signature() != current_signature.clone().into()))
         .unwrap_or(false);
@@ -17,7 +17,7 @@ pub fn use_historical<T: historical::HistricalModel>(items: Vec<T::Item>,on_push
         MaybeOutOfSync::OutOfSync
     } else {
         MaybeOutOfSync::Ok(YewHistorical {
-            current: T::calculate(items, current_index),
+            current: calculate(items, current_index),
             push: move || {
                 let next_signature = next_signature.clone();
                 let signature = SerdeHistoricalSignature::from(next_signature.clone());
@@ -28,8 +28,8 @@ pub fn use_historical<T: historical::HistricalModel>(items: Vec<T::Item>,on_push
     }
 }
 
-pub struct YewHistorical<T : historical::HistricalModel, F: Fn()> {
-    pub current: T,
+pub struct YewHistorical<T : historical::HistricalItem, F: Fn()> {
+    pub current: T::Collected,
     pub push: F
 }
 
