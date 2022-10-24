@@ -1,31 +1,44 @@
+use firestore_hooks::use_collection_sync;
 use historical::{HistoricalSignature, next_signature, calculate};
 
 mod use_history_state;
 
 use crate::use_history_state::use_history_state;
 
-pub fn use_historical<T: historical::HistricalItem>(items: Vec<T>,on_push: impl Fn(HistoricalSignature)) -> MaybeOutOfSync<YewHistorical<T,impl Fn()>> {
+pub fn use_historical<T: historical::HistricalItem + firestore::FireStoreResource + Clone + 'static>(param: T::ParamForPath,on_push: impl Fn(HistoricalSignature) -> T) -> MaybeOutOfSync<YewHistorical<T,impl Fn()>> where T::ParamForPath: Clone + PartialEq {
+    let collection = use_collection_sync::<T>(&param);
     let (signature_state, set_signature) = use_history_state::<SerdeHistoricalSignature>();
-    let current_signature = signature_state.clone();
-    let current_index = current_signature.as_ref().map(|s| s.index);
-    let next_signature = next_signature(&items, current_index);
-    let is_out_of_sync = current_signature
-        .map(|current_signature| items.iter().all(|item| item.signature() != current_signature.clone().into()))
-        .unwrap_or(false);
-
-    if is_out_of_sync {
-        MaybeOutOfSync::OutOfSync
-    } else {
-        MaybeOutOfSync::Ok(YewHistorical {
-            current: calculate(items, current_index),
-            push: move || {
-                let next_signature = next_signature.clone();
-                let signature = SerdeHistoricalSignature::from(next_signature.clone());
-                on_push(next_signature);
-                set_signature(signature);
-            }, 
-        })
+    match collection {
+        firestore_hooks::DataFetchState::Loading => {
+            MaybeOutOfSync::OutOfSync
+        },
+        firestore_hooks::DataFetchState::Loaded(items) => {
+            let current_signature = signature_state.clone();
+            let current_index = current_signature.as_ref().map(|s| s.index);
+            let next_signature = next_signature(&items, current_index);
+            let is_out_of_sync = current_signature
+                .map(|current_signature| items.iter().all(|item| item.signature() != current_signature.clone().into()))
+                .unwrap_or(false);
+            if is_out_of_sync {
+                MaybeOutOfSync::OutOfSync
+            } else {
+                MaybeOutOfSync::Ok(YewHistorical {
+                    current: calculate(items, current_index),
+                    push: move || {
+                        let next_signature = next_signature.clone();
+                        let signature = SerdeHistoricalSignature::from(next_signature.clone());
+                        set_signature(signature);
+                        firestore::add_document(&param, &on_push(next_signature), |_| {}, || {} );
+                    }, 
+                })
+            }
+        }
+        firestore_hooks::DataFetchState::Error => {
+            MaybeOutOfSync::Error
+        },
     }
+
+    
 }
 
 pub struct YewHistorical<T : historical::HistricalItem, F: Fn()> {
@@ -36,6 +49,7 @@ pub struct YewHistorical<T : historical::HistricalItem, F: Fn()> {
 pub enum MaybeOutOfSync<T> {
     Ok(T),
     OutOfSync,
+    Error
 }
 
 
