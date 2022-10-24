@@ -7,7 +7,7 @@ use crate::use_history_state::use_history_state;
 
 pub fn use_historical<T: historical::HistricalItem + firestore::FireStoreResource + Clone + 'static>(param: T::ParamForPath,on_push: impl Fn(HistoricalSignature) -> T) -> MaybeOutOfSync<YewHistorical<T,impl Fn()>> where T::ParamForPath: Clone + PartialEq {
     let collection = use_collection_sync::<T>(&param);
-    let (signature_state, set_signature) = use_history_state::<SerdeHistoricalSignature>();
+    let (signature_state, set_signature) = use_history_state::<HistoricalSignature>();
     match collection {
         firestore_hooks::DataFetchState::Loading => {
             MaybeOutOfSync::OutOfSync
@@ -26,7 +26,7 @@ pub fn use_historical<T: historical::HistricalItem + firestore::FireStoreResourc
                     current: calculate(items, current_index),
                     push: move || {
                         let next_signature = next_signature.clone();
-                        let signature = SerdeHistoricalSignature::from(next_signature.clone());
+                        let signature = next_signature.clone();
                         set_signature(signature);
                         firestore::add_document(&param, &on_push(next_signature), |_| {}, || {} );
                     }, 
@@ -50,29 +50,4 @@ pub enum MaybeOutOfSync<T> {
     Ok(T),
     OutOfSync,
     Error
-}
-
-
-#[derive(serde::Deserialize, serde::Serialize, Debug, Clone, PartialEq, Eq, Default)]
-struct SerdeHistoricalSignature {
-    pub index: usize,
-    pub branch: usize,
-}
-
-impl From<HistoricalSignature> for SerdeHistoricalSignature {
-    fn from(signature: HistoricalSignature) -> Self {
-        Self {
-            index: signature.index,
-            branch: signature.branch,
-        }
-    }
-}
-
-impl Into<HistoricalSignature> for SerdeHistoricalSignature {
-    fn into(self) -> HistoricalSignature {
-        HistoricalSignature {
-            index: self.index,
-            branch: self.branch,
-        }
-    }
 }
