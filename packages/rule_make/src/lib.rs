@@ -29,22 +29,10 @@ pub fn rule_make(props: &Props) -> Html {
     ]);
     let room_id = props.room_id.clone();
     let room = {
-        let state = state.clone();
-        use_historical::use_historical::<RoomEditAction>(
+        use_historical::use_historical::<RoomEditAction,RoomEditBody>(
             room_id.clone(), 
-            move |signature| {
-                let rule = Rule {
-                    roles: state
-                        .iter()
-                        .enumerate()
-                        .map(|(index, item)| Role {
-                            name: item.name.clone(),
-                            number: item.count,
-                            id: index.to_string(),
-                        })
-                        .collect(),
-                };
-                RoomEditAction { signature, body: RoomEditBody::SetRule(rule) }
+            |signature,body| {
+                RoomEditAction { signature, body }
             }
         )
     };
@@ -55,7 +43,7 @@ pub fn rule_make(props: &Props) -> Html {
                 {
                     match members.merge(room) {
                         firestore_hooks::DataFetchState::Loading => Default::default(),
-                        firestore_hooks::DataFetchState::Loaded((members,YewHistorical {current:_,push})) => html! {
+                        firestore_hooks::DataFetchState::Loaded((members,YewHistorical {current:_,push, ..})) => html! {
                             <>
                                 <BodyItems>
                                     <Heading2>{"ルールを決めましょう"}</Heading2>
@@ -154,9 +142,20 @@ pub fn rule_make(props: &Props) -> Html {
                                         (*state).iter().any(|item| !names.insert(item.name.clone()))
                                     };
                                     let not_enough_roles = (*state).iter().map(|e| e.count).sum::<usize>() < members.len();
+                                    let rule = Rule {
+                                        roles: state
+                                            .iter()
+                                            .enumerate()
+                                            .map(|(index, item)| Role {
+                                                name: item.name.clone(),
+                                                number: item.count,
+                                                id: index.to_string(),
+                                            })
+                                            .collect(),
+                                    };
                                     html! {
                                         <BottomOperaton>
-                                            <ButtonLarge disabled={empty || duplicated_name || not_enough_roles} onclick={Callback::from(move |_| push())}>
+                                            <ButtonLarge disabled={empty || duplicated_name || not_enough_roles} onclick={push.reform(move |_|RoomEditBody::SetRule(rule.clone()) )}>
                                                 {"ルールを確定"}
                                             </ButtonLarge>
                                         </BottomOperaton>

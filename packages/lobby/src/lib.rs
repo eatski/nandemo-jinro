@@ -2,7 +2,7 @@ use atoms::{loading, ButtonLarge, Heading2, HeadingDescription, unexpected_error
 use firestore_hooks::{use_collection_sync, use_document, DataFetchState};
 use layouting::{BodyItems, BottomOperaton};
 use model::{MemberJSON, RoomEditAction, RoomEditBody};
-use yew::{function_component, html, Callback, Properties};
+use yew::{function_component, html, Properties};
 use use_historical::{use_historical, YewHistorical};
 
 #[derive(Properties, PartialEq)]
@@ -15,9 +15,7 @@ pub struct Props {
 pub fn lobby(props: &Props) -> Html {
     let members_state = use_collection_sync::<MemberJSON>(&props.room_id);
     let you_state = use_document::<MemberJSON>(&props.room_id, props.user_id.as_str());
-
     let state = members_state.merge(you_state);
-
     match state {
         DataFetchState::Loaded((members, you)) => {
             let is_host = you.is_host;
@@ -89,15 +87,13 @@ struct MemberCloseProps {
 
 #[function_component[MemberClose]]
 fn member_close(props: &MemberCloseProps) -> Html {
-    let state = use_historical::<RoomEditAction>(props.room_id.clone(), |signature| RoomEditAction {signature, body: RoomEditBody::SetCanJoin(false)});
+    let state = use_historical::<RoomEditAction,RoomEditBody>(props.room_id.clone(), |signature,body| RoomEditAction {signature, body});
     match state {
         DataFetchState::Loading => loading(),
-        DataFetchState::Loaded(YewHistorical {current: _,push}) => {
+        DataFetchState::Loaded(YewHistorical {current: _,push,..}) => {
             html! {
                 <ButtonLarge
-                    onclick={Callback::from(move |_| {
-                        push();
-                    })}
+                    onclick={push.reform(|_| RoomEditBody::SetCanJoin(false))}
                 >
                     {"締め切る"}
                 </ButtonLarge>

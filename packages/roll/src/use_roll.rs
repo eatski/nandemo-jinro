@@ -63,7 +63,7 @@ pub fn use_roll(room_id: &str) -> Option<impl Fn()> {
                 }
                 || {}
             },
-            (room, members, rolls, clicked),
+            (room.map(|room| room.current), members, rolls, clicked),
         );
     }
     if matches!(*clicked, ButtonState::NotClicked) {

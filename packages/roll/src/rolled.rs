@@ -81,6 +81,7 @@ pub fn rolled(props: &Props) -> Html {
                         .get(props.user_id.as_str())
                         .unwrap();
                     let role_name = room
+                        .latest
                         .rule
                         .as_ref()
                         .unwrap()

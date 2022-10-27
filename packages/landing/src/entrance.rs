@@ -42,7 +42,7 @@ pub fn guest_entrance(props: &GuestEntranceProps) -> Html {
     match state {
         DataFetchState::Loading => loading(),
         DataFetchState::Loaded((room, host)) => {
-            if room.can_join {
+            if room.latest.can_join {
                 html! {
                     <>
                         {title()}

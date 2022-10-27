@@ -21,7 +21,7 @@ impl<T> DataFetchState<T> {
             (DataFetchState::Error, _) => DataFetchState::Error,
         }
     }
-    pub fn map<T2>(self, func: impl Fn(T) -> T2) -> DataFetchState<T2> {
+    pub fn map<T2>(self, func: impl FnOnce(T) -> T2) -> DataFetchState<T2> {
         match self {
             DataFetchState::Loaded(a) => DataFetchState::Loaded(func(a)),
             DataFetchState::Loading=> DataFetchState::Loading,

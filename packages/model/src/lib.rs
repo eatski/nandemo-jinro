@@ -32,7 +32,7 @@ impl FireStoreResource for Roll {
     type ParamForPath = String;
 }
 
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq,Debug)]
 pub struct Room {
     pub rule: Option<Rule>,
     pub can_join: bool,
@@ -46,14 +46,14 @@ impl Default for Room {
         }
     }
 }
-#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq,Debug)]
 
 pub struct RoomEditAction {
     pub signature: HistoricalSignature,
     pub body: RoomEditBody,
 }
 
-#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq,Debug)]
 pub enum RoomEditBody {
     SetCanJoin(bool),
     SetRule(Rule),
@@ -81,13 +81,13 @@ impl FireStoreResource for RoomEditAction {
     type ParamForPath = String;
 }
 
-#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq,Debug)]
 pub struct Role {
     pub id: String,
     pub name: String,
     pub number: usize,
 }
-#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq,Debug)]
 pub struct Rule {
     pub roles: Vec<Role>,
 }

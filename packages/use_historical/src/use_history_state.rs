@@ -1,6 +1,6 @@
 use serde::{de::DeserializeOwned, Serialize};
 use wasm_bindgen::{prelude::Closure, JsValue};
-use yew::{use_state, use_effect};
+use yew::{use_state, use_effect, Callback};
 
 fn get_history_state<T: Serialize + DeserializeOwned>() -> Option<T> {
     let window = web_sys::window().unwrap();
@@ -14,7 +14,15 @@ fn get_history_state<T: Serialize + DeserializeOwned>() -> Option<T> {
     }
 }
 
-pub fn use_history_state<T : DeserializeOwned + Serialize + Eq + Clone + 'static>() -> (Option<T> , impl Fn(T)) {
+#[derive(Clone, Debug, PartialEq)]
+pub struct HistoryState<T> {
+    pub state: Option<T>,
+    pub push: Callback<T>,
+}
+
+
+
+pub fn use_history_state<T : DeserializeOwned + Serialize + Eq + Clone + 'static>() -> HistoryState<T> {
     let state = use_state(get_history_state);
     {
         let state = state.clone();
@@ -30,14 +38,14 @@ pub fn use_history_state<T : DeserializeOwned + Serialize + Eq + Clone + 'static
             }
         });
     }
-    (
-        (&*state).clone(),
-        move |next| {
+    HistoryState::<T> {
+        state: (&*state).clone(),
+        push: Callback::from(move |next| {
             let window = web_sys::window().unwrap();
             let history = window.history().unwrap();
             let next = Some(next);
             history.push_state(&JsValue::from_str(serde_json::to_string(&next).unwrap().as_str()), "").unwrap();
             state.set(next);
-        }
-    )
+        }),
+    }
 }
