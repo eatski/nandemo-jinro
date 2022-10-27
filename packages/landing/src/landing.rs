@@ -5,6 +5,7 @@ use yew_router::prelude::{use_history, History};
 
 use model::{self, MemberInput};
 use router::Route;
+use names::{Generator, Name};
 
 use crate::common::{title, JoinForm};
 
@@ -90,7 +91,8 @@ fn create_rule_view() -> Html {
             html! {
                 <JoinForm form_label="名前を入力してルームを作成する" label="作成" default="ホスト" placeholder="あなたの名前" onsubmit={Callback::once(move |name: String| {
                     state.set(State::Loading);
-                    let room_id: String = "todo".to_owned();
+                    let mut generator = Generator::with_naming(Name::Numbered);
+                    let room_id = generator.next().unwrap();
                     let room_id_cloned = room_id.clone();
                     let member_id = firestore::add_document(
                         &room_id,

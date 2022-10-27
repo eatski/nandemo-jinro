@@ -264,6 +264,7 @@ dependencies = [
  "firestore",
  "firestore_hooks",
  "model",
+ "names",
  "router",
  "use_historical",
  "user_id_storage",
@@ -320,6 +321,15 @@ dependencies = [
  "historical",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "names"
+version = "0.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "10a8690bf09abf659851e58cd666c3d37ac6af07c2bd7a9e332cfba471715775"
+dependencies = [
+ "rand",
 ]
 
 [[package]]
