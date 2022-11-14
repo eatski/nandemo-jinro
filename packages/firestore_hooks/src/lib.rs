@@ -1,15 +1,15 @@
 use firestore::FireStoreResource;
 use yew::{use_effect_with_deps, use_state};
 
-#[derive(Clone, PartialEq, Eq)]
-pub enum DataFetchState<R: Clone> {
+#[derive(PartialEq, Eq,Clone)]
+pub enum DataFetchState<R> {
     Loading,
     Loaded(R),
     Error
 }
 
-impl<T: Clone> DataFetchState<T> {
-    pub fn merge<T2: Clone>(self, target: DataFetchState<T2>) -> DataFetchState<(T, T2)> {
+impl<T> DataFetchState<T> {
+    pub fn merge<T2>(self, target: DataFetchState<T2>) -> DataFetchState<(T, T2)> {
         match (self, target) {
             (DataFetchState::Loading, DataFetchState::Loading) => DataFetchState::Loading,
             (DataFetchState::Loading, DataFetchState::Loaded(_)) => DataFetchState::Loading,
@@ -21,7 +21,7 @@ impl<T: Clone> DataFetchState<T> {
             (DataFetchState::Error, _) => DataFetchState::Error,
         }
     }
-    pub fn map<T2: Clone>(self, func: impl Fn(T) -> T2) -> DataFetchState<T2> {
+    pub fn map<T2>(self, func: impl FnOnce(T) -> T2) -> DataFetchState<T2> {
         match self {
             DataFetchState::Loaded(a) => DataFetchState::Loaded(func(a)),
             DataFetchState::Loading=> DataFetchState::Loading,

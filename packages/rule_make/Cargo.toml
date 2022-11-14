@@ -15,3 +15,4 @@ model = { path = "../model" }
 firestore_hooks = { path = "../firestore_hooks" }
 layouting = { path = "../layouting" }
 web-sys = "0.3"
+use_historical = { path = "../use_historical" }

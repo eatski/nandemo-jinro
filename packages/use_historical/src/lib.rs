@@ -1,92 +1,51 @@
-use historical::{HistoricalSignature,HistricalItem};
-use wasm_bindgen::{prelude::Closure, JsValue};
-use yew::{use_effect, use_state};
-
-pub fn use_historical<T: historical::HistricalModel>(items: Vec<T::Item>,on_push: impl Fn(HistoricalSignature)) -> MaybeOutOfSync<YewHistorical<T,impl Fn()>> {
-    let signature_state = use_state(Option::<SerdeHistoricalSignature>::default);
-    {
-        let signature_state = signature_state.clone();
-        use_effect(|| {
-            let window = web_sys::window().unwrap();
-            let history = window.history().unwrap();
-            let callback : Box<dyn FnMut()> = Box::new(move || {
-                signature_state.set(
-                    serde_json::from_str(
-                        history.clone()
-                        .state().unwrap_or_default()
-                        .as_string()
-                        .unwrap()
-                        .as_str()
-                    ).ok()
-                );
-            });
-            let callback = Closure::wrap( callback).into_js_value().into();
-            window.add_event_listener_with_callback("popstate", &callback).unwrap();
-            move || {
-                window.remove_event_listener_with_callback("popstate", &callback).unwrap();
-            }
-        });
-    }
-    let current_signature = (*signature_state).clone();
-    let current_index = current_signature.as_ref().map(|s| s.index);
-    let next_signature = T::next_signature(&items, current_index);
-
-    let is_out_of_sync = current_signature
-        .map(|current_signature| items.iter().all(|item| item.signature() != current_signature.clone().into()))
-        .unwrap_or(false);
-
-    if is_out_of_sync {
-        MaybeOutOfSync::OutOfSync
-    } else {
-        MaybeOutOfSync::Ok(YewHistorical {
-            current: T::calculate(items, current_index),
-            push: move || {
-                let window = web_sys::window().unwrap();
-                let history = window.history().unwrap();
-                let next_signature = next_signature.clone();
-                let signature = SerdeHistoricalSignature::from(next_signature.clone());
-                history.push_state(&JsValue::from_str(serde_json::to_string(&signature).unwrap().as_str()), "").unwrap();
-                on_push(next_signature);
-                signature_state.set(Some(signature));
-            }, 
-        })
-    }
-
-   
-}
-
-pub struct YewHistorical<T : historical::HistricalModel, F: Fn()> {
-    pub current: T,
-    pub push: F
-
-}
-
-pub enum MaybeOutOfSync<T> {
-    Ok(T),
-    OutOfSync,
-}
+use std::{fmt::Debug};
+use firestore_hooks::{use_collection_sync, DataFetchState};
+use historical::{HistoricalSignature, next_signature, calculate_latest};
+use yew::{Callback, Children, Properties};
 
 
-#[derive(serde::Deserialize, serde::Serialize, Debug, Clone, PartialEq, Eq, Default)]
-struct SerdeHistoricalSignature {
-    pub index: usize,
-    pub branch: usize,
-}
-
-impl From<HistoricalSignature> for SerdeHistoricalSignature {
-    fn from(signature: HistoricalSignature) -> Self {
-        Self {
-            index: signature.index,
-            branch: signature.branch,
+pub fn use_historical<T: historical::HistricalItem + firestore::FireStoreResource + Clone + 'static,B>(param: T::ParamForPath,merge: impl Fn(HistoricalSignature,B) -> T + 'static) -> DataFetchState<YewHistorical<T,B>> where T::ParamForPath: Clone + PartialEq {
+    let collection = use_collection_sync::<T>(&param);
+    match collection {
+        firestore_hooks::DataFetchState::Loading => {
+            DataFetchState::Loading
+        },
+        firestore_hooks::DataFetchState::Loaded(items) => {
+            let next_signature = next_signature(&items, None);
+            DataFetchState::Loaded(YewHistorical {
+                latest: calculate_latest(items),
+                push: Callback::from(move |body| {
+                    let next_signature = next_signature.clone();
+                    firestore::add_document(&param, &merge(next_signature,body), |_| {}, || {} );
+                }), 
+            })
         }
+        firestore_hooks::DataFetchState::Error => {
+            DataFetchState::Error
+        },
     }
 }
 
-impl Into<HistoricalSignature> for SerdeHistoricalSignature {
-    fn into(self) -> HistoricalSignature {
-        HistoricalSignature {
-            index: self.index,
-            branch: self.branch,
-        }
-    }
+pub fn use_historical_read<T: historical::HistricalItem + firestore::FireStoreResource + Clone + 'static>(param: T::ParamForPath) -> DataFetchState<YewHistoricalRead<T::Collected>> where T::ParamForPath: Clone + PartialEq,T::Collected : Debug {
+    let collection = use_collection_sync::<T>(&param);
+    collection.map(move |items| {
+        let read = YewHistoricalRead { latest: calculate_latest(items) };
+        read
+    })
+}
+
+
+#[derive(Debug)]
+pub struct YewHistoricalRead<T> {
+    pub latest: T
+}
+
+pub struct YewHistorical<T : historical::HistricalItem, B> {
+    pub latest: T::Collected,
+    pub push: Callback<B>,
+}
+
+#[derive(PartialEq,Clone,Properties)]
+pub struct ChildrenProps {
+    pub children: Children,
 }

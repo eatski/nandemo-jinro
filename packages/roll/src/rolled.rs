@@ -2,11 +2,12 @@ use std::iter::repeat;
 
 use atoms::{loading, Heading2, unexpected_error};
 use layouting::{BodyItems, BottomOperaton};
-use model::{MemberJSON, Roll, Room};
+use model::{MemberJSON, Roll, RoomEditAction};
+use use_historical::use_historical_read;
 use wasm_bindgen::prelude::Closure;
 use yew::{function_component, html, Callback, Properties, use_effect, use_state};
 
-use firestore_hooks::{use_collection_sync, use_document, use_document_sync, DataFetchState};
+use firestore_hooks::{use_collection_sync, use_document, DataFetchState};
 
 use crate::common::RollButton;
 use crate::use_roll::use_roll;
@@ -55,7 +56,7 @@ fn timer_loading(props: &TimerLoadingProps) -> Html {
 #[function_component(Rolled)]
 pub fn rolled(props: &Props) -> Html {
     let rolls = use_collection_sync::<Roll>(&props.room_id);
-    let room = use_document_sync::<Room>(&(), props.room_id.as_str());
+    let room = use_historical_read::<RoomEditAction>(props.room_id.clone());
     let member = use_document::<MemberJSON>(&props.room_id, props.user_id.as_str());
     let state = rolls.merge(room).merge(member);
     let roll = use_roll(props.room_id.as_str());
@@ -80,6 +81,7 @@ pub fn rolled(props: &Props) -> Html {
                         .get(props.user_id.as_str())
                         .unwrap();
                     let role_name = room
+                        .latest
                         .rule
                         .as_ref()
                         .unwrap()

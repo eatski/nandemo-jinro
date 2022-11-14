@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 yew = "0.19"
 historical = {path = "../historical"}
+firestore_hooks = {path = "../firestore_hooks"}
+firestore = {path = "../firestore"}
 serde = {version = "1.0"}
 serde_json = {version = "1.0"}
-web-sys = "0.3"
-wasm-bindgen = "0.2"

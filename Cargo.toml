@@ -35,3 +35,4 @@ user_id_storage = {path = "./packages/user_id_storage"}
 lobby = {path = "./packages/lobby"}
 rule_make = {path = "./packages/rule_make"}
 roll = {path = "./packages/roll"}
+use_historical = {path = "./packages/use_historical"}

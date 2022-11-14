@@ -227,6 +227,9 @@ checksum = "8a9ee70c43aaf417c914396645a0fa852624801b24ebb7ae78fe8272889ac888"
 [[package]]
 name = "historical"
 version = "0.1.0"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "indexmap"
@@ -261,7 +264,9 @@ dependencies = [
  "firestore",
  "firestore_hooks",
  "model",
+ "names",
  "router",
+ "use_historical",
  "user_id_storage",
  "yew",
  "yew-router",
@@ -295,6 +300,7 @@ dependencies = [
  "firestore_hooks",
  "layouting",
  "model",
+ "use_historical",
  "yew",
 ]
 
@@ -312,8 +318,18 @@ name = "model"
 version = "0.1.0"
 dependencies = [
  "firestore",
+ "historical",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "names"
+version = "0.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "10a8690bf09abf659851e58cd666c3d37ac6af07c2bd7a9e332cfba471715775"
+dependencies = [
+ "rand",
 ]
 
 [[package]]
@@ -419,6 +435,7 @@ dependencies = [
  "roll",
  "router",
  "rule_make",
+ "use_historical",
  "user_id_storage",
  "yew",
  "yew-router",
@@ -436,6 +453,7 @@ dependencies = [
  "layouting",
  "model",
  "rand",
+ "use_historical",
  "wasm-bindgen",
  "web-sys",
  "yew",
@@ -465,6 +483,7 @@ dependencies = [
  "model",
  "serde",
  "serde_json",
+ "use_historical",
  "web-sys",
  "yew",
 ]
@@ -586,11 +605,11 @@ checksum = "dcc811dc4066ac62f84f11307873c4850cb653bfa9b1719cee2bd2204a4bc5dd"
 name = "use_historical"
 version = "0.1.0"
 dependencies = [
+ "firestore",
+ "firestore_hooks",
  "historical",
  "serde",
  "serde_json",
- "wasm-bindgen",
- "web-sys",
  "yew",
 ]
 

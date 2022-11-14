@@ -1,9 +1,10 @@
 use atoms::{loading, Heading2, unexpected_error};
 use firestore::add_document;
-use model::{MemberInput, MemberJSON, Room};
+use model::{MemberInput, MemberJSON, RoomEditAction};
+use use_historical::use_historical_read;
 use yew::{function_component, html, Callback, Properties};
 
-use firestore_hooks::{use_collection, use_document_sync, DataFetchState};
+use firestore_hooks::{use_collection, DataFetchState};
 use user_id_storage::save_user_id;
 
 use crate::common::{title, JoinForm};
@@ -35,13 +36,13 @@ pub fn guest_entrance(props: &GuestEntranceProps) -> Html {
     let host = use_collection::<MemberJSON>(&props.room_id)
         .map(|memebers| memebers.into_iter().find(|m| m.is_host).unwrap());
 
-    let room_state = use_document_sync::<Room>(&(), &props.room_id);
+    let room_state = use_historical_read::<RoomEditAction>(props.room_id.clone());
     let state = room_state.merge(host);
 
     match state {
         DataFetchState::Loading => loading(),
         DataFetchState::Loaded((room, host)) => {
-            if room.can_join {
+            if room.latest.can_join {
                 html! {
                     <>
                         {title()}

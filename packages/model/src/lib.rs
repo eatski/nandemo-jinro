@@ -1,4 +1,5 @@
 use firestore::FireStoreResource;
+use historical::{HistoricalSignature, HistricalItem};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -31,26 +32,62 @@ impl FireStoreResource for Roll {
     type ParamForPath = String;
 }
 
-#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq,Debug)]
 pub struct Room {
     pub rule: Option<Rule>,
     pub can_join: bool,
 }
 
-impl FireStoreResource for Room {
-    fn path(_: &()) -> String {
-        format!("{}/rooms", NAME_SPACE)
+impl Default for Room {
+    fn default() -> Self {
+        Self {
+            rule: None,
+            can_join: true,
+        }
     }
-    type ParamForPath = ();
+}
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq,Debug)]
+
+pub struct RoomEditAction {
+    pub signature: HistoricalSignature,
+    pub body: RoomEditBody,
 }
 
-#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq,Debug)]
+pub enum RoomEditBody {
+    SetCanJoin(bool),
+    SetRule(Rule),
+}
+
+impl HistricalItem for RoomEditAction {
+    type Collected = Room;
+
+    fn signature(&self) -> HistoricalSignature {
+        self.signature.clone()
+    }
+
+    fn apply(self,acc: &mut Self::Collected) {
+        match self.body {
+            RoomEditBody::SetCanJoin(can_join) => acc.can_join = can_join,
+            RoomEditBody::SetRule(rule) => acc.rule = Some(rule),
+        }
+    }
+}
+
+impl FireStoreResource for RoomEditAction {
+    fn path(room_id: &String) -> String {
+        format!("{}/rooms/{}/edit", NAME_SPACE, room_id)
+    }
+    type ParamForPath = String;
+}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq,Debug)]
 pub struct Role {
     pub id: String,
     pub name: String,
     pub number: usize,
 }
-#[derive(Serialize, Deserialize, Clone, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq,Debug)]
 pub struct Rule {
     pub roles: Vec<Role>,
 }
@@ -68,28 +105,4 @@ impl FireStoreResource for MemberJSON {
         format!("{}/rooms/{}/members", NAME_SPACE, room_id)
     }
     type ParamForPath = String;
-}
-
-#[derive(Serialize, Deserialize, Clone)]
-pub struct SetRule {
-    pub rule: Rule,
-}
-
-impl FireStoreResource for SetRule {
-    fn path(_: &()) -> String {
-        format!("{}/rooms", NAME_SPACE)
-    }
-    type ParamForPath = ();
-}
-
-#[derive(Serialize, Deserialize, Clone)]
-pub struct SetCanJoin {
-    pub can_join: bool,
-}
-
-impl FireStoreResource for SetCanJoin {
-    fn path(_: &()) -> String {
-        format!("{}/rooms", NAME_SPACE)
-    }
-    type ParamForPath = ();
 }

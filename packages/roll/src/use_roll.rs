@@ -1,9 +1,10 @@
-use model::{MemberJSON, Roll, Room, Rule, UserToRole};
+use model::{MemberJSON, Roll, Rule, UserToRole, RoomEditAction};
 use rand::seq::SliceRandom;
+use use_historical::use_historical_read;
 use std::iter::repeat;
 use yew::{use_effect_with_deps, use_state};
 
-use firestore_hooks::{use_collection, use_collection_sync, use_document, DataFetchState};
+use firestore_hooks::{use_collection, use_collection_sync, DataFetchState};
 
 fn create_next_roll(rule: &Rule, members: &Vec<MemberJSON>, rolls: &Vec<Roll>) -> Roll {
     let mut roles: Vec<_> = rule
@@ -33,7 +34,7 @@ enum ButtonState {
 }
 pub fn use_roll(room_id: &str) -> Option<impl Fn()> {
     let clicked = use_state(|| ButtonState::NotClicked);
-    let room = use_document::<Room>(&(), room_id);
+    let room = use_historical_read::<RoomEditAction>(room_id.to_string());
     let members = use_collection::<MemberJSON>(&room_id.to_string());
     let rolls = use_collection_sync::<Roll>(&room_id.to_string());
     {
@@ -62,7 +63,7 @@ pub fn use_roll(room_id: &str) -> Option<impl Fn()> {
                 }
                 || {}
             },
-            (room, members, rolls, clicked),
+            (room.map(|room| room.latest), members, rolls, clicked),
         );
     }
     if matches!(*clicked, ButtonState::NotClicked) {
