@@ -12,7 +12,7 @@ use user_id_storage::get_user_id;
 use roll::roll::RollContainer;
 use roll::rolled::Rolled;
 
-use use_historical::{use_historical_read,HistoricalProvider};
+use use_historical::{use_historical_read};
 
 #[derive(Properties, PartialEq)]
 pub struct RoomProps {
@@ -27,20 +27,14 @@ pub fn room(props: &RoomProps) -> Html {
     let set_user_id = Callback::once(move |user_id| {
         user_id_setter.set(Some(user_id));
     });
-    html! {
-        <HistoricalProvider>
-            {
-                if let Some(user_id) = &*user_id_state {
-                    html! {
-                        <HasUserId room_id={props.room_id.clone()} user_id={user_id.clone()}/>
-                    }
-                } else {
-                    html! {
-                        <GuestEntrance room_id={props.room_id.clone()} on_join={set_user_id} />
-                    }
-                }
-            }
-        </HistoricalProvider>
+    if let Some(user_id) = &*user_id_state {
+        html! {
+            <HasUserId room_id={props.room_id.clone()} user_id={user_id.clone()}/>
+        }
+    } else {
+        html! {
+            <GuestEntrance room_id={props.room_id.clone()} on_join={set_user_id} />
+        }
     }
     
 }
@@ -62,11 +56,11 @@ fn view_when_has_userid(props: &HasUserIdProps) -> Html {
         DataFetchState::Loaded(((room, member), rolls)) => {
             let rolled = rolls.len() > 0;
             if member.is_host {
-                if room.current.can_join {
+                if room.latest.can_join {
                     html! {
                         <Lobby room_id={props.room_id.clone()} user_id={props.user_id.clone()}/>
                     }
-                } else if room.current.rule.is_none() {
+                } else if room.latest.rule.is_none() {
                     html! {
                         <RuleMake room_id={props.room_id.clone()} />
                     }

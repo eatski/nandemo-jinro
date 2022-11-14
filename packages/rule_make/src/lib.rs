@@ -43,7 +43,7 @@ pub fn rule_make(props: &Props) -> Html {
                 {
                     match members.merge(room) {
                         firestore_hooks::DataFetchState::Loading => Default::default(),
-                        firestore_hooks::DataFetchState::Loaded((members,YewHistorical {current:_,push, ..})) => html! {
+                        firestore_hooks::DataFetchState::Loaded((members,YewHistorical {push, ..})) => html! {
                             <>
                                 <BodyItems>
                                     <Heading2>{"ルールを決めましょう"}</Heading2>

@@ -90,7 +90,7 @@ fn member_close(props: &MemberCloseProps) -> Html {
     let state = use_historical::<RoomEditAction,RoomEditBody>(props.room_id.clone(), |signature,body| RoomEditAction {signature, body});
     match state {
         DataFetchState::Loading => loading(),
-        DataFetchState::Loaded(YewHistorical {current: _,push,..}) => {
+        DataFetchState::Loaded(YewHistorical {push,..}) => {
             html! {
                 <ButtonLarge
                     onclick={push.reform(|_| RoomEditBody::SetCanJoin(false))}

@@ -32,7 +32,7 @@ pub fn roll(props: &Props) -> Html {
     match state {
         DataFetchState::Loading => loading(),
         DataFetchState::Loaded((members, room)) => {
-            let rule = room.current.rule.unwrap();
+            let rule = room.latest.rule.unwrap();
             html! {
                 <section>
                     <BodyItems>
