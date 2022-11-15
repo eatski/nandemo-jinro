@@ -16,3 +16,6 @@
 
 # Node.js artifacts
 /node_modules
+
+# firebase
+.firebase
