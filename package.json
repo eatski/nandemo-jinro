@@ -5,11 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:js": "esbuild javascript/index.ts --bundle --outfile=assets/index.js",
-    "dev:js": "esbuild javascript/index.ts --bundle --outfile=assets/index.js --watch",
+    "build:js": "esbuild javascript/index.ts --bundle --outfile=assets/index.js --define:PROD=true --minify",
+    "dev:js": "esbuild javascript/index.ts --bundle --outfile=assets/index.js --watch --define:PROD=false",
+    "build:rs": "trunk build",
     "dev:rs": "trunk serve",
+    "build:css": "tailwindcss -i tailwind.css -o assets/index.css --minify",
+    "dev:css": "tailwindcss -i tailwind.css -o assets/index.css --watch",
     "dev": "concurrently npm:dev:js npm:dev:rs npm:dev:css",
-    "dev:css": "tailwindcss -i tailwind.css -o assets/index.css --watch"
+    "build": "npm run build:js && npm run build:css && npm run build:rs"
   },
   "repository": {
     "type": "git",
@@ -28,6 +31,7 @@
   },
   "devDependencies": {
     "concurrently": "^7.4.0",
-    "tailwindcss": "^3.1.8"
+    "tailwindcss": "^3.1.8",
+    "typescript": "^4.8.4"
   }
 }
