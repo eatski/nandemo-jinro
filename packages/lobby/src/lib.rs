@@ -87,13 +87,15 @@ struct MemberCloseProps {
 
 #[function_component[MemberClose]]
 fn member_close(props: &MemberCloseProps) -> Html {
-    let state = use_historical::<RoomEditAction,RoomEditBody>(props.room_id.clone(), |signature,body| RoomEditAction {signature, body});
-    match state {
+    let room = use_historical::<RoomEditAction,RoomEditBody>(props.room_id.clone(), |signature,body| RoomEditAction {signature, body});
+    let members = use_collection_sync::<MemberJSON>(&props.room_id);
+    match room.merge(members) {
         DataFetchState::Loading => loading(),
-        DataFetchState::Loaded(YewHistorical {push,..}) => {
+        DataFetchState::Loaded((YewHistorical {push,..},members)) => {
             html! {
                 <ButtonLarge
                     onclick={push.reform(|_| RoomEditBody::SetCanJoin(false))}
+                    disabled={members.len() <= 1}
                 >
                     {"締め切る"}
                 </ButtonLarge>
