@@ -1,4 +1,4 @@
-use atoms::{button_link, loading, Heading2, HeadingDescription};
+use atoms::{loading, Heading2, HeadingDescription};
 use user_id_storage::save_user_id;
 use yew::{function_component, html, use_state, Callback, Children, Properties};
 use yew_router::prelude::{use_history, History};
@@ -48,26 +48,25 @@ pub fn landing() -> Html {
                             </CardContent>
                         </Card>
                     </section>
-                    <section class="w-full max-w-xl" aria-label="テンプレから">
-                        <Card>
-                            <Heading2>{"テンプレから"}</Heading2>
-                            <HeadingDescription>{"誰かが作ったルールで遊ぶ"}</HeadingDescription>
-                            <CardContent>
-                                <div class="flex flex-wrap justify-center gap-2">
-                                    {button_link("スプラトゥーン", "/tags/spatoon")}
-                                    {button_link("汎用 4人", "/tags/monster_hunter")}
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </section>
-
+                    // <section class="w-full max-w-xl" aria-label="テンプレから">
+                    //     <Card>
+                    //         <Heading2>{"テンプレから"}</Heading2>
+                    //         <HeadingDescription>{"誰かが作ったルールで遊ぶ"}</HeadingDescription>
+                    //         <CardContent>
+                    //             <div class="flex flex-wrap justify-center gap-2">
+                    //                 {button_link("スプラトゥーン", "/tags/spatoon")}
+                    //                 {button_link("汎用 4人", "/tags/monster_hunter")}
+                    //             </div>
+                    //         </CardContent>
+                    //     </Card>
+                    // </section>
                 </div>
                 <section>
                     <Heading2>{"遊び方"}</Heading2>
                     <div  class="w-full flex justify-center">
                         <ol class="text-black-light text-sm list-decimal space-y-1">
-                            <li>{"好きなルールを選ぶor作成"}</li>
                             <li>{"みんなに部屋のURLを共有"}</li>
+                            <li>{"好きなルールを設定"}</li>
                             <li>{"全員に配られる秘密の役職で自由に遊ぼう！"}</li>
                         </ol>
                     </div>
