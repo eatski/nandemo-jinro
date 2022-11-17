@@ -1,0 +1,34 @@
+[debug] [2022-11-17T13:44:03.240Z] ----------------------------------------------------------------------
+[debug] [2022-11-17T13:44:03.241Z] Command:       /Users/hagaitski/.nvm/versions/node/v16.13.1/bin/node /Users/hagaitski/Documents/apps/roleroll/node_modules/.bin/firebase deploy --only hosting
+[debug] [2022-11-17T13:44:03.241Z] CLI Version:   11.16.0
+[debug] [2022-11-17T13:44:03.241Z] Platform:      darwin
+[debug] [2022-11-17T13:44:03.241Z] Node Version:  v16.13.1
+[debug] [2022-11-17T13:44:03.243Z] Time:          Thu Nov 17 2022 22:44:03 GMT+0900 (日本標準時)
+[debug] [2022-11-17T13:44:03.243Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-11-17T13:44:03.288Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-11-17T13:44:03.288Z] > authorizing via signed-in user (i.haga629@gmail.com)
+[debug] [2022-11-17T13:44:03.288Z] [iam] checking project nandemo-jinro for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2022-11-17T13:44:03.289Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/nandemo-jinro:testIamPermissions [none]
+[debug] [2022-11-17T13:44:03.289Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/nandemo-jinro:testIamPermissions x-goog-quota-user=projects/nandemo-jinro
+[debug] [2022-11-17T13:44:03.289Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/nandemo-jinro:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2022-11-17T13:44:04.062Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/nandemo-jinro:testIamPermissions 200
+[debug] [2022-11-17T13:44:04.062Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/nandemo-jinro:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2022-11-17T13:44:04.064Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/nandemo-jinro [none]
+[debug] [2022-11-17T13:44:11.834Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/nandemo-jinro 200
+[debug] [2022-11-17T13:44:11.835Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/nandemo-jinro {"projectId":"nandemo-jinro","projectNumber":"824985421559","displayName":"nandemo-jinro","name":"projects/nandemo-jinro","resources":{"hostingSite":"nandemo-jinro"},"state":"ACTIVE","etag":"1_4f7eb972-8b66-4cb7-886a-558d6f8fac3f"}
+[info] 
+[info] === Deploying to 'nandemo-jinro'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2022-11-17T13:44:11.842Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/nandemo-jinro/versions [none]
+[debug] [2022-11-17T13:44:11.843Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/nandemo-jinro/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2022-11-17T13:44:13.267Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/nandemo-jinro/versions 200
+[debug] [2022-11-17T13:44:13.268Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/nandemo-jinro/versions {"name":"projects/824985421559/sites/nandemo-jinro/versions/84bd0fd1a0067bd6","status":"CREATED","config":{},"labels":{"deployment-tool":"cli-firebase"}}
+[info] i  hosting[nandemo-jinro]: beginning deploy... 
+[info] i  hosting[nandemo-jinro]: found 6 files in dist 
+[debug] [2022-11-17T13:44:19.338Z] [hosting] uploading with 200 concurrency
+[debug] [2022-11-17T13:44:19.345Z] [hosting] hash cache [ZGlzdA] stored for 6 files
+[debug] [2022-11-17T13:44:19.345Z] [hosting][hash queue][FINAL] {"max":1,"min":0,"avg":0,"active":0,"complete":6,"success":6,"errored":0,"retried":0,"total":6,"elapsed":3}
+[debug] [2022-11-17T13:44:19.345Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/824985421559/sites/nandemo-jinro/versions/84bd0fd1a0067bd6:populateFiles [none]
+[debug] [2022-11-17T13:44:19.345Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/824985421559/sites/nandemo-jinro/versions/84bd0fd1a0067bd6:populateFiles {"files":{"/favicon-dfa9eb2485aaadb8.ico":"42dd1b01b9328d685db5e08a3f3a8a439f714cd476d4ed418bf98ed9d3e0a976","/index-bd701dea180a0f15.js":"2bcc179590015acb54ffdf98fac21c7ddb2b9d2f9e64d999d2611202ec23cb3c","/index-e5289d58164cef67.css":"4d7b28b8aa97b1b7a24337cd59136fd6adb7528bdec71f610fe063b56ad2700c","/index.html":"e2814faab17a4ece7669947fa8f1af2256652043112cabf2d864ffd3c3d474aa","/roleroll-aee0774da8206b1a.js":"f360cadfaddb4e157926fa07e456ebe2d7b105e0fb92a4aa4dc6ca1a91a27a1a","/roleroll-aee0774da8206b1a_bg.wasm":"10d673d6525c9200cc0fa101bc03536d075dc05da62e11cd36d60f92339f5a11"}}

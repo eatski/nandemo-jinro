@@ -11,8 +11,11 @@
 
 # build artifacts
 
-/dist
-/assets
+/dist/*
+!/dist/sitemap.xml
+/assets/
+
+
 
 # Node.js artifacts
 /node_modules
