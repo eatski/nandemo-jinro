@@ -8,12 +8,11 @@ module.exports = {
         "feature-light": "#38bdf8",
         quiet: "#bae6fd",
         line: "#cbd5e1",
-        black: "#334155",
-        "black-light": "#64748b",
-        "black-quiet": "#a0aec0",
+        black: "#111827",
+        "black-light": "#374151",
+        "black-quiet": "#cbd5e1",
         colored: "#f5f5f4",
         "colored-light": "#fafaf9",
-        marked: "#fb923c",
       }
     },
 
