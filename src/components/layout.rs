@@ -16,7 +16,7 @@ pub fn layout(props: &ChildrenOnlyProps) -> Html {
                         {"なんでも人狼"}
                     </a>
                     <div class="ml-auto">
-                        {button_link("報告","/")}
+                        {button_link("報告","https://github.com/eatski/roleroll/issues/new")}
                     </div>
                 </div>
             </header>
