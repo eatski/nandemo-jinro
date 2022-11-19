@@ -5,7 +5,7 @@ pub fn title() -> Html {
     html! {
         <div class="text-center p-8">
             <h1 class="text-3xl md:text-4xl text-black font-mono font-bold">{"なんでも人狼"}</h1>
-            <p class="text-black-light mt-2">{"ゲームマスター不要でなんでも人狼ゲームにして遊べちゃうブラウザアプリ"}</p>
+            <p class="text-black-light mt-2">{"ゲームマスター不要でなんでも人狼ゲームにして遊べちゃうブラウザ配役アプリ"}</p>
         </div>
     }
 }
