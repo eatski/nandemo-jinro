@@ -67,8 +67,8 @@ pub fn landing() -> Html {
                         <ol class="text-black-light text-sm list-decimal space-y-1">
                             <li>{"みんなに部屋のURLを共有"}</li>
                             <li>{"好きな配役（人狼、市民など）を設定"}</li>
-                            <li>{"当アプリが自動で配役をブラウザを通じて各プレイヤーに送信します"}</li>
-                            <li>{"全員に配られる秘密の役職で自由に遊ぼう！"}</li>
+                            <li>{"当アプリがランダムな配役をブラウザを通じて各プレイヤーに送信します"}</li>
+                            <li>{"配られた秘密の役職で自由に遊ぼう！"}</li>
                         </ol>
                     </div>
                 </section>
