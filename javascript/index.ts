@@ -115,6 +115,12 @@ const setDocument = (path: string, data: string,onComplete: () => void,onError: 
     updateDoc(docRef, JSON.parse(data)).then(onComplete).catch(onError);
 }
 
+const writeClickBoard = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+        alert("クリップボードにコピーしました");
+    });  
+}
+
 //@ts-expect-error
 window._wasm_js_bridge = {
     syncCollection,
@@ -123,5 +129,6 @@ window._wasm_js_bridge = {
     setField,
     syncDocument,
     getDocument,
-    setDocument
+    setDocument,
+    writeClickBoard
 }

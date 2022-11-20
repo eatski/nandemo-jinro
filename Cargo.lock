@@ -301,6 +301,8 @@ dependencies = [
  "layouting",
  "model",
  "use_historical",
+ "wasm-bindgen",
+ "web-sys",
  "yew",
 ]
 

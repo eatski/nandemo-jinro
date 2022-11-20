@@ -23,7 +23,6 @@ pub fn button(props: &ButtonProps) -> Html {
         </button>
     }
 }
-
 #[function_component[ButtonLarge]]
 pub fn button_large(props: &ButtonProps) -> Html {
     html! {
@@ -66,7 +65,7 @@ pub fn heading2(props: &ChildrenOnlyProps) -> Html {
 #[function_component(HeadingDescription)]
 pub fn heading_descriotion(props: &ChildrenOnlyProps) -> Html {
     html! {
-        <p class="w-full text-center text-sm text-black-light">{props.children.clone()}</p>
+        <p class="text-center text-sm text-black-light">{props.children.clone()}</p>
     }
 }
 
