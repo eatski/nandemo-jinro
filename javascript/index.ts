@@ -1,4 +1,4 @@
-import { initializeFirestore, doc, collection,onSnapshot, Unsubscribe, setDoc,updateDoc, getDocs,runTransaction, getDoc } from "@firebase/firestore"
+import { initializeFirestore, doc, collection,onSnapshot, Unsubscribe, setDoc, getDocs, getDoc } from "@firebase/firestore"
 import { initializeApp } from "@firebase/app";
 
 const app = initializeApp(PROD ? {
@@ -83,19 +83,6 @@ const addDocument = (path: string, data: string,onComplete: (id: string) => void
     return docRef.id;
 }
 
-const setField = (path: string, fieldname: string,data: string,onComplete: () => void,onError: () => void) => {
-    const docRef = doc(store,path);
-    runTransaction(store, async (transaction) => {
-        const dacSnap = await transaction.get(docRef);
-        const newData = {[fieldname]:JSON.parse(data)};
-        if(!dacSnap.exists()){
-            transaction.set(docRef, newData);
-        } else {
-            transaction.update(docRef,newData);
-        }
-    }).then(onComplete).catch(onError);
-}
-
 const syncDocument = (path: string,callback: (res: string) => void, onError: () => void): () => void => {
     const docRef = doc(store,path);
     return onSnapshotWhenActive(
@@ -110,11 +97,6 @@ const getDocument = (path: string,onComplete: (res: string) => void, onError: ()
     getDoc(docRef).then((res) => onComplete(JSON.stringify({id: res.id,...res.data()}))).catch(onError);
 }
 
-const setDocument = (path: string, data: string,onComplete: () => void,onError: () => void) => {
-    const docRef = doc(store,path);
-    updateDoc(docRef, JSON.parse(data)).then(onComplete).catch(onError);
-}
-
 const writeClickBoard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
         alert("クリップボードにコピーしました");
@@ -126,9 +108,7 @@ window._wasm_js_bridge = {
     syncCollection,
     addDocument,
     getCollection,
-    setField,
     syncDocument,
     getDocument,
-    setDocument,
     writeClickBoard
 }

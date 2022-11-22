@@ -12,14 +12,10 @@ extern "C" {
     fn addDocument(path: &str, data: &str, on_complete: &JsValue, on_error: &JsValue) -> String;
     #[wasm_bindgen(js_name = "getCollection",js_namespace = ["window","_wasm_js_bridge"])]
     fn getCollection(path: &str, on_complete: &JsValue, on_error: &JsValue);
-    #[wasm_bindgen(js_name = "setField",js_namespace = ["window","_wasm_js_bridge"])]
-    fn setField(path: &str, field: &str, value: &str, on_complete: &JsValue, on_error: &JsValue);
     #[wasm_bindgen(js_name = "syncDocument",js_namespace = ["window","_wasm_js_bridge"])]
     fn syncDocument(path: &str, on_complete: &JsValue, on_error: &JsValue) -> Function;
     #[wasm_bindgen(js_name = "getDocument",js_namespace = ["window","_wasm_js_bridge"])]
     fn getDocument(path: &str, on_complete: &JsValue, on_error: &JsValue);
-    #[wasm_bindgen(js_name = "setDocument",js_namespace = ["window","_wasm_js_bridge"])]
-    fn setDocument(path: &str, data: &str, on_complete: &JsValue, on_error: &JsValue);
 }
 
 pub fn sync_collection_json(
@@ -85,15 +81,4 @@ pub fn get_document_json(
     });
     let on_error: JsValue = Closure::once_into_js(on_error);
     getDocument(path, &on_complete, &on_error)
-}
-
-pub fn set_document_json(
-    path: &str,
-    json: &str,
-    on_complete: impl FnOnce() + 'static,
-    on_error: impl FnOnce() + 'static,
-) {
-    let on_complete: JsValue = Closure::once_into_js(on_complete);
-    let on_error: JsValue = Closure::once_into_js(on_error);
-    setDocument(path, json, &on_complete, &on_error)
 }
