@@ -9,6 +9,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d301b3b94cb4b2f23d7917810addbbaff90738e0ca2be692bd027e70d7e0330c"
 
 [[package]]
+name = "app_root"
+version = "0.1.0"
+dependencies = [
+ "atoms",
+ "firestore",
+ "firestore_hooks",
+ "landing",
+ "lobby",
+ "model",
+ "roll",
+ "router",
+ "rule_make",
+ "use_historical",
+ "user_id_storage",
+ "yew",
+ "yew-router",
+]
+
+[[package]]
 name = "atoms"
 version = "0.1.0"
 dependencies = [
@@ -659,17 +678,7 @@ dependencies = [
 name = "roleroll"
 version = "0.1.0"
 dependencies = [
- "atoms",
- "firestore",
- "firestore_hooks",
- "landing",
- "lobby",
- "model",
- "roll",
- "router",
- "rule_make",
- "use_historical",
- "user_id_storage",
+ "app_root",
  "yew",
  "yew-router",
 ]

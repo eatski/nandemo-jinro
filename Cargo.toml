@@ -19,7 +19,8 @@ members = [
     "packages/roll",
     "packages/layouting",
     "packages/historical",
-    "packages/use_historical"
+    "packages/use_historical",
+    "packages/app_root",
 ]
 
 [profile.release]
@@ -28,15 +29,5 @@ opt-level = 's'
 
 [dependencies]
 yew = {version="0.20", features=["csr"]}
-atoms = {path = "./packages/atoms"}
-firestore = {path = "./packages/firestore"}
-model = {path = "./packages/model"}
 yew-router = "0.17"
-firestore_hooks = {path = "./packages/firestore_hooks"}
-router = {path = "./packages/router"}
-landing = {path = "./packages/landing"}
-user_id_storage = {path = "./packages/user_id_storage"}
-lobby = {path = "./packages/lobby"}
-rule_make = {path = "./packages/rule_make"}
-roll = {path = "./packages/roll"}
-use_historical = {path = "./packages/use_historical"}
+app_root = {path = "./packages/app_root"}

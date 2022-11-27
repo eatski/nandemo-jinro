@@ -1,0 +1,21 @@
+[package]
+name = "app_root"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+yew = {version="0.20"}
+atoms = {path = "../atoms"}
+model = {path = "../model"}
+yew-router = "0.17"
+router = {path = "../router"}
+landing = {path = "../landing"}
+lobby = {path = "../lobby"}
+rule_make = {path = "../rule_make"}
+roll = {path = "../roll"}
+use_historical = {path = "../use_historical"}
+user_id_storage = {path = "../user_id_storage"}
+firestore_hooks = {path = "../firestore_hooks"}
+firestore = {path = "../firestore"}
