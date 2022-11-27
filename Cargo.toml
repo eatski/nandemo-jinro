@@ -22,6 +22,10 @@ members = [
     "packages/use_historical"
 ]
 
+[profile.release]
+lto = true
+opt-level = 's'
+
 [dependencies]
 yew = "0.19"
 atoms = {path = "./packages/atoms"}
