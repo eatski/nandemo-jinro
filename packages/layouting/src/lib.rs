@@ -1,4 +1,4 @@
-use yew::{function_component, html, Children, Properties};
+use yew::{function_component, html, Children, Properties, Html};
 
 #[derive(Properties, PartialEq)]
 pub struct ChildrenOnlyProps {

@@ -2,7 +2,7 @@ use model::{MemberJSON, Roll, Rule, UserToRole, RoomEditAction};
 use rand::seq::SliceRandom;
 use use_historical::use_historical_read;
 use std::iter::repeat;
-use yew::{use_effect_with_deps, use_state};
+use yew::{use_effect_with_deps, use_state, hook, Callback};
 
 use firestore_hooks::{use_collection, use_collection_sync, DataFetchState};
 
@@ -32,7 +32,8 @@ enum ButtonState {
     NotClicked,
     Clicked,
 }
-pub fn use_roll(room_id: &str) -> Option<impl Fn()> {
+#[hook]
+pub fn use_roll(room_id: &str) -> Option<yew::Callback<()> > {
     let clicked = use_state(|| ButtonState::NotClicked);
     let room = use_historical_read::<RoomEditAction>(room_id.to_string());
     let members = use_collection::<MemberJSON>(&room_id.to_string());
@@ -67,9 +68,9 @@ pub fn use_roll(room_id: &str) -> Option<impl Fn()> {
         );
     }
     if matches!(*clicked, ButtonState::NotClicked) {
-        Some(move || {
+        Some(Callback::from(move |_| {
             clicked.set(ButtonState::Clicked);
-        })
+        }))
     } else {
         None
     }

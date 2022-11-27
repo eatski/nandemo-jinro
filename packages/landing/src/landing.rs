@@ -1,7 +1,7 @@
 use atoms::{loading, Heading2, HeadingDescription};
 use user_id_storage::save_user_id;
-use yew::{function_component, html, use_state, Callback, Children, Properties};
-use yew_router::prelude::{use_history, History};
+use yew::{function_component, html, use_state, Callback, Children, Properties, Html};
+use yew_router::hooks::use_navigator;
 
 use model::{self, MemberInput};
 use router::Route;
@@ -84,16 +84,18 @@ fn create_rule_view() -> Html {
         Loading,
         Error,
     }
-    let history = use_history().unwrap();
+    let history = use_navigator().unwrap();
     let state = use_state(|| State::Input);
     match &*state {
         State::Input => {
             html! {
-                <JoinForm form_label="名前を入力してルームを作成する" label="作成" default="ホスト" placeholder="あなたの名前" onsubmit={Callback::once(move |name: String| {
+                <JoinForm form_label="名前を入力してルームを作成する" label="作成" default="ホスト" placeholder="あなたの名前" onsubmit={Callback::from(move |name: String| {
                     state.set(State::Loading);
                     let mut generator = Generator::with_naming(Name::Numbered);
+                    let state = state.clone();
                     let room_id = generator.next().unwrap();
                     let room_id_cloned = room_id.clone();
+                    let navigator = history.clone();
                     let member_id = firestore::add_document(
                         &room_id,
                         &MemberInput {
@@ -101,7 +103,7 @@ fn create_rule_view() -> Html {
                             is_host: true
                         },
                         move |_| {
-                            history.push(Route::Room { id: room_id_cloned});
+                            navigator.push(&Route::Room { id: room_id_cloned});
                         },
                         move || {
                             state.set(State::Error);

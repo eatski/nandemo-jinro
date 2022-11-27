@@ -27,11 +27,11 @@ lto = true
 opt-level = 's'
 
 [dependencies]
-yew = "0.19"
+yew = {version="0.20", features=["csr"]}
 atoms = {path = "./packages/atoms"}
 firestore = {path = "./packages/firestore"}
 model = {path = "./packages/model"}
-yew-router = "0.16"
+yew-router = "0.17"
 firestore_hooks = {path = "./packages/firestore_hooks"}
 router = {path = "./packages/router"}
 landing = {path = "./packages/landing"}

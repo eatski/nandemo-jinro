@@ -4,7 +4,7 @@ use atoms::{loading, Heading2, HeadingDescription, unexpected_error};
 use firestore_hooks::{use_collection, DataFetchState};
 use layouting::{BodyItems, BottomOperaton};
 use model::{MemberJSON, RoomEditAction};
-use yew::{function_component, html, Callback, Html, Properties};
+use yew::{function_component, html, Html, Properties};
 use use_historical::use_historical_read;
 
 use crate::common::RollButton;
@@ -78,7 +78,7 @@ pub fn roll(props: &Props) -> Html {
                             Some(roll) => {
                                 html! {
                                     <BottomOperaton>
-                                        <RollButton onclick={Callback::once(move |_| roll())}>
+                                        <RollButton onclick={roll}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-full h-full">
                                                     <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clip-rule="evenodd" />
                                                 </svg>

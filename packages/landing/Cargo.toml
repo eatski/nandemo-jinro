@@ -6,9 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-yew = "0.19"
+yew = "0.20"
 atoms = {path = "../atoms"}
-yew-router = "0.16"
+yew-router = "0.17"
 router = {path = "../router"}
 firestore = { path = "../firestore" }
 user_id_storage = { path = "../user_id_storage" }

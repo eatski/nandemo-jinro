@@ -1,6 +1,6 @@
 use atoms::{loading, unexpected_error};
 use model::{MemberJSON, Roll};
-use yew::{function_component, html, use_state_eq, Callback, Properties};
+use yew::{function_component, html, use_state_eq, Callback, Properties, Html};
 
 use landing::entrance::GuestEntrance;
 
@@ -24,7 +24,7 @@ pub fn room(props: &RoomProps) -> Html {
     // NOTE: ルームIDが変わる場合のことを考慮できていない
     let user_id_state = use_state_eq(|| get_user_id(props.room_id.as_str()));
     let user_id_setter = user_id_state.setter();
-    let set_user_id = Callback::once(move |user_id| {
+    let set_user_id = Callback::from(move |user_id| {
         user_id_setter.set(Some(user_id));
     });
     if let Some(user_id) = &*user_id_state {
