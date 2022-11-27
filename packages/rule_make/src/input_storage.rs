@@ -1,5 +1,5 @@
 use serde::{Serialize, Deserialize};
-use yew::{use_state, UseStateHandle, use_effect_with_deps};
+use yew::{use_state, UseStateHandle, use_effect_with_deps, hook};
 
 
 #[derive(Clone,Serialize,Deserialize,PartialEq,Debug)]
@@ -31,6 +31,7 @@ fn get_input_storage(room_id: &str) -> Option<Input> {
         .and_then(|json| serde_json::from_str(json.as_str()).ok())
 }
 
+#[hook]
 pub fn use_input(room_id: &str,default: Input)->UseStateHandle<Input>{
     let saved_input = get_input_storage(room_id);
     let input_state = use_state(|| saved_input.unwrap_or(default));

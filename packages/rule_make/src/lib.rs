@@ -6,7 +6,7 @@ use input_storage::{Item, use_input};
 use layouting::{BodyItems, BottomOperaton};
 use model::{MemberJSON, Role, Rule, RoomEditAction, RoomEditBody};
 use use_historical::YewHistorical;
-use yew::{function_component, html, Callback, Properties};
+use yew::{function_component, html, Callback, Properties, Html};
 
 mod input_storage;
 #[derive(Properties, PartialEq)]
@@ -52,17 +52,21 @@ pub fn rule_make(props: &Props) -> Html {
                                     <ul class="flex flex-col gap-2 mt-8">
                                         {for (*state).iter().enumerate().map(|(index,item)| {
                                             let on_number_input = {
-                                                let mut captured_state = captured_state.clone();
+                                                let captured_state = captured_state.clone();
                                                 let state = state.clone();
-                                                Callback::once(move |count| {
+                                                Callback::from(move |count| {
+                                                    let mut captured_state = captured_state.clone();
+                                                    let state = state.clone();
                                                     captured_state[index].count = count;
                                                     state.set(captured_state)
                                                 })
                                             };
                                             let on_text_input = {
-                                                let mut captured_state = captured_state.clone();
+                                                let captured_state = captured_state.clone();
                                                 let state = state.clone();
-                                                Callback::once(move |name| {
+                                                Callback::from(move |name| {
+                                                    let mut captured_state = captured_state.clone();
+                                                    let state = state.clone();
                                                     captured_state[index].name = name;
                                                     state.set(captured_state)
                                                 })

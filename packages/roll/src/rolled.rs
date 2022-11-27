@@ -5,7 +5,7 @@ use layouting::{BodyItems, BottomOperaton};
 use model::{MemberJSON, Roll, RoomEditAction};
 use use_historical::use_historical_read;
 use wasm_bindgen::prelude::Closure;
-use yew::{function_component, html, Callback, Properties, use_effect, use_state};
+use yew::{function_component, html, Callback, Properties, use_effect, use_state, Html};
 
 use firestore_hooks::{use_collection_sync, use_document, DataFetchState};
 
@@ -71,7 +71,7 @@ pub fn rolled(props: &Props) -> Html {
                     let seq_num = last_rolled.seq_num;
                     if Some(seq_num) != *counter {
                         return html! {
-                            <TimerLoading on_timeout={Callback::once(move |_| {
+                            <TimerLoading on_timeout={Callback::from(move |_| {
                                 counter.set(Some(seq_num));
                             })} />
                         }
@@ -102,7 +102,7 @@ pub fn rolled(props: &Props) -> Html {
                                         Some(roll) => {
                                             html! {
                                                 <BottomOperaton>
-                                                    <RollButton onclick={Callback::once(move |_| roll())}>
+                                                    <RollButton onclick={roll}>
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-full h-full">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                                                         </svg>

@@ -1,5 +1,5 @@
 use firestore::FireStoreResource;
-use yew::{use_effect_with_deps, use_state};
+use yew::{use_effect_with_deps, use_state, hook};
 
 #[derive(PartialEq, Eq,Clone)]
 pub enum DataFetchState<R> {
@@ -30,6 +30,7 @@ impl<T> DataFetchState<T> {
     }
 }
 
+#[hook]
 pub fn use_collection<T>(param: &T::ParamForPath) -> DataFetchState<Vec<T>>
 where
     T: 'static + FireStoreResource + Clone,
@@ -54,6 +55,7 @@ where
     (*state).clone()
 }
 
+#[hook]
 pub fn use_collection_sync<T>(param: &T::ParamForPath) -> DataFetchState<Vec<T>>
 where
     T: 'static + FireStoreResource + Clone,
@@ -75,6 +77,7 @@ where
     (*state_cloned).clone()
 }
 
+#[hook]
 pub fn use_document_sync<T>(param: &T::ParamForPath, document_id: &str) -> DataFetchState<T>
 where
     T: 'static + FireStoreResource + Clone,
@@ -98,6 +101,7 @@ where
     (*state_cloned).clone()
 }
 
+#[hook]
 pub fn use_document<T>(param: &T::ParamForPath, document_id: &str) -> DataFetchState<T>
 where
     T: 'static + FireStoreResource + Clone,

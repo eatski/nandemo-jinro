@@ -12,13 +12,13 @@ fn root() -> Html {
     html! {
         <Layout>
             <BrowserRouter>
-                <Switch<Route> render={Switch::render(switch)} />
+                <Switch<Route> render={switch} />
             </BrowserRouter>
         </Layout>
     }
 }
 
-fn switch(route: &Route) -> Html {
+fn switch(route: Route) -> Html {
     match route {
         Route::Home => html! { <Landing /> },
         Route::Room { id } => html! {
@@ -29,5 +29,5 @@ fn switch(route: &Route) -> Html {
 }
 
 fn main() {
-    yew::start_app::<Root>();
+    yew::Renderer::<Root>::new().render();
 }

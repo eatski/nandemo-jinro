@@ -2,7 +2,7 @@ use atoms::{loading, Heading2, unexpected_error};
 use firestore::add_document;
 use model::{MemberInput, MemberJSON, RoomEditAction};
 use use_historical::use_historical_read;
-use yew::{function_component, html, Callback, Properties};
+use yew::{function_component, html, Callback, Properties, Html};
 
 use firestore_hooks::{use_collection, DataFetchState};
 use user_id_storage::save_user_id;
