@@ -58,7 +58,7 @@ pub fn button_link(label: &str, href: &str) -> Html {
 #[function_component(Heading2)]
 pub fn heading2(props: &ChildrenOnlyProps) -> Html {
     html! {
-        <h2 class="w-full text-center text-2xl text-black mb-1">{props.children.clone()}</h2>
+        <h2 class="w-full text-center text-xl text-black mb-1">{props.children.clone()}</h2>
     }
 }
 
