@@ -13,7 +13,7 @@ pub struct ButtonProps {
 }
 
 const BUTTON_FEATURE_COLOR: &str =
-    "transition-colors bg-action hover:bg-action-hover disabled:bg-action-disable text-action-label";
+    "transition-colors bg-action hover:bg-action-hover disabled:bg-action-disable text-action-label disabled:text-action-label-disable";
 
 #[function_component[Button]]
 pub fn button(props: &ButtonProps) -> Html {
@@ -23,6 +23,9 @@ pub fn button(props: &ButtonProps) -> Html {
         </button>
     }
 }
+
+
+
 #[function_component[ButtonLarge]]
 pub fn button_large(props: &ButtonProps) -> Html {
     html! {
@@ -41,17 +44,30 @@ pub fn button_rounded(props: &ButtonProps) -> Html {
     }
 }
 
+
+
 pub fn loading() -> Html {
     html! {
         <div role="img" aria-label="ローディング" class="animate-spin h-10 w-10 border-4 border-action-disable-500 rounded-full border-t-transparent"></div>
     }
 }
 
+const BUTTON_SUB_COLOR: &str = "rounded-md border-separator text-word bg-screen hover:text-word-2nd py-2 px-3";
+
 pub fn button_link(label: &str, href: &str) -> Html {
     html! {
-        <a class="rounded-md border-separator border-solid border text-word bg-screen hover:text-word-2nd py-2 px-3" href={href.to_owned()}>
+        <a class={BUTTON_SUB_COLOR} href={href.to_owned()}>
             {label}
         </a>
+    }
+}
+
+#[function_component]
+pub fn ButtonSub(props: &ButtonProps) -> Html {
+    html! {
+        <button aria-label={props.aria_label} onclick={props.onclick.clone()} disabled={props.disabled.unwrap_or_else(|| false)} class={format!("{} py-2 px-4",BUTTON_SUB_COLOR)}>
+            {props.children.clone()}
+        </button>
     }
 }
 
@@ -118,7 +134,7 @@ pub fn input_text(props: &InputTextProps) -> Html {
             onclick={on_input_click}
             maxlength={props.maxlength.to_string()}
             aria-label={props.aria_label}
-            class="w-52 border-separator border-solid border focus:border-action rounded-md py-2 px-2 text-word outline-none" type="text" placeholder={props.placeholder}
+            class="w-52 border-separator border-solid border focus:border-action rounded-md py-2 px-2 bg-screen-2nd text-word outline-none" type="text" placeholder={props.placeholder}
         />
     }
 }
@@ -143,7 +159,7 @@ pub fn input_small_number(props: &InputNumberProps) -> Html {
     };
 
     html! {
-        <input {oninput} min="1" value={props.value.to_string()} class="w-14 border-separator border-solid border focus:border-action rounded-md py-2 px-2 text-word outline-none" type="number" />
+        <input {oninput} min="1" value={props.value.to_string()} class="w-14 border-separator border-solid border focus:border-action rounded-md py-2 px-2 bg-screen-2nd text-word outline-none" type="number" />
     }
 }
 

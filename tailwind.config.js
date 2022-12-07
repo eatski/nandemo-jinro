@@ -5,10 +5,12 @@ module.exports = {
     extend: {
       colors: {
         screen: "var(--nj-screen)",
+        "screen-2nd": "var(--nj-screen-2nd)",
         action: "var(--nj-action)",
         "action-hover": "var(--nj-action-hover)",
         "action-disable": "var(--nj-action-disable)",
         "action-label": "var(--nj-action-label)",
+        "action-label-disable": "var(--nj-action-label-disable)",
         separator: "var(--nj-separator)",
         word: "var(--nj-word)",
         "word-2nd": "var(--nj-word-2nd)",

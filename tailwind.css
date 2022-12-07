@@ -4,14 +4,34 @@
 
 :root {
     --nj-screen: #ffffff;
+    --nj-screen-2nd: #ffffff;
     --nj-action: #0ea5e9;
     --nj-action-hover: #38bdf8;
     --nj-action-disable: #bae6fd;
     --nj-action-label: #ffffff;
+    --nj-action-label-disable: #ffffff;
     --nj-separator: #cbd5e1;
     --nj-word: #111827;
     --nj-word-2nd: #374151;
-    --nj-word-disable: #cbd5e1;
+    --nj-word-disable: #cbd5e1; 
     --nj-layer: #f5f5f4;
     --nj-layer-2nd: #fafaf9;
 }
+
+[data-theme="dark"] {
+    --nj-screen: #111827;
+    --nj-screen-2nd: #374151;
+    --nj-action: #0ea5e9;
+    --nj-action-hover: #38bdf8;
+    --nj-action-disable: #69717D;
+    --nj-action-label: #ffffff;
+    --nj-action-label-disable: #BCC0C5;
+    --nj-separator: #cbd5e1;
+    --nj-word: #ffffff;
+    --nj-word-2nd: #e7e7e7;
+    --nj-word-disable: #9da6b1;
+    --nj-layer: #374151;
+    --nj-layer-2nd: #374151;
+}
+    
+    
