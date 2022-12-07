@@ -4,15 +4,17 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        feature: "#0ea5e9",
-        "feature-light": "#38bdf8",
-        quiet: "#bae6fd",
-        line: "#cbd5e1",
-        black: "#111827",
-        "black-light": "#374151",
-        "black-quiet": "#cbd5e1",
-        colored: "#f5f5f4",
-        "colored-light": "#fafaf9",
+        screen: "var(--nj-screen)",
+        action: "var(--nj-action)",
+        "action-hover": "var(--nj-action-hover)",
+        "action-disable": "var(--nj-action-disable)",
+        "action-label": "var(--nj-action-label)",
+        separator: "var(--nj-separator)",
+        word: "var(--nj-word)",
+        "word-2nd": "var(--nj-word-2nd)",
+        "word-disable": "var(--nj-word-disable)",
+        layer: "var(--nj-layer)",
+        "layer-2nd": "var(--nj-layer-2nd)",
       }
     },
 

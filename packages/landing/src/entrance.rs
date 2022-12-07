@@ -59,7 +59,7 @@ pub fn guest_entrance(props: &GuestEntranceProps) -> Html {
                 html! {
                     <div>
                         {title()}
-                        <p class="mx-auto w-full max-w-2xl text-center text-black">
+                        <p class="mx-auto w-full max-w-2xl text-center text-word">
                             {"この部屋は参加を締め切られました。"}
                         </p>
                     </div>

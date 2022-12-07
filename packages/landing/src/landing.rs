@@ -17,7 +17,7 @@ pub struct ChildrenOnlyProps {
 #[function_component(Card)]
 fn card(props: &ChildrenOnlyProps) -> Html {
     html! {
-        <div class="h-full rounded-md p-3 bg-colored">
+        <div class="h-full rounded-md p-3 bg-layer">
             {props.children.clone()}
         </div>
     }
@@ -64,7 +64,7 @@ pub fn landing() -> Html {
                 <section>
                     <Heading2>{"遊び方"}</Heading2>
                     <div  class="w-full flex justify-center ml-4 md:ml-0 ">
-                        <ol class="text-black-light text-sm list-decimal space-y-1">
+                        <ol class="text-word-2nd text-sm list-decimal space-y-1">
                             <li>{"みんなに部屋のURLを共有"}</li>
                             <li>{"好きな配役（人狼、市民など）を設定"}</li>
                             <li>{"当アプリがランダムな配役をブラウザを通じて各プレイヤーに送信します"}</li>

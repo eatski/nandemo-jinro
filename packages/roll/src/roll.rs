@@ -43,11 +43,11 @@ pub fn roll(props: &Props) -> Html {
                                 {
                                     for rule.roles.iter().map(|roll| {
                                         html! {
-                                            <li class="flex text-black pb-1 border-solid border-b border-line">
+                                            <li class="flex text-word pb-1 border-solid border-b border-separator">
                                                 <span class="text-lg mr-3 grow">
                                                     {roll.name.as_str()}
                                                 </span>
-                                                <span class="text-black-light flex">
+                                                <span class="text-word-2nd flex">
                                                     {
                                                         if roll.number > 5 {
                                                             html! {
@@ -90,7 +90,7 @@ pub fn roll(props: &Props) -> Html {
                         }
                     }
                     // <div class="flex justify-center mt-4">
-                    //     <button class="text-black hover:text-black-light text-md">{"戻る"}</button>
+                    //     <button class="text-word hover:text-word-2nd text-md">{"戻る"}</button>
                     // </div>
                 </section>
             }

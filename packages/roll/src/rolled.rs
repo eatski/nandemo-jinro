@@ -40,11 +40,11 @@ fn timer_loading(props: &TimerLoadingProps) -> Html {
     });
     html! {
         <div class=" flex flex-col h-80 items-center justify-center">
-            <div class="text-2xl text-black">{"役職を割り振り中..."}</div>
+            <div class="text-2xl text-word">{"役職を割り振り中..."}</div>
             <div class="flex justify-center gap-8 mt-6">
                 {
                     for repeat(html! {
-                        <div class="w-3 h-3 bg-feature-light rounded-full animate-bounce"></div>
+                        <div class="w-3 h-3 bg-action-hover rounded-full animate-bounce"></div>
                     }).take(5)
                 }
             </div>

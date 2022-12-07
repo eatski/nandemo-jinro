@@ -13,7 +13,7 @@ pub struct ButtonProps {
 }
 
 const BUTTON_FEATURE_COLOR: &str =
-    "transition-colors bg-feature hover:bg-feature-light disabled:bg-quiet text-white";
+    "transition-colors bg-action hover:bg-action-hover disabled:bg-action-disable text-action-label";
 
 #[function_component[Button]]
 pub fn button(props: &ButtonProps) -> Html {
@@ -43,13 +43,13 @@ pub fn button_rounded(props: &ButtonProps) -> Html {
 
 pub fn loading() -> Html {
     html! {
-        <div role="img" aria-label="ローディング" class="animate-spin h-10 w-10 border-4 border-quiet-500 rounded-full border-t-transparent"></div>
+        <div role="img" aria-label="ローディング" class="animate-spin h-10 w-10 border-4 border-action-disable-500 rounded-full border-t-transparent"></div>
     }
 }
 
 pub fn button_link(label: &str, href: &str) -> Html {
     html! {
-        <a class="rounded-md border-line border-solid border text-black bg-white hover:text-black-light py-2 px-3" href={href.to_owned()}>
+        <a class="rounded-md border-separator border-solid border text-word bg-screen hover:text-word-2nd py-2 px-3" href={href.to_owned()}>
             {label}
         </a>
     }
@@ -58,14 +58,14 @@ pub fn button_link(label: &str, href: &str) -> Html {
 #[function_component(Heading2)]
 pub fn heading2(props: &ChildrenOnlyProps) -> Html {
     html! {
-        <h2 class="w-full text-center text-xl text-black mb-1">{props.children.clone()}</h2>
+        <h2 class="w-full text-center text-xl text-word mb-1">{props.children.clone()}</h2>
     }
 }
 
 #[function_component(HeadingDescription)]
 pub fn heading_descriotion(props: &ChildrenOnlyProps) -> Html {
     html! {
-        <p class="text-center text-sm text-black-light">{props.children.clone()}</p>
+        <p class="text-center text-sm text-word-2nd">{props.children.clone()}</p>
     }
 }
 
@@ -118,7 +118,7 @@ pub fn input_text(props: &InputTextProps) -> Html {
             onclick={on_input_click}
             maxlength={props.maxlength.to_string()}
             aria-label={props.aria_label}
-            class="w-52 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="text" placeholder={props.placeholder}
+            class="w-52 border-separator border-solid border focus:border-action rounded-md py-2 px-2 text-word outline-none" type="text" placeholder={props.placeholder}
         />
     }
 }
@@ -143,7 +143,7 @@ pub fn input_small_number(props: &InputNumberProps) -> Html {
     };
 
     html! {
-        <input {oninput} min="1" value={props.value.to_string()} class="w-14 border-line border-solid border focus:border-feature rounded-md py-2 px-2 text-black outline-none" type="number" />
+        <input {oninput} min="1" value={props.value.to_string()} class="w-14 border-separator border-solid border focus:border-action rounded-md py-2 px-2 text-word outline-none" type="number" />
     }
 }
 

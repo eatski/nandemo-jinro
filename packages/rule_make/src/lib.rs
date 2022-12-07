@@ -102,7 +102,7 @@ pub fn rule_make(props: &Props) -> Html {
                                                     state.set(captured_state)
                                                 })
                                             }
-                                            class="text-black hover:text-black-light"
+                                            class="text-word hover:text-word-2nd"
                                             aria-label="役職を追加"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -126,7 +126,7 @@ pub fn rule_make(props: &Props) -> Html {
                                                             }) 
                                                         }
                                                         disabled={disabled}
-                                                        class="text-black hover:text-black-light disabled:text-black-quiet"
+                                                        class="text-word hover:text-word-2nd disabled:text-word-disable"
                                                         aria-label="役職を削除"
                                                     >
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
