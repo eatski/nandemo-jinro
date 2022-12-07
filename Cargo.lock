@@ -23,6 +23,7 @@ dependencies = [
  "rule_make",
  "use_historical",
  "user_id_storage",
+ "web-sys",
  "yew",
  "yew-router",
 ]

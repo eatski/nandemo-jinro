@@ -1,6 +1,8 @@
 use atoms::{button_link, ButtonSub};
 use yew::{function_component, html, Children, Properties, Html, Callback, use_state};
 
+use crate::components::use_stored_input::use_stored_input;
+
 #[derive(Properties, PartialEq)]
 pub struct ChildrenOnlyProps {
     pub children: Children, // the field name `children` is important!
@@ -8,8 +10,8 @@ pub struct ChildrenOnlyProps {
 
 #[function_component(Layout)]
 pub fn layout(props: &ChildrenOnlyProps) -> Html {
-    let dark_mode_state = use_state(|| false);
-    let dark_mode = *dark_mode_state;
+    let theme_state = use_stored_input("theme", "light");
+    let dark_mode = *theme_state == "dark";
     html! {
         <div class="bg-screen min-h-screen h-max" data-theme={if dark_mode {"dark"} else { "light"}}>
             <header class="w-full border-separator border-solid border-b px-4 py-3 ">
@@ -18,7 +20,7 @@ pub fn layout(props: &ChildrenOnlyProps) -> Html {
                         {"なんでも人狼"}
                     </a>
                     <div class="ml-auto">
-                        <ButtonSub onclick={Callback::from(move |_| dark_mode_state.set(!*dark_mode_state))}>
+                        <ButtonSub onclick={Callback::from(move |_| theme_state.set(if dark_mode {"light".to_owned()} else {"dark".to_owned()}))}>
                             {if dark_mode {"ライトモード"} else { "ダークモード"}}
                         </ButtonSub>
                         {button_link("報告","https://github.com/eatski/roleroll/issues/new")}

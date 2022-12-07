@@ -19,3 +19,4 @@ use_historical = {path = "../use_historical"}
 user_id_storage = {path = "../user_id_storage"}
 firestore_hooks = {path = "../firestore_hooks"}
 firestore = {path = "../firestore"}
+web-sys = "0.3" 
