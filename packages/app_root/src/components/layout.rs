@@ -13,7 +13,7 @@ pub fn layout(props: &ChildrenOnlyProps) -> Html {
     let theme_state = use_stored_input("theme", "light");
     let dark_mode = *theme_state == "dark";
     html! {
-        <div class="bg-screen min-h-screen h-max" data-theme={if dark_mode {"dark"} else { "light"}}>
+        <div class="transition-colors bg-screen min-h-screen h-max" data-theme={if dark_mode {"dark"} else { "light"}}>
             <header class="w-full border-separator border-solid border-b px-4 py-3 ">
                 <div class="flex items-center">
                     <a class="font-mono text-word text-lg" href="/">

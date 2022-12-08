@@ -17,7 +17,7 @@ pub struct ChildrenOnlyProps {
 #[function_component(Card)]
 fn card(props: &ChildrenOnlyProps) -> Html {
     html! {
-        <div class="h-full rounded-md p-3 bg-layer">
+        <div class="h-full rounded-md p-3 transition-colors bg-layer">
             {props.children.clone()}
         </div>
     }

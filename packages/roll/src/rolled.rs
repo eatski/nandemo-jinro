@@ -44,7 +44,7 @@ fn timer_loading(props: &TimerLoadingProps) -> Html {
             <div class="flex justify-center gap-8 mt-6">
                 {
                     for repeat(html! {
-                        <div class="w-3 h-3 bg-action-hover rounded-full animate-bounce"></div>
+                        <div class="transition-colors w-3 h-3 bg-action rounded-full animate-bounce"></div>
                     }).take(5)
                 }
             </div>

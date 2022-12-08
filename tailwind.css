@@ -19,10 +19,10 @@
 }
 
 [data-theme="dark"] {
-    --nj-screen: #111827;
-    --nj-screen-2nd: #374151;
-    --nj-action: #0ea5e9;
-    --nj-action-hover: #38bdf8;
+    --nj-screen: #0b101a;
+    --nj-screen-2nd: #252d39;
+    --nj-action: #048dcd;
+    --nj-action-hover: #019ae1;
     --nj-action-disable: #69717D;
     --nj-action-label: #ffffff;
     --nj-action-label-disable: #BCC0C5;
@@ -30,8 +30,8 @@
     --nj-word: #ffffff;
     --nj-word-2nd: #e7e7e7;
     --nj-word-disable: #9da6b1;
-    --nj-layer: #374151;
-    --nj-layer-2nd: #374151;
+    --nj-layer: #000000;
+    --nj-layer-2nd: #000000;
 }
     
     

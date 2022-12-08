@@ -52,7 +52,7 @@ pub fn loading() -> Html {
     }
 }
 
-const BUTTON_SUB_COLOR: &str = "rounded-md border-separator text-word bg-screen hover:text-word-2nd py-2 px-3";
+const BUTTON_SUB_COLOR: &str = "transition-colors rounded-md border-separator text-word bg-screen hover:text-word-2nd py-2 px-3";
 
 pub fn button_link(label: &str, href: &str) -> Html {
     html! {
@@ -134,7 +134,7 @@ pub fn input_text(props: &InputTextProps) -> Html {
             onclick={on_input_click}
             maxlength={props.maxlength.to_string()}
             aria-label={props.aria_label}
-            class="w-52 border-separator border-solid border focus:border-action rounded-md py-2 px-2 bg-screen-2nd text-word outline-none" type="text" placeholder={props.placeholder}
+            class="w-52 border-separator border-solid border focus:border-action rounded-md py-2 px-2 transition-colors bg-screen-2nd text-word outline-none" type="text" placeholder={props.placeholder}
         />
     }
 }

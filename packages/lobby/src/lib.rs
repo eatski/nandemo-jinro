@@ -60,12 +60,12 @@ pub fn lobby(props: &Props) -> Html {
                                     let is_you = member.id == *user_id;
                                     html! {
                                         <li class="flex justify-center">
-                                            <div class="relative bg-layer-2nd w-60 border-separator border-solid border rounded-full py-1 text-center text-md text-word-2nd">
+                                            <div class="relative transition-colors bg-layer-2nd w-60 border-separator border-solid border rounded-full py-1 text-center text-md text-word-2nd">
                                                 {member.name.as_str()}
                                                 <span class="absolute top-1/2 right-5">
                                                     {is_you.then(|| html! {
                                                         <span role="img" aria-label={"あなた"} class="relative h-2 w-2">
-                                                            <span class="animate-pulse absolute -translate-y-1/2 top-0 left-0 rounded-full bg-action-hover h-2 w-2" />
+                                                            <span class="animate-pulse absolute -translate-y-1/2 top-0 left-0 rounded-full transition-colors bg-action h-2 w-2" />
                                                         </span>
                                                     }).unwrap_or_default()}
                                                 </span>
