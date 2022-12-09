@@ -12,6 +12,7 @@ mod input_storage;
 #[derive(Properties, PartialEq)]
 pub struct Props {
     pub room_id: String,
+    pub on_complete: Option<Callback<()>>,
 }
 
 
@@ -157,9 +158,19 @@ pub fn rule_make(props: &Props) -> Html {
                                             })
                                             .collect(),
                                     };
+                                    let onclick = {
+                                        let on_complete = props.on_complete.clone();
+                                        let push = push.clone();
+                                        Callback::from(move |_| {
+                                            push.emit(RoomEditBody::SetRule(rule.clone()));
+                                            if let Some(on_complete) = &on_complete {
+                                                on_complete.emit(());
+                                            };
+                                        })
+                                    };
                                     html! {
                                         <BottomOperaton>
-                                            <ButtonLarge disabled={empty || duplicated_name || not_enough_roles} onclick={push.reform(move |_|RoomEditBody::SetRule(rule.clone()) )}>
+                                            <ButtonLarge disabled={empty || duplicated_name || not_enough_roles} onclick={onclick}>
                                                 {"ルールを確定"}
                                             </ButtonLarge>
                                         </BottomOperaton>
