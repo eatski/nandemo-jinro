@@ -1,5 +1,7 @@
 use atoms::{loading, unexpected_error};
 use model::{MemberJSON, Roll};
+use serde::{Serialize, Deserialize};
+use use_history_state::use_history_state;
 use yew::{function_component, html, use_state_eq, Callback, Properties, Html};
 
 use landing::entrance::GuestEntrance;
@@ -45,33 +47,47 @@ struct HasUserIdProps {
     user_id: String,
 }
 
+#[derive(Debug, Clone, PartialEq,Serialize, Deserialize)]
+enum RoomHistoryState {
+    Lobby,
+    RuleMake,
+    Confirm
+}
+
 #[function_component(HasUserId)]
 fn view_when_has_userid(props: &HasUserIdProps) -> Html {
     let member = use_document::<MemberJSON>(&props.room_id, props.user_id.as_str());
+    // 必要かどうか検討
     let room = use_historical_read::<model::RoomEditAction>(props.room_id.clone());
     let roles = use_collection_sync::<Roll>(&props.room_id);
     let merged = room.merge(member).merge(roles);
+    let (history_state,push) = use_history_state::<RoomHistoryState>();
     match merged {
         DataFetchState::Loading => loading(),
-        DataFetchState::Loaded(((room, member), rolls)) => {
+        DataFetchState::Loaded(((_, member), rolls)) => {
             let rolled = rolls.len() > 0;
             if member.is_host {
-                if room.latest.can_join {
+                if rolled {
                     html! {
-                        <Lobby room_id={props.room_id.clone()} user_id={props.user_id.clone()}/>
-                    }
-                } else if room.latest.rule.is_none() {
-                    html! {
-                        <RuleMake room_id={props.room_id.clone()} />
+                        <Rolled room_id={props.room_id.clone()} user_id={props.user_id.clone()}/>
                     }
                 } else {
-                    if rolled {
-                        html! {
-                            <Rolled room_id={props.room_id.clone()} user_id={props.user_id.clone()}/>
-                        }
-                    } else {
-                        html! {
-                            <RollContainer room_id={props.room_id.clone()} />
+                    let history_state = history_state.unwrap_or(RoomHistoryState::Lobby);
+                    match history_state {
+                        RoomHistoryState::Lobby => {
+                            html! {
+                                <Lobby room_id={props.room_id.clone()} user_id={props.user_id.clone()} on_complete={push.reform(|_| RoomHistoryState::RuleMake)}/>
+                            }
+                        },
+                        RoomHistoryState::RuleMake => {
+                            html! {
+                                <RuleMake room_id={props.room_id.clone()} on_complete={push.reform(|_| RoomHistoryState::Confirm)} />
+                            }
+                        },
+                        RoomHistoryState::Confirm => {
+                            html! {
+                                <RollContainer room_id={props.room_id.clone()}  />
+                            }
                         }
                     }
                 }

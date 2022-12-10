@@ -17,7 +17,10 @@ pub fn next_signature<T: HistricalItem>(items: &Vec<T>,current: Option<usize>) -
             branch: next_max_branch.map(|b| b + 1).unwrap_or(current_max_branch),
         }
     } else {
-        HistoricalSignature::default()
+        HistoricalSignature {
+            index: items.len(),
+            branch: 0,
+        }
     }
 }
 
