@@ -1,6 +1,7 @@
 use atoms::{loading, unexpected_error};
 use model::{MemberJSON, Roll};
 use serde::{Serialize, Deserialize};
+use use_can_roll::{use_can_roll_validation,ValidationError};
 use use_history_state::use_history_state;
 use yew::{function_component, html, use_state_eq, Callback, Properties, Html};
 
@@ -13,8 +14,6 @@ use user_id_storage::get_user_id;
 
 use roll::roll::RollContainer;
 use roll::rolled::Rolled;
-
-use use_historical::{use_historical_read};
 
 use crate::components::room_host_navi::{RoomHostNavi, LinkStatus};
 
@@ -59,14 +58,13 @@ enum RoomHistoryState {
 #[function_component(HasUserId)]
 fn view_when_has_userid(props: &HasUserIdProps) -> Html {
     let member = use_document::<MemberJSON>(&props.room_id, props.user_id.as_str());
-    // 必要かどうか検討
-    let room = use_historical_read::<model::RoomEditAction>(props.room_id.clone());
+    let validation = use_can_roll_validation(&props.room_id);
     let roles = use_collection_sync::<Roll>(&props.room_id);
-    let merged = room.merge(member).merge(roles);
+    let merged = validation.merge(member).merge(roles);
     let (history_state,push) = use_history_state::<RoomHistoryState>();
     match merged {
         DataFetchState::Loading => loading(),
-        DataFetchState::Loaded(((room, member), rolls)) => {
+        DataFetchState::Loaded(((validation, member), rolls)) => {
             let rolled = rolls.len() > 0;
             if member.is_host {
                 if rolled {
@@ -82,8 +80,12 @@ fn view_when_has_userid(props: &HasUserIdProps) -> Html {
                             }
                         },
                         RoomHistoryState::RuleMake => {
+                            let room_open = validation.iter().any(|error| matches!(error,ValidationError::RoomOpen));
                             html! {
-                                <RuleMake room_id={props.room_id.clone()} on_complete={push.reform(|_| RoomHistoryState::Confirm)} />
+                                <RuleMake 
+                                    room_id={props.room_id.clone()} 
+                                    on_complete={push.reform(move |_| if room_open { RoomHistoryState::Lobby} else { RoomHistoryState::Confirm })} 
+                                />
                             }
                         },
                         RoomHistoryState::Confirm => {
@@ -102,7 +104,7 @@ fn view_when_has_userid(props: &HasUserIdProps) -> Html {
                                     onclick: push.reform(|_| RoomHistoryState::RuleMake)
                                 }}}
                                 confirm={if history_state == RoomHistoryState::Confirm { LinkStatus::Current} else {
-                                    if room.latest.rule.is_none() || room.latest.can_join {
+                                    if !validation.is_empty() {
                                         LinkStatus::Disabled
                                     } else {
                                         LinkStatus::Clickable {

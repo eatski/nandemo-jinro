@@ -22,7 +22,7 @@ dependencies = [
  "router",
  "rule_make",
  "serde",
- "use_historical",
+ "use_can_roll",
  "use_history_state",
  "user_id_storage",
  "web-sys",
