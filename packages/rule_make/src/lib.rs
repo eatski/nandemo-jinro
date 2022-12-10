@@ -44,7 +44,7 @@ pub fn rule_make(props: &Props) -> Html {
                 {
                     match members.merge(room) {
                         firestore_hooks::DataFetchState::Loading => Default::default(),
-                        firestore_hooks::DataFetchState::Loaded((members,YewHistorical {push, ..})) => html! {
+                        firestore_hooks::DataFetchState::Loaded((members,YewHistorical {push_with_callback, ..})) => html! {
                             <>
                                 <BodyItems>
                                     <Heading2>{"ルールを決めましょう"}</Heading2>
@@ -160,12 +160,14 @@ pub fn rule_make(props: &Props) -> Html {
                                     };
                                     let onclick = {
                                         let on_complete = props.on_complete.clone();
-                                        let push = push.clone();
+                                        let push_with_callback = push_with_callback.clone();
                                         Callback::from(move |_| {
-                                            push.emit(RoomEditBody::SetRule(rule.clone()));
-                                            if let Some(on_complete) = &on_complete {
-                                                on_complete.emit(());
-                                            };
+                                            let on_complete = on_complete.clone();
+                                            push_with_callback.emit((RoomEditBody::SetRule(rule.clone()), Box::new(move || {
+                                                if let Some(on_complete) = &on_complete {
+                                                    on_complete.emit(());
+                                                };
+                                            })));
                                         })
                                     };
                                     html! {

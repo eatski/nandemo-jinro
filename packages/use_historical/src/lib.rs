@@ -14,10 +14,12 @@ pub fn use_historical<T: historical::HistricalItem + firestore::FireStoreResourc
             let next_signature = next_signature(&items, None);
             DataFetchState::Loaded(YewHistorical {
                 latest: calculate_latest(items),
-                push: Callback::from(move |body| {
+                push_with_callback:  Callback::from(move |(body,callback): (B,Box<dyn FnOnce()>)| {
                     let next_signature = next_signature.clone();
-                    firestore::add_document(&param, &merge(next_signature,body), |_| {}, || {} );
-                }), 
+                    firestore::add_document(&param, &merge(next_signature,body), |_| {
+                        callback();
+                    }, || {} );
+                })
             })
         }
         firestore_hooks::DataFetchState::Error => {
@@ -43,8 +45,9 @@ pub struct YewHistoricalRead<T> {
 
 pub struct YewHistorical<T : historical::HistricalItem, B> {
     pub latest: T::Collected,
-    pub push: Callback<B>,
+    pub push_with_callback: Callback<(B,Box<dyn FnOnce()>)>,
 }
+
 
 #[derive(PartialEq,Clone,Properties)]
 pub struct ChildrenProps {

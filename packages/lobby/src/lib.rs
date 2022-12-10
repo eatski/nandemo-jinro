@@ -3,7 +3,7 @@ use firestore_hooks::{use_collection_sync, use_document, DataFetchState};
 use layouting::{BodyItems, BottomOperaton};
 use model::{MemberJSON, RoomEditAction, RoomEditBody};
 use web_sys::window;
-use yew::{function_component, html, Properties, Callback, Html};
+use yew::{function_component, html, Properties, Callback, Html, use_state};
 use use_historical::{use_historical, YewHistorical};
 
 mod clipboard;
@@ -105,26 +105,44 @@ struct MemberCloseProps {
 fn member_close(props: &MemberCloseProps) -> Html {
     let room = use_historical::<RoomEditAction,RoomEditBody>(props.room_id.clone(), |signature,body| RoomEditAction {signature, body});
     let members = use_collection_sync::<MemberJSON>(&props.room_id);
-   
-    match room.merge(members) {
-        DataFetchState::Loading => loading(),
-        DataFetchState::Loaded((YewHistorical {push,..},members)) => {
-            let on_complete = props.on_complete.clone();
-            let onclick = Callback::from(move |_| {
-                push.emit(RoomEditBody::SetCanJoin(false));
-                if let Some(on_complete) = &on_complete {
-                    on_complete.emit(());
-                }
-            });
-            html! {
-                <ButtonLarge
-                    onclick={onclick}
-                    disabled={members.len() <= 1}
-                >
-                    {"締め切る"}
-                </ButtonLarge>
-            }
-        },
-        DataFetchState::Error => unexpected_error()
+    let updateing = use_state(|| false);
+    if !*updateing {
+        match room.merge(members) {
+            DataFetchState::Loading => loading(),
+            DataFetchState::Loaded((YewHistorical {push_with_callback,latest},members)) => {
+                if latest.can_join {
+                    let on_complete = props.on_complete.clone();
+                    let onclick = push_with_callback.reform(move |_| {
+                        let on_complete = on_complete.clone();
+                        updateing.set(true);
+                        let updateing = updateing.clone();
+                        (RoomEditBody::SetCanJoin(false),Box::new(move || {
+                            on_complete.map(|callback| callback.emit(()));
+                            updateing.set(false);
+                        }))
+                    });
+                    html! {
+                        <ButtonLarge
+                            onclick={onclick}
+                            disabled={members.len() <= 1}
+                        >
+                            {"締め切る"}
+                        </ButtonLarge>
+                    }
+                } else {
+                    html! {
+                        <ButtonLarge
+                            onclick={push_with_callback.reform(|_| (RoomEditBody::SetCanJoin(true),Box::new(|| {})))}
+                        >
+                            {"募集を再開"}
+                        </ButtonLarge>
+                    }
+                }   
+            },
+            DataFetchState::Error => unexpected_error()
+        }
+    } else {
+        loading()
     }
+    
 }
