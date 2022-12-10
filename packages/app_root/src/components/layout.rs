@@ -28,7 +28,7 @@ pub fn layout(props: &ChildrenOnlyProps) -> Html {
 
                 </div>
             </header>
-            <main class="px-7 py-12">
+            <main class="px-7 py-10">
                 {props.children.clone()}
             </main>
         </div>

@@ -16,6 +16,8 @@ use roll::rolled::Rolled;
 
 use use_historical::{use_historical_read};
 
+use crate::components::room_host_navi::{RoomHostNavi, LinkStatus};
+
 #[derive(Properties, PartialEq)]
 pub struct RoomProps {
     pub room_id: String,
@@ -47,7 +49,7 @@ struct HasUserIdProps {
     user_id: String,
 }
 
-#[derive(Debug, Clone, PartialEq,Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq,Serialize, Deserialize,Eq)]
 enum RoomHistoryState {
     Lobby,
     RuleMake,
@@ -64,7 +66,7 @@ fn view_when_has_userid(props: &HasUserIdProps) -> Html {
     let (history_state,push) = use_history_state::<RoomHistoryState>();
     match merged {
         DataFetchState::Loading => loading(),
-        DataFetchState::Loaded(((_, member), rolls)) => {
+        DataFetchState::Loaded(((room, member), rolls)) => {
             let rolled = rolls.len() > 0;
             if member.is_host {
                 if rolled {
@@ -73,7 +75,7 @@ fn view_when_has_userid(props: &HasUserIdProps) -> Html {
                     }
                 } else {
                     let history_state = history_state.unwrap_or(RoomHistoryState::Lobby);
-                    match history_state {
+                    let content = match history_state {
                         RoomHistoryState::Lobby => {
                             html! {
                                 <Lobby room_id={props.room_id.clone()} user_id={props.user_id.clone()} on_complete={push.reform(|_| RoomHistoryState::RuleMake)}/>
@@ -89,6 +91,28 @@ fn view_when_has_userid(props: &HasUserIdProps) -> Html {
                                 <RollContainer room_id={props.room_id.clone()}  />
                             }
                         }
+                    };
+                    html! {
+                        <>
+                            <RoomHostNavi 
+                                lobby={if history_state == RoomHistoryState::Lobby { LinkStatus::Current} else {LinkStatus::Clickable {
+                                    onclick: push.reform(|_| RoomHistoryState::Lobby)
+                                }}} 
+                                make_rule={if history_state == RoomHistoryState::RuleMake { LinkStatus::Current} else {LinkStatus::Clickable {
+                                    onclick: push.reform(|_| RoomHistoryState::RuleMake)
+                                }}}
+                                confirm={if history_state == RoomHistoryState::Confirm { LinkStatus::Current} else {
+                                    if room.latest.rule.is_none() || room.latest.can_join {
+                                        LinkStatus::Disabled
+                                    } else {
+                                        LinkStatus::Clickable {
+                                            onclick: push.reform(|_| RoomHistoryState::Confirm)
+                                        }
+                                    }
+                                }}
+                            />
+                            {content}
+                        </>
                     }
                 }
             } else {
