@@ -23,7 +23,7 @@ pub fn layout(props: &ChildrenOnlyProps) -> Html {
                         <ButtonSub onclick={Callback::from(move |_| theme_state.set(if dark_mode {"light".to_owned()} else {"dark".to_owned()}))}>
                             {if dark_mode {"ライトモード"} else { "ダークモード"}}
                         </ButtonSub>
-                        {button_link("報告","https://github.com/eatski/roleroll/issues/new")}
+                        {button_link("報告","https://github.com/eatski/nandemo-jinro/issues")}
                     </div>
 
                 </div>
