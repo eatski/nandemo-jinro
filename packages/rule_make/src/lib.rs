@@ -105,6 +105,7 @@ pub fn rule_make(props: &Props) -> Html {
                                             }
                                             class="text-word hover:text-word-2nd"
                                             aria-label="役職を追加"
+                                            title="役職を追加"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -129,6 +130,7 @@ pub fn rule_make(props: &Props) -> Html {
                                                         disabled={disabled}
                                                         class="text-word hover:text-word-2nd disabled:text-word-disable"
                                                         aria-label="役職を削除"
+                                                        title="役職を削除"
                                                     >
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M5.5 12.5h13" />

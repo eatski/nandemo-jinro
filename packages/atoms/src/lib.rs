@@ -8,7 +8,7 @@ use yew::{
 pub struct ButtonProps {
     pub onclick: Callback<MouseEvent>,
     pub children: Children,
-    pub aria_label: Option<&'static str>,
+    pub label: Option<&'static str>,
     pub disabled: Option<bool>,
 }
 
@@ -18,7 +18,7 @@ const BUTTON_FEATURE_COLOR: &str =
 #[function_component[Button]]
 pub fn button(props: &ButtonProps) -> Html {
     html! {
-        <button aria-label={props.aria_label} onclick={props.onclick.clone()} disabled={props.disabled.unwrap_or_else(|| false)} class={format!("{} py-2 px-4 rounded-md",BUTTON_FEATURE_COLOR)}>
+        <button aria-label={props.label} title={props.label} onclick={props.onclick.clone()} disabled={props.disabled.unwrap_or_else(|| false)} class={format!("{} py-2 px-4 rounded-md",BUTTON_FEATURE_COLOR)}>
             {props.children.clone()}
         </button>
     }
@@ -29,7 +29,7 @@ pub fn button(props: &ButtonProps) -> Html {
 #[function_component[ButtonLarge]]
 pub fn button_large(props: &ButtonProps) -> Html {
     html! {
-        <button aria-label={props.aria_label} onclick={props.onclick.clone()} disabled={props.disabled.unwrap_or_else(|| false)} class={format!("{} py-4 px-9 text-lg rounded-full",BUTTON_FEATURE_COLOR)}>
+        <button aria-label={props.label} title={props.label} onclick={props.onclick.clone()} disabled={props.disabled.unwrap_or_else(|| false)} class={format!("{} py-4 px-9 text-lg rounded-full",BUTTON_FEATURE_COLOR)}>
             {props.children.clone()}
         </button>
     }
@@ -38,7 +38,7 @@ pub fn button_large(props: &ButtonProps) -> Html {
 #[function_component(ButtonRounded)]
 pub fn button_rounded(props: &ButtonProps) -> Html {
     html! {
-        <button aria-label={props.aria_label} class={format!("{} py-3 px-3 text-lg rounded-full h-16 h-16",BUTTON_FEATURE_COLOR)}  disabled={props.disabled.unwrap_or_else(|| false)} onclick={props.onclick.clone()}>
+        <button aria-label={props.label} title={props.label} class={format!("{} py-3 px-3 text-lg rounded-full h-16 h-16",BUTTON_FEATURE_COLOR)}  disabled={props.disabled.unwrap_or_else(|| false)} onclick={props.onclick.clone()}>
             {props.children.clone()}
         </button>
     }
@@ -65,7 +65,7 @@ pub fn button_link(label: &str, href: &str) -> Html {
 #[function_component]
 pub fn ButtonSub(props: &ButtonProps) -> Html {
     html! {
-        <button aria-label={props.aria_label} onclick={props.onclick.clone()} disabled={props.disabled.unwrap_or_else(|| false)} class={format!("{} py-2 px-4",BUTTON_SUB_COLOR)}>
+        <button aria-label={props.label} title={props.label} onclick={props.onclick.clone()} disabled={props.disabled.unwrap_or_else(|| false)} class={format!("{} py-2 px-4",BUTTON_SUB_COLOR)}>
             {props.children.clone()}
         </button>
     }
@@ -104,7 +104,7 @@ pub struct InputTextProps {
     pub oninput: Callback<String>,
     pub value: String,
     pub maxlength: usize,
-    pub aria_label: Option<&'static str>,
+    pub label: Option<&'static str>,
 }
 
 #[function_component(InputText)]
@@ -133,7 +133,7 @@ pub fn input_text(props: &InputTextProps) -> Html {
             value={props.value.clone()}
             onclick={on_input_click}
             maxlength={props.maxlength.to_string()}
-            aria-label={props.aria_label}
+            aria-label={props.label}
             class="w-52 border-separator border-solid border focus:border-action rounded-md py-2 px-2 transition-colors bg-screen-2nd text-word outline-none" type="text" placeholder={props.placeholder}
         />
     }
