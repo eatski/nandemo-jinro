@@ -6,6 +6,7 @@ use layouting::{BodyItems, BottomOperaton};
 use model::{MemberJSON, RoomEditAction};
 use yew::{function_component, html, Html, Properties};
 use use_historical::use_historical_read;
+use use_can_roll::{use_can_roll_validation,ValidationError};
 
 use crate::common::RollButton;
 use crate::use_roll::use_roll;
@@ -28,10 +29,11 @@ pub fn roll(props: &Props) -> Html {
     let room = use_historical_read::<RoomEditAction>(props.room_id.clone());
     let members = use_collection::<MemberJSON>(&props.room_id);
     let roll = use_roll(props.room_id.as_str());
-    let state = members.merge(room);
+    let validate = use_can_roll_validation(&props.room_id);
+    let state = members.merge(room).merge(validate);
     match state {
         DataFetchState::Loading => loading(),
-        DataFetchState::Loaded((members, room)) => {
+        DataFetchState::Loaded(((members,room), validation)) => {
             let rule = room.latest.rule.unwrap();
             html! {
                 <section>
@@ -72,26 +74,41 @@ pub fn roll(props: &Props) -> Html {
                                 }
                             </ul>
                         </div>
+                       
                     </BodyItems>
+                    
                     {
-                        match roll {
-                            Some(roll) => {
-                                html! {
-                                    <BottomOperaton>
-                                        <RollButton onclick={roll}>
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-full h-full">
-                                                    <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clip-rule="evenodd" />
-                                                </svg>
-                                        </RollButton>
-                                    </BottomOperaton>
+                        if !validation.is_empty() {
+                            let error_to_message = |error: &ValidationError| {
+                                match error {
+                                    ValidationError::NotEnoughMembers => "2人以上の参加者が必要です",
+                                    ValidationError::NotEnoughRoles => "参加者に対して割り振られる役職が足りません",
+                                    ValidationError::NoRules => "ルールがまだ未決定です",
+                                    ValidationError::RoomOpen => "部屋が締め切られていません",
                                 }
-                            },
-                            None => loading(),
+                            };
+                            html! {
+                                <div class="w-full">
+                                    {for validation.iter().map(|error| html!{<p class="m-auto w-fit text-error font-bold">{error_to_message(error)}</p>})}
+                                </div>
+                            }
+                        } else {
+                            match roll {
+                                Some(roll) => {
+                                    html! {
+                                        <BottomOperaton>
+                                            <RollButton onclick={roll}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-full h-full">
+                                                        <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clip-rule="evenodd" />
+                                                    </svg>
+                                            </RollButton>
+                                        </BottomOperaton>
+                                    }
+                                },
+                                None => loading(),
+                            }
                         }
                     }
-                    // <div class="flex justify-center mt-4">
-                    //     <button class="text-word hover:text-word-2nd text-md">{"戻る"}</button>
-                    // </div>
                 </section>
             }
         },

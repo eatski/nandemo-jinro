@@ -17,6 +17,7 @@ module.exports = {
         "word-disable": "var(--nj-word-disable)",
         layer: "var(--nj-layer)",
         "layer-2nd": "var(--nj-layer-2nd)",
+        error: "var(--nj-error)",
       }
     },
 

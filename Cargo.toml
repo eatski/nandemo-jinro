@@ -22,6 +22,7 @@ members = [
     "packages/use_historical",
     "packages/app_root",
     "packages/use_history_state",
+    "packages/use_can_roll",
 ]
 
 [profile.release]

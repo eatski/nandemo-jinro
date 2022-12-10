@@ -16,6 +16,7 @@
     --nj-word-disable: #cbd5e1; 
     --nj-layer: #eff3f8;
     --nj-layer-2nd: #fafaf9;
+    --nj-error: #f56565;
 }
 
 [data-theme="dark"] {
@@ -32,6 +33,7 @@
     --nj-word-disable: #9da6b1;
     --nj-layer: #000000;
     --nj-layer-2nd: #000000;
+    --nj-error: #ffffff;
 }
     
     

@@ -146,7 +146,6 @@ pub fn rule_make(props: &Props) -> Html {
                                         let mut names = HashSet::new();
                                         (*state).iter().any(|item| !names.insert(item.name.clone()))
                                     };
-                                    let not_enough_roles = (*state).iter().map(|e| e.count).sum::<usize>() < members.len();
                                     let rule = Rule {
                                         roles: state
                                             .iter()
@@ -172,7 +171,7 @@ pub fn rule_make(props: &Props) -> Html {
                                     };
                                     html! {
                                         <BottomOperaton>
-                                            <ButtonLarge disabled={empty || duplicated_name || not_enough_roles} onclick={onclick}>
+                                            <ButtonLarge disabled={empty || duplicated_name} onclick={onclick}>
                                                 {"ルールを確定"}
                                             </ButtonLarge>
                                         </BottomOperaton>

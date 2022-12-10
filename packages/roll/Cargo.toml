@@ -18,3 +18,4 @@ js-sys = "0.3"
 web-sys = "0.3"
 wasm-bindgen = "0.2"
 use_historical = { path = "../use_historical" }
+use_can_roll = { path = "../use_can_roll" }
