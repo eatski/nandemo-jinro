@@ -3,37 +3,37 @@
 @tailwind utilities;
 
 :root {
-    --nj-screen: #ffffff;
-    --nj-screen-2nd: #ffffff;
-    --nj-action: #0ea5e9;
-    --nj-action-hover: #38bdf8;
-    --nj-action-disable: #bae6fd;
-    --nj-action-label: #ffffff;
-    --nj-action-label-disable: #ffffff;
-    --nj-separator: #cbd5e1;
-    --nj-word: #111827;
-    --nj-word-2nd: #374151;
-    --nj-word-disable: #cbd5e1; 
-    --nj-layer: #eff3f8;
-    --nj-layer-2nd: #fafaf9;
-    --nj-error: #f56565;
+    --nj-color-screen: #ffffff;
+    --nj-color-screen-2nd: #ffffff;
+    --nj-color-action: #0ea5e9;
+    --nj-color-action-hover: #38bdf8;
+    --nj-color-action-disable: #bae6fd;
+    --nj-color-action-label: #ffffff;
+    --nj-color-action-label-disable: #ffffff;
+    --nj-color-separator: #cbd5e1;
+    --nj-color-word: #111827;
+    --nj-color-word-2nd: #374151;
+    --nj-color-word-disable: #cbd5e1; 
+    --nj-color-layer: #eff3f8;
+    --nj-color-layer-2nd: #fafaf9;
+    --nj-color-error: #f56565;
 }
 
 [data-theme="dark"] {
-    --nj-screen: #0b101a;
-    --nj-screen-2nd: #252d39;
-    --nj-action: #048dcd;
-    --nj-action-hover: #019ae1;
-    --nj-action-disable: #69717D;
-    --nj-action-label: #ffffff;
-    --nj-action-label-disable: #BCC0C5;
-    --nj-separator: #cbd5e1;
-    --nj-word: #ffffff;
-    --nj-word-2nd: #e7e7e7;
-    --nj-word-disable: #9da6b1;
-    --nj-layer: #000000;
-    --nj-layer-2nd: #000000;
-    --nj-error: #ffffff;
+    --nj-color-screen: #0b101a;
+    --nj-color-screen-2nd: #252d39;
+    --nj-color-action: #048dcd;
+    --nj-color-action-hover: #019ae1;
+    --nj-color-action-disable: #69717D;
+    --nj-color-action-label: #ffffff;
+    --nj-color-action-label-disable: #BCC0C5;
+    --nj-color-separator: #cbd5e1;
+    --nj-color-word: #ffffff;
+    --nj-color-word-2nd: #e7e7e7;
+    --nj-color-word-disable: #9da6b1;
+    --nj-color-layer: #000000;
+    --nj-color-layer-2nd: #000000;
+    --nj-color-error: #ffffff;
 }
     
     
