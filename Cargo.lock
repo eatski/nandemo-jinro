@@ -24,8 +24,8 @@ dependencies = [
  "serde",
  "use_can_roll",
  "use_history_state",
+ "use_stored_input",
  "user_id_storage",
- "web-sys",
  "yew",
  "yew-router",
 ]
@@ -728,9 +728,8 @@ dependencies = [
  "layouting",
  "model",
  "serde",
- "serde_json",
  "use_historical",
- "web-sys",
+ "use_stored_input",
  "yew",
 ]
 
@@ -944,6 +943,16 @@ dependencies = [
  "web-sys",
  "yew",
  "yew-router",
+]
+
+[[package]]
+name = "use_stored_input"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "web-sys",
+ "yew",
 ]
 
 [[package]]

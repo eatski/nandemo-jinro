@@ -18,7 +18,8 @@ pub struct Props {
 
 #[function_component(RuleMake)]
 pub fn rule_make(props: &Props) -> Html {
-    let state = use_input(props.room_id.as_str(),vec![
+    let (state,set_state) = use_input(props.room_id.as_str());
+    let state = state.unwrap_or(vec![
         Item {
             name: "市民".to_string(),
             count: 3,
@@ -37,7 +38,7 @@ pub fn rule_make(props: &Props) -> Html {
             }
         )
     };
-    let captured_state = (*state).clone();
+    let captured_state = state.clone();
     let members = use_collection_sync::<MemberJSON>(&props.room_id);
     html! {
         <section class="mx-auto w-full max-w-2xl py-2">
@@ -54,22 +55,18 @@ pub fn rule_make(props: &Props) -> Html {
                                         {for (*state).iter().enumerate().map(|(index,item)| {
                                             let on_number_input = {
                                                 let captured_state = captured_state.clone();
-                                                let state = state.clone();
-                                                Callback::from(move |count| {
+                                                set_state.clone().reform(move |count| {
                                                     let mut captured_state = captured_state.clone();
-                                                    let state = state.clone();
                                                     captured_state[index].count = count;
-                                                    state.set(captured_state)
+                                                    captured_state
                                                 })
                                             };
                                             let on_text_input = {
                                                 let captured_state = captured_state.clone();
-                                                let state = state.clone();
-                                                Callback::from(move |name| {
+                                                set_state.clone().reform(move |name| {
                                                     let mut captured_state = captured_state.clone();
-                                                    let state = state.clone();
                                                     captured_state[index].name = name;
-                                                    state.set(captured_state)
+                                                    captured_state
                                                 })
                                             };
                                             html! {
@@ -92,15 +89,14 @@ pub fn rule_make(props: &Props) -> Html {
                                     <div class="flex justify-center mt-5 gap-5">
                                         <button
                                             onclick={
-                                                let state = state.clone();
                                                 let captured_state = captured_state.clone();
-                                                Callback::from(move |_| {
+                                                set_state.reform(move |_| {
                                                     let mut captured_state = captured_state.clone();
                                                     captured_state.push(Item {
                                                         name: "".to_string(),
                                                         count: 1,
                                                     });
-                                                    state.set(captured_state)
+                                                    captured_state
                                                 })
                                             }
                                             class="text-word hover:text-word-2nd"
@@ -117,13 +113,12 @@ pub fn rule_make(props: &Props) -> Html {
                                                 html! {
                                                     <button
                                                         onclick={
-                                                            let state = state.clone();
                                                             let captured_state = captured_state.clone();
-                                                            (!disabled).then(|| {
-                                                                Callback::from(move |_| {
+                                                            (!disabled).then(move || {
+                                                                set_state.clone().reform(move |_| {
                                                                     let mut captured_state = captured_state.clone();
                                                                     captured_state.pop();
-                                                                    state.set(captured_state)
+                                                                    captured_state
                                                                 })
                                                             }) 
                                                         }

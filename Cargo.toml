@@ -23,6 +23,7 @@ members = [
     "packages/app_root",
     "packages/use_history_state",
     "packages/use_can_roll",
+    "packages/use_stored_input"
 ]
 
 [profile.release]
