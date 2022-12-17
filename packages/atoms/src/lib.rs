@@ -165,6 +165,6 @@ pub fn input_small_number(props: &InputNumberProps) -> Html {
 
 pub fn unexpected_error() -> Html {
     html! {
-        <p>{"予期せぬエラー"}</p>
+        <p>{"予期せぬエラーが発生しました。"}</p>
     }
 }

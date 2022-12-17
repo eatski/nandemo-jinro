@@ -42,13 +42,16 @@ where
 {
     let state = use_state(|| Err(NotFetched::Loading));
     let state_cloned = state.clone();
+    let state_on_error = state.clone();
     let param = param.clone();
     use_effect_with_deps(
         |param| {
             firestore::sync_collection(
                 param,
                 move |collection| state.set(Ok(collection)),
-                || {},
+                move || {
+                    state_on_error.set(Err(NotFetched::Error));
+                },
             )
         },
         param,
@@ -64,6 +67,7 @@ where
 {
     let state = use_state(|| Err(NotFetched::Loading));
     let state_cloned = state.clone();
+    let state_on_error = state.clone();
     let param = param.clone();
     let document_id = document_id.to_string();
     use_effect_with_deps(
@@ -72,7 +76,9 @@ where
                 param,
                 document_id.as_str(),
                 move |document| state.set(Ok(document)),
-                || {},
+                move || {
+                    state_on_error.set(Err(NotFetched::Error));
+                },
             )
         },
         param.clone(),
@@ -88,6 +94,7 @@ where
 {
     let state = use_state(|| Err(NotFetched::Loading));
     let state_cloned = state.clone();
+    let state_on_error = state.clone();
     let param = param.clone();
     let document_id = document_id.to_string();
     use_effect_with_deps(
@@ -96,7 +103,9 @@ where
                 param,
                 document_id.as_str(),
                 move |document| state.set(Ok(document)),
-                || {},
+                move || {
+                    state_on_error.set(Err(NotFetched::Error));
+                },
             );
             || {}
         },
