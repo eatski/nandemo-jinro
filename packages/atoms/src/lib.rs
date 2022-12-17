@@ -52,7 +52,7 @@ pub fn loading() -> Html {
     }
 }
 
-const BUTTON_SUB_COLOR: &str = "transition-colors rounded-md border-separator text-word bg-screen hover:text-word-2nd py-2 px-3";
+const BUTTON_SUB_COLOR: &str = "transition-colors rounded-md border-separator text-word bg-screen hover:text-word-hover py-2 px-3";
 
 pub fn button_link(label: &str, href: &str) -> Html {
     html! {

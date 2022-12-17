@@ -99,7 +99,7 @@ pub fn rule_make(props: &Props) -> Html {
                                                     captured_state
                                                 })
                                             }
-                                            class="text-word hover:text-word-2nd"
+                                            class="text-word hover:text-word-hover"
                                             aria-label="役職を追加"
                                             title="役職を追加"
                                         >
@@ -123,7 +123,7 @@ pub fn rule_make(props: &Props) -> Html {
                                                             }) 
                                                         }
                                                         disabled={disabled}
-                                                        class="text-word hover:text-word-2nd disabled:text-word-disable"
+                                                        class="text-word hover:text-word-hover disabled:text-word-disable"
                                                         aria-label="役職を削除"
                                                         title="役職を削除"
                                                     >

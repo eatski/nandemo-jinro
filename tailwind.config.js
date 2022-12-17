@@ -14,6 +14,7 @@ module.exports = {
         separator: "var(--nj-color-separator)",
         word: "var(--nj-color-word)",
         "word-2nd": "var(--nj-color-word-2nd)",
+        "word-hover": "var(--nj-color-word-hover)",
         "word-disable": "var(--nj-color-word-disable)",
         layer: "var(--nj-color-layer)",
         "layer-2nd": "var(--nj-color-layer-2nd)",
