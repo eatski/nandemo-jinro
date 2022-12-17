@@ -4,7 +4,7 @@ use model::{MemberInput, MemberJSON, RoomEditAction};
 use use_historical::use_historical_read;
 use yew::{function_component, html, Callback, Properties, Html};
 
-use firestore_hooks::{use_collection, DataFetchState};
+use firestore_hooks::{use_collection, NotFetched};
 use user_id_storage::save_user_id;
 
 use crate::common::{title, JoinForm};
@@ -33,15 +33,17 @@ pub fn guest_entrance(props: &GuestEntranceProps) -> Html {
         save_user_id(room_id_cloned.as_str(), user_id.as_str());
         on_join.emit(user_id);
     });
+
     let host = use_collection::<MemberJSON>(&props.room_id)
         .map(|memebers| memebers.into_iter().find(|m| m.is_host).unwrap());
 
     let room_state = use_historical_read::<RoomEditAction>(props.room_id.clone());
-    let state = room_state.merge(host);
+
+    let state = (|| Ok((room_state?, host?)))();
 
     match state {
-        DataFetchState::Loading => loading(),
-        DataFetchState::Loaded((room, host)) => {
+        Result::Err(NotFetched::Loading) => loading(),
+        Result::Ok((room, host)) => {
             if room.latest.can_join {
                 html! {
                     <>
@@ -66,7 +68,7 @@ pub fn guest_entrance(props: &GuestEntranceProps) -> Html {
                 }
             }
         },
-        DataFetchState::Error => {
+        Result::Err(NotFetched::Error) => {
             unexpected_error()
         }
     }

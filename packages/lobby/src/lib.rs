@@ -1,5 +1,5 @@
 use atoms::{loading, ButtonLarge, Heading2, HeadingDescription, unexpected_error};
-use firestore_hooks::{use_collection_sync, use_document, DataFetchState};
+use firestore_hooks::{use_collection_sync, use_document, NotFetched};
 use layouting::{BodyItems, BottomOperaton};
 use model::{MemberJSON, RoomEditAction, RoomEditBody};
 use web_sys::window;
@@ -21,9 +21,9 @@ pub struct Props {
 pub fn lobby(props: &Props) -> Html {
     let members_state = use_collection_sync::<MemberJSON>(&props.room_id);
     let you_state = use_document::<MemberJSON>(&props.room_id, props.user_id.as_str());
-    let state = members_state.merge(you_state);
+    let state = (|| Ok((members_state?,you_state?)) )();
     match state {
-        DataFetchState::Loaded((members, you)) => {
+        Ok((members, you)) => {
             let is_host = you.is_host;
             let user_id = props.user_id.clone();
             html! {
@@ -91,8 +91,8 @@ pub fn lobby(props: &Props) -> Html {
 
             }
         }
-        DataFetchState::Loading => loading(),
-        DataFetchState::Error => unexpected_error()
+        Err(NotFetched::Loading) => loading(),
+        Err(NotFetched::Error)  => unexpected_error()
     }
 }
 #[derive(Properties, PartialEq)]
@@ -107,9 +107,9 @@ fn member_close(props: &MemberCloseProps) -> Html {
     let members = use_collection_sync::<MemberJSON>(&props.room_id);
     let updateing = use_state(|| false);
     if !*updateing {
-        match room.merge(members) {
-            DataFetchState::Loading => loading(),
-            DataFetchState::Loaded((YewHistorical {push_with_callback,latest},members)) => {
+        match (|| Ok((room?,members?)))() {
+            Err(NotFetched::Loading) => loading(),
+            Ok((YewHistorical {push_with_callback,latest},members)) => {
                 if latest.can_join {
                     let on_complete = props.on_complete.clone();
                     let onclick = push_with_callback.reform(move |_| {
@@ -139,7 +139,7 @@ fn member_close(props: &MemberCloseProps) -> Html {
                     }
                 }   
             },
-            DataFetchState::Error => unexpected_error()
+            Err(NotFetched::Error) => unexpected_error()
         }
     } else {
         loading()

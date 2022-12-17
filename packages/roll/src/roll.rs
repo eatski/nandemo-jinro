@@ -1,7 +1,7 @@
 use std::iter::repeat;
 
 use atoms::{loading, Heading2, HeadingDescription, unexpected_error};
-use firestore_hooks::{use_collection, DataFetchState};
+use firestore_hooks::{use_collection_sync, NotFetched};
 use layouting::{BodyItems, BottomOperaton};
 use model::{MemberJSON, RoomEditAction};
 use yew::{function_component, html, Html, Properties};
@@ -27,13 +27,13 @@ fn icon() -> Html {
 #[function_component(RollContainer)]
 pub fn roll(props: &Props) -> Html {
     let room = use_historical_read::<RoomEditAction>(props.room_id.clone());
-    let members = use_collection::<MemberJSON>(&props.room_id);
+    let members = use_collection_sync::<MemberJSON>(&props.room_id);
     let roll = use_roll(props.room_id.as_str());
     let validate = use_can_roll_validation(&props.room_id);
-    let state = members.merge(room).merge(validate);
+    let state = (|| Ok((room?, members?, validate?)))();
     match state {
-        DataFetchState::Loading => loading(),
-        DataFetchState::Loaded(((members,room), validation)) => {
+        Err(NotFetched::Loading) => loading(),
+        Ok((room,members, validation)) => {
             let rule = room.latest.rule.unwrap();
             html! {
                 <section>
@@ -112,7 +112,7 @@ pub fn roll(props: &Props) -> Html {
                 </section>
             }
         },
-        DataFetchState::Error => {
+        Err(NotFetched::Error) => {
             unexpected_error()
         }
     }

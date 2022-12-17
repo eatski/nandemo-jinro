@@ -1,10 +1,10 @@
 use model::{MemberJSON, Roll, Rule, UserToRole, RoomEditAction};
 use rand::seq::SliceRandom;
 use use_historical::use_historical_read;
-use std::iter::repeat;
+use std::{iter::repeat};
 use yew::{use_effect_with_deps, use_state, hook, Callback};
 
-use firestore_hooks::{use_collection, use_collection_sync, DataFetchState};
+use firestore_hooks::{use_collection, use_collection_sync, DataFetchResult};
 
 fn create_next_roll(rule: &Rule, members: &Vec<MemberJSON>, rolls: &Vec<Roll>) -> Roll {
     let mut roles: Vec<_> = rule
@@ -43,9 +43,14 @@ pub fn use_roll(room_id: &str) -> Option<yew::Callback<()> > {
         let room_id = room_id.to_string();
         use_effect_with_deps(
             move |(room, members, rolls, clicked)| {
-                let merged = room.clone().merge(members.clone()).merge(rolls.clone());
+                let merged: DataFetchResult<_> = (|| {
+                    let room = room.clone()?;
+                    let members = members.clone()?;
+                    let rolls = rolls.clone()?;
+                    Ok((room, members, rolls))
+                })();
                 match merged {
-                    DataFetchState::Loaded(((room, members), rolls)) => {
+                    Ok((room, members, rolls)) => {
                         if matches!(*clicked.clone(), ButtonState::Clicked) {
                             let next_roll = create_next_roll(&room.rule.unwrap(), &members, &rolls);
                             clicked.set(ButtonState::Loading);
@@ -60,7 +65,7 @@ pub fn use_roll(room_id: &str) -> Option<yew::Callback<()> > {
                             );
                         }
                     }
-                    _ => {}
+                    Err(_) => {}
                 }
                 || {}
             },

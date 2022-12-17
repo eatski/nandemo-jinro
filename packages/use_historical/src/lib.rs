@@ -1,35 +1,26 @@
 use std::{fmt::Debug};
-use firestore_hooks::{use_collection_sync, DataFetchState};
+use firestore_hooks::{use_collection_sync, DataFetchResult};
 use historical::{HistoricalSignature, next_signature, calculate_latest};
 use yew::{Callback, Children, Properties, hook};
 
 #[hook]
-pub fn use_historical<T: historical::HistricalItem + firestore::FireStoreResource + Clone + 'static,B>(param: T::ParamForPath,merge: impl Fn(HistoricalSignature,B) -> T + 'static) -> DataFetchState<YewHistorical<T,B>> where T::ParamForPath: Clone + PartialEq {
+pub fn use_historical<T: historical::HistricalItem + firestore::FireStoreResource + Clone + 'static,B>(param: T::ParamForPath,merge: impl Fn(HistoricalSignature,B) -> T + 'static) -> DataFetchResult<YewHistorical<T,B>> where T::ParamForPath: Clone + PartialEq {
     let collection = use_collection_sync::<T>(&param);
-    match collection {
-        firestore_hooks::DataFetchState::Loading => {
-            DataFetchState::Loading
-        },
-        firestore_hooks::DataFetchState::Loaded(items) => {
-            let next_signature = next_signature(&items, None);
-            DataFetchState::Loaded(YewHistorical {
-                latest: calculate_latest(items),
-                push_with_callback:  Callback::from(move |(body,callback): (B,Box<dyn FnOnce()>)| {
-                    let next_signature = next_signature.clone();
-                    firestore::add_document(&param, &merge(next_signature,body), |_| {
-                        callback();
-                    }, || {} );
-                })
-            })
-        }
-        firestore_hooks::DataFetchState::Error => {
-            DataFetchState::Error
-        },
-    }
+    collection.map(|collection| {
+        let next_signature = next_signature(&collection, None);
+        let latest = calculate_latest(collection);
+        let push_with_callback = Callback::from(move |(body,callback): (B,Box<dyn FnOnce()>)| {
+            let next_signature = next_signature.clone();
+            firestore::add_document(&param, &merge(next_signature,body), |_| {
+                callback();
+            }, || {} );
+        });
+        YewHistorical { latest, push_with_callback }
+    })
 }
 
 #[hook]
-pub fn use_historical_read<T: historical::HistricalItem + firestore::FireStoreResource + Clone + 'static>(param: T::ParamForPath) -> DataFetchState<YewHistoricalRead<T::Collected>> where T::ParamForPath: Clone + PartialEq,T::Collected : Debug {
+pub fn use_historical_read<T: historical::HistricalItem + firestore::FireStoreResource + Clone + 'static>(param: T::ParamForPath) -> DataFetchResult<YewHistoricalRead<T::Collected>> where T::ParamForPath: Clone + PartialEq,T::Collected : Debug {
     let collection = use_collection_sync::<T>(&param);
     collection.map(move |items| {
         let read = YewHistoricalRead { latest: calculate_latest(items) };

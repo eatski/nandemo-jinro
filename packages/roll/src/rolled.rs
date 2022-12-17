@@ -7,7 +7,7 @@ use use_historical::use_historical_read;
 use wasm_bindgen::prelude::Closure;
 use yew::{function_component, html, Callback, Properties, use_effect, use_state, Html};
 
-use firestore_hooks::{use_collection_sync, use_document, DataFetchState};
+use firestore_hooks::{use_collection_sync, use_document, NotFetched};
 
 use crate::common::RollButton;
 use crate::use_roll::use_roll;
@@ -58,12 +58,17 @@ pub fn rolled(props: &Props) -> Html {
     let rolls = use_collection_sync::<Roll>(&props.room_id);
     let room = use_historical_read::<RoomEditAction>(props.room_id.clone());
     let member = use_document::<MemberJSON>(&props.room_id, props.user_id.as_str());
-    let state = rolls.merge(room).merge(member);
+    let state = (|| {
+        let rolls = rolls?;
+        let room = room?;
+        let member = member?;
+        Ok((rolls, room, member))
+    })();
     let roll = use_roll(props.room_id.as_str());
     let counter = use_state(|| None);
     match state {
-        DataFetchState::Loading => loading(),
-        DataFetchState::Loaded(((mut rolls, room), member)) => {
+        Err(NotFetched::Loading) => loading(),
+        Ok((mut rolls, room, member)) => {
             rolls.sort_by_key(|roll| roll.seq_num);
             let last_rolled = rolls.last();
             match last_rolled {
@@ -122,6 +127,6 @@ pub fn rolled(props: &Props) -> Html {
                 None => html! {},
             }
         },
-        DataFetchState::Error => unexpected_error()
+        Err(NotFetched::Error) => unexpected_error()
     }
 }

@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 use atoms::{ButtonLarge, Heading2, HeadingDescription, InputSmallNumber, InputText, unexpected_error};
-use firestore_hooks::{use_collection_sync, DataFetchState};
+use firestore_hooks::{use_collection_sync, NotFetched};
 use input_storage::{Item, use_input};
 use layouting::{BodyItems, BottomOperaton};
 use model::{MemberJSON, Role, Rule, RoomEditAction, RoomEditBody};
@@ -43,9 +43,9 @@ pub fn rule_make(props: &Props) -> Html {
     html! {
         <section class="mx-auto w-full max-w-2xl py-2">
                 {
-                    match members.merge(room) {
-                        firestore_hooks::DataFetchState::Loading => Default::default(),
-                        firestore_hooks::DataFetchState::Loaded((members,YewHistorical {push_with_callback, ..})) => html! {
+                    match (|| {Ok((members?,room?))})() {
+                        Result::Err(NotFetched::Loading) => Default::default(),
+                        Result::Ok((members,YewHistorical {push_with_callback, ..})) => html! {
                             <>
                                 <BodyItems>
                                     <Heading2>{"ルールを決めましょう"}</Heading2>
@@ -176,7 +176,7 @@ pub fn rule_make(props: &Props) -> Html {
                                 }}
                             </>
                         },
-                        DataFetchState::Error => unexpected_error()
+                        Result::Err(NotFetched::Error) => unexpected_error()
                     }
                 }
         </section>

@@ -7,7 +7,7 @@ use yew::{function_component, html, use_state_eq, Callback, Properties, Html};
 
 use landing::entrance::GuestEntrance;
 
-use firestore_hooks::{use_collection_sync, use_document, DataFetchState};
+use firestore_hooks::{use_collection_sync, use_document, NotFetched};
 use lobby::Lobby;
 use rule_make::RuleMake;
 use user_id_storage::get_user_id;
@@ -60,11 +60,13 @@ fn view_when_has_userid(props: &HasUserIdProps) -> Html {
     let member = use_document::<MemberJSON>(&props.room_id, props.user_id.as_str());
     let validation = use_can_roll_validation(&props.room_id);
     let roles = use_collection_sync::<Roll>(&props.room_id);
-    let merged = validation.merge(member).merge(roles);
+    let merged = (|| {
+        Ok((validation?, member?,roles?))
+    })();
     let (history_state,push) = use_history_state::<RoomHistoryState>();
     match merged {
-        DataFetchState::Loading => loading(),
-        DataFetchState::Loaded(((validation, member), rolls)) => {
+        Err(NotFetched::Loading) => loading(),
+        Ok((validation, member, rolls)) => {
             let rolled = rolls.len() > 0;
             if member.is_host {
                 if rolled {
@@ -129,6 +131,6 @@ fn view_when_has_userid(props: &HasUserIdProps) -> Html {
                 }
             }
         },
-        DataFetchState::Error => unexpected_error()
+        Err(NotFetched::Error) => unexpected_error()
     }
 }
