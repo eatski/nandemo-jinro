@@ -48,7 +48,7 @@ pub fn button_rounded(props: &ButtonProps) -> Html {
 
 pub fn loading() -> Html {
     html! {
-        <div role="img" aria-label="ローディング" class="animate-spin h-10 w-10 border-4 border-action-disable-500 rounded-full border-t-transparent"></div>
+        <div role="img" aria-label="ローディング" class="m-auto animate-spin h-10 w-10 border-4 border-action-disable-500 rounded-full border-t-transparent"></div>
     }
 }
 
