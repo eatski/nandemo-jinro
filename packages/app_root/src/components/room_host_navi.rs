@@ -36,7 +36,7 @@ fn IconWrapper (props: &IconWrapperProps) -> Html {
         LinkStatus::Disabled => "m-auto w-6 w-6 text-word-disable",
     };
     let onclick = match props.status {
-        LinkStatus::Clickable { ref onclick,done } => Some(onclick.clone()),
+        LinkStatus::Clickable { ref onclick,.. } => Some(onclick.clone()),
         _ => None,
     };
     let done = match props.status {
