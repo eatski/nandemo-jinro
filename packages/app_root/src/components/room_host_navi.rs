@@ -3,12 +3,16 @@ use yew::{Properties, function_component, Children, Html, html, classes, Callbac
 
 #[derive(Clone, PartialEq)]
 pub enum LinkStatus {
-    Current,
+    Current {
+        done: bool,
+    },
     Clickable {
         onclick: Callback<()>,
+        done: bool,
     },
     Disabled,
 }
+
 
 #[derive(Properties, Clone, PartialEq)]
 struct IconWrapperProps {
@@ -16,23 +20,40 @@ struct IconWrapperProps {
     status: LinkStatus,
 }
 
+fn checked_icon() -> Html {
+    html! {
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+        </svg>
+    }
+}
+
 #[function_component]
 fn IconWrapper (props: &IconWrapperProps) -> Html {
     let status_classname = match props.status {
-        LinkStatus::Current => "text-action",
+        LinkStatus::Current { .. }  => "text-action",
         LinkStatus::Clickable { .. } => "m-auto w-6 w-6 text-word-2nd hover:text-word-hover hover:cursor-pointer", //TODO: text-word-hoverはまだない
         LinkStatus::Disabled => "m-auto w-6 w-6 text-word-disable",
     };
     let onclick = match props.status {
-        LinkStatus::Clickable { ref onclick } => Some(onclick.clone()),
+        LinkStatus::Clickable { ref onclick,done } => Some(onclick.clone()),
         _ => None,
     };
+    let done = match props.status {
+        LinkStatus::Clickable { done, .. } => done,
+        LinkStatus::Current { done } => done,
+        _ => false,
+    };
     html! {
-        <a class={classes!("h-8","w-8", "flex")} onclick={onclick.map(|onclick| onclick.reform(|_| ()))}>
+        <a class={classes!("h-8","w-8", "flex", "relative")} onclick={onclick.map(|onclick| onclick.reform(|_| ()))}>
             <div class={status_classname}>
                 {props.children.clone()}
             </div>
-            
+            {done.then(
+                || html!{<div class={classes!("absolute", "-bottom-1", "-right-1", "text-accents")} >
+                    {checked_icon()}
+                </div>}
+            )}
         </a>
     }
 }
@@ -61,7 +82,7 @@ pub fn RoomHostNavi(props: &RoomHostNaviProps) -> Html {
             </IconWrapper>
             <IconWrapper status={props.confirm.clone()}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-full h-full">
-                    <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                    <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
                 </svg>
             </IconWrapper>
         </nav>

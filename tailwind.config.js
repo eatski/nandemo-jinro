@@ -19,6 +19,7 @@ module.exports = {
         layer: "var(--nj-color-layer)",
         "layer-2nd": "var(--nj-color-layer-2nd)",
         error: "var(--nj-color-error)",
+        accents: "var(--nj-color-accents)",
       }
     },
 

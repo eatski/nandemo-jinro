@@ -18,6 +18,7 @@
     --nj-color-layer: #eff3f8;
     --nj-color-layer-2nd: #fafaf9;
     --nj-color-error: #f56565;
+    --nj-color-accents: #8c9cb1;
 }
 
 [data-theme="dark"] {
@@ -36,6 +37,8 @@
     --nj-color-layer: #000000;
     --nj-color-layer-2nd: #000000;
     --nj-color-error: #ffffff;
+    --nj-color-accents: #048dcd;
+   
 }
     
     

@@ -69,6 +69,8 @@ fn view_when_has_userid(props: &HasUserIdProps) -> Html {
         Ok((validation, member, rolls)) => {
             let rolled = rolls.len() > 0;
             if member.is_host {
+                let room_open = validation.iter().any(|error| matches!(error,ValidationError::RoomOpen));
+                let no_rule = validation.iter().any(|error| matches!(error,ValidationError::NoRules));
                 if rolled {
                     html! {
                         <Rolled room_id={props.room_id.clone()} user_id={props.user_id.clone()}/>
@@ -82,7 +84,6 @@ fn view_when_has_userid(props: &HasUserIdProps) -> Html {
                             }
                         },
                         RoomHistoryState::RuleMake => {
-                            let room_open = validation.iter().any(|error| matches!(error,ValidationError::RoomOpen));
                             html! {
                                 <RuleMake 
                                     room_id={props.room_id.clone()} 
@@ -99,18 +100,21 @@ fn view_when_has_userid(props: &HasUserIdProps) -> Html {
                     html! {
                         <>
                             <RoomHostNavi 
-                                lobby={if history_state == RoomHistoryState::Lobby { LinkStatus::Current} else {LinkStatus::Clickable {
-                                    onclick: push.reform(|_| RoomHistoryState::Lobby)
+                                lobby={if history_state == RoomHistoryState::Lobby { LinkStatus::Current { done: !room_open }} else {LinkStatus::Clickable {
+                                    onclick: push.reform(|_| RoomHistoryState::Lobby),
+                                    done: !room_open
                                 }}} 
-                                make_rule={if history_state == RoomHistoryState::RuleMake { LinkStatus::Current} else {LinkStatus::Clickable {
-                                    onclick: push.reform(|_| RoomHistoryState::RuleMake)
+                                make_rule={if history_state == RoomHistoryState::RuleMake { LinkStatus::Current {done: !no_rule }} else {LinkStatus::Clickable {
+                                    onclick: push.reform(|_| RoomHistoryState::RuleMake),
+                                    done: !no_rule
                                 }}}
-                                confirm={if history_state == RoomHistoryState::Confirm { LinkStatus::Current} else {
+                                confirm={if history_state == RoomHistoryState::Confirm { LinkStatus::Current {done: false}} else {
                                     if !validation.is_empty() {
                                         LinkStatus::Disabled
                                     } else {
                                         LinkStatus::Clickable {
-                                            onclick: push.reform(|_| RoomHistoryState::Confirm)
+                                            onclick: push.reform(|_| RoomHistoryState::Confirm),
+                                            done: false
                                         }
                                     }
                                 }}
