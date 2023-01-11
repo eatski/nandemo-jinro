@@ -7,7 +7,7 @@ use yew::{Callback, Children, Properties, hook};
 pub fn use_historical<T: historical::HistricalItem + firestore::FireStoreResource + Clone + 'static,B>(param: T::ParamForPath,merge: impl Fn(HistoricalSignature,B) -> T + 'static) -> DataFetchResult<YewHistorical<T,B>> where T::ParamForPath: Clone + PartialEq {
     let collection = use_collection_sync::<T>(&param);
     collection.map(|collection| {
-        let next_signature = next_signature(&collection, None);
+        let next_signature = next_signature(&collection);
         let latest = calculate_latest(collection);
         let push_with_callback = Callback::from(move |(body,callback): (B,Box<dyn FnOnce()>)| {
             let next_signature = next_signature.clone();
